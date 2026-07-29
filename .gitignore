@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.venv/
+env/
+.Python
+*.egg-info/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Data (too large for git)
+DERIVED_DATA/
+RIPPED_PAPERS/
+OCR_EXPORT/
+ripped_pdfs/
+*.db
+*.db-journal
+*.npy
+*.csv
+
+# Ripper state / debug
+.ripper_state.json
+debug_*.html
+diagnose_*.html
+pdf_links*
+
+# Node / Frontend build
+node_modules/
+dist/
+build/
+.DS_Store
+
+# Logs
+*.log
+npm-debug.log*
+
+# Claude Code
+.claude/
+
+# Plans
+plans/

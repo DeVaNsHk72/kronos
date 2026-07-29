@@ -1,0 +1,359 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* Departure Mono — self-hosted via a community-packaged @proj-airi wrapper
+   (the official Departure Mono has no @fontsource release). The single retro-
+   mono voice for numbers, marks, and codes. */
+@import "@proj-airi/font-departure-mono";
+
+/* Cream paper ground + one bookish-red accent. Font families are a fresh
+   pick, deliberately away from the AI-default Google Fonts stack:
+   Fraunces (Google) → display, with SOFT + WONK axes dialled up.
+   Newsreader (Google) → screen-reading serif.
+   General Sans (Fontshare, Indian Type Foundry) → chrome.
+   Departure Mono → retro-mono for archive-from-the-past numbers. */
+@theme {
+  --color-paper: #f6f5f1;
+  --color-paper-2: #fbfaf7;
+  --color-line: #e1dfd8;
+  --color-line-2: #eceae3;
+  --color-ink: #16181d;
+  --color-ink-2: #5a6072;
+  /* One accent, used everywhere: marks in the margin, data bars, citation
+     chips, download buttons. `mark` and `blueprint` kept as separate tokens
+     (many classes reference each by name) but both resolve to the same red. */
+  --color-mark: #b02c33;
+  --color-blueprint: #b02c33;
+
+  --font-editorial: "Fraunces", ui-serif, Georgia, "Times New Roman", serif;
+  --font-serif: "Newsreader", ui-serif, Georgia, "Times New Roman", serif;
+  --font-sans: "General Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Departure Mono", ui-monospace, monospace;
+
+  /* shadcn/ui token bridge — Tailwind v4 needs the `--color-*` prefix for
+     utilities like `bg-popover`, `bg-background`, `border-border` to resolve.
+     Each maps to one of the palette tokens above so the whole system stays
+     coherent regardless of which primitive you drop into a page. */
+  --color-background: var(--color-paper);
+  --color-foreground: var(--color-ink);
+  --color-card: var(--color-paper-2);
+  --color-card-foreground: var(--color-ink);
+  --color-popover: var(--color-paper-2);
+  --color-popover-foreground: var(--color-ink);
+  --color-primary: var(--color-mark);
+  --color-primary-foreground: var(--color-paper);
+  --color-secondary: var(--color-line-2);
+  --color-secondary-foreground: var(--color-ink);
+  --color-muted: var(--color-line-2);
+  --color-muted-foreground: var(--color-ink-2);
+  --color-accent: var(--color-line-2);
+  --color-accent-foreground: var(--color-ink);
+  --color-destructive: var(--color-mark);
+  --color-destructive-foreground: var(--color-paper);
+  --color-border: var(--color-line);
+  --color-input: var(--color-line);
+  /* Focus ring — neutral ink, not the accent. A red ring on every focused
+     input reads as an error state, not a focus indicator. Opacity is applied
+     by consumers via `ring-ring/50`. */
+  --color-ring: var(--color-ink);
+  --radius: 0.5rem;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* shadcn convention — every element defaults to the border-color token
+   (Tailwind v4's `border` utility only sets width, not colour). Without
+   this, popovers, inputs, and card wrappers inherit currentColor (ink)
+   giving heavy dark hairlines that look like error states. */
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-variation-settings: "wdth" 87;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+/* Editorial serif — for question text, topic names, anything that reads as
+   *content* rather than chrome. Newsreader has variable optical sizing
+   (`opsz`) which browsers follow automatically from the font-size. */
+.serif {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: -0.005em;
+}
+
+/* Display serif — Fraunces with SOFT and WONK cranked up. The SOFT axis
+   softens the terminals; WONK adds swashy alternates on `g`, `y`, italic
+   letters. Combined at max, Fraunces reads distinctive rather than "another
+   editorial serif". Use sparingly — one moment per screen. */
+.serif-display {
+  font-family: var(--font-editorial);
+  font-weight: 500;
+  font-style: italic;
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+  letter-spacing: -0.025em;
+  line-height: 0.9;
+}
+
+.serif-label {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+/* Italic serif at 13px in muted ink — used everywhere for hints, labels,
+   micro-notes, filter select captions. Was previously repeated 11 times in
+   the codebase as `serif italic text-[13px] text-ink-2`. */
+.serif-note {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 13px;
+  color: var(--color-ink-2);
+}
+
+/* Page-level hero title. Instrument Serif italic, 44px → 64px at sm.
+   Used on the top of Download and Stats. Landing hero uses its own clamp. */
+.title-page {
+  font-family: var(--font-editorial);
+  font-weight: 500;
+  font-style: italic;
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+  letter-spacing: -0.025em;
+  line-height: 0.9;
+  font-size: 44px;
+  color: var(--color-ink);
+}
+@media (min-width: 640px) {
+  .title-page {
+    font-size: 64px;
+  }
+}
+
+/* Empty-state / section title. 32px → 40px at sm. Used on Ask, Stats,
+   Download empty states. */
+.title-section {
+  font-family: var(--font-editorial);
+  font-weight: 500;
+  font-style: italic;
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+  letter-spacing: -0.025em;
+  line-height: 0.9;
+  font-size: 32px;
+  color: var(--color-ink);
+}
+@media (min-width: 640px) {
+  .title-section {
+    font-size: 40px;
+  }
+}
+
+/* Round backdrop for a foreground icon. 44px is the empty-state hero size;
+   `.icon-badge-sm` is the 28px chat avatar. Both use the accent bg at 10%. */
+.icon-badge {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-mark) 10%, transparent);
+  color: var(--color-mark);
+}
+.icon-badge-sm {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-mark) 10%, transparent);
+  color: var(--color-mark);
+}
+
+.grid-paper {
+  background-color: var(--color-paper-2);
+}
+
+/* THE SIGNATURE — the margin rule from a printed question paper. Content sits
+   left of the hairline, the number that matters sits right of it. */
+.margin-rule {
+  box-shadow: inset 1px 0 0 var(--color-line);
+}
+
+/* marks, hanging in the margin */
+.mark {
+  font-family: var(--font-mono);
+  color: var(--color-mark);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+:where(a, button, input, select):focus-visible {
+  outline: none;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-blueprint) 30%, transparent);
+}
+
+.thin-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.thin-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-line);
+  border-radius: 8px;
+}
+.thin-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-line) transparent;
+}
+
+/* Fades the top/bottom edge of a scrollable list instead of cutting it off
+   hard — the list reads as continuing, not broken. Harmless when the list
+   isn't scrolled: the fade band is only ~14px. */
+.scroll-fade {
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    black 14px,
+    black calc(100% - 14px),
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    black 14px,
+    black calc(100% - 14px),
+    transparent
+  );
+}
+
+/* metadata badges — mono, quiet, grouped */
+.badge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1;
+  padding: 3px 6px;
+  border-radius: 3px;
+  border: 1px solid var(--color-line);
+  color: var(--color-ink-2);
+  background: var(--color-paper);
+  white-space: nowrap;
+}
+.badge-code {
+  color: var(--color-ink);
+  border-color: color-mix(in srgb, var(--color-ink) 26%, var(--color-line));
+}
+.badge-score {
+  color: var(--color-blueprint);
+  border-color: color-mix(
+    in srgb,
+    var(--color-blueprint) 40%,
+    var(--color-line)
+  );
+  background: color-mix(
+    in srgb,
+    var(--color-blueprint) 10%,
+    var(--color-paper)
+  );
+}
+
+.chip {
+  font-size: 11px;
+  line-height: 1;
+  padding: 4px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--color-line);
+  color: var(--color-ink-2);
+  background: var(--color-paper);
+  white-space: nowrap;
+}
+.chip-topic {
+  color: var(--color-ink);
+  border-color: color-mix(in srgb, var(--color-ink) 20%, var(--color-line));
+  background: var(--color-paper-2);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  line-height: 1;
+  padding: 5px 6px 5px 10px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--color-ink) 18%, var(--color-line));
+  background: var(--color-paper-2);
+  color: var(--color-ink);
+}
+
+/* An actual highlighter stripe: the bright amber that was too light for text on
+   paper is exactly right as ink laid over it. */
+mark.hl {
+  background: rgba(176, 44, 51, 0.16);
+  color: var(--color-ink);
+  border-radius: 2px;
+  padding: 0 2px;
+}
+
+/* Bars and year-strips draw themselves in on mount. One motion idea, used only
+   where a value has a length worth reading. */
+@keyframes draw-in {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.draw {
+  transform-origin: left center;
+  animation: draw-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Filter popover panels open from their trigger (top-left, since they anchor
+   below the button). Fast and near-imperceptible — used tens of times per
+   session, so keep it subtle. The `data-mounted` pattern (rather than
+   @starting-style) is deliberate: @starting-style doesn't fire reliably when
+   React mounts the element via reconciliation, whereas a class flip on the
+   first frame works everywhere. */
+.popover-panel {
+  transform-origin: top left;
+  opacity: 0;
+  transform: scale(0.96);
+  transition:
+    opacity 150ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 150ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.popover-panel[data-mounted="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  .draw {
+    animation: none;
+  }
+}
