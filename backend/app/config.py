@@ -22,6 +22,10 @@ FIGURES_DIR = DERIVED / "figures"          # <sha>/<filename>
 # PAPERS_ROOT at wherever it actually lives; without it /api/download 404s.
 RIPPED_DIR = Path(os.getenv("PAPERS_ROOT") or REPO)
 
+# when set, /api/download/{sha} redirects to f"{PDF_BASE_URL}/{sha}.pdf"
+# instead of serving from RIPPED_DIR (used in prod, where PDFs live on HF)
+PDF_BASE_URL = (os.getenv("PDF_BASE_URL") or "").rstrip("/")
+
 # sentence-transformer used for both the corpus and query embeddings
 EMB_MODEL = "BAAI/bge-small-en-v1.5"
 # bge-v1.5 is asymmetric: the query (not the corpus) gets this instruction

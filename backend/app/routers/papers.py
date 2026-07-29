@@ -15,7 +15,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import FileResponse
 from starlette.background import BackgroundTask
 
-from ..config import RIPPED_DIR
+from ..config import PDF_BASE_URL, RIPPED_DIR
 from ..db import get_db
 from .files import _safe_under
 
@@ -78,7 +78,7 @@ def list_papers(
         total += size
         out.append({**{c: r[c] for c in PCOLS},
                     "filename": _name(r), "size_bytes": size,
-                    "available": pdf is not None,
+                    "available": pdf is not None or bool(PDF_BASE_URL),
                     "download_url": f"/api/download/{r['sha']}"})
     return {"count": len(out), "total_bytes": total,
             "max_files": MAX_ZIP_FILES, "max_bytes": MAX_ZIP_BYTES,

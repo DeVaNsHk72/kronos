@@ -9,9 +9,9 @@ import json
 from pathlib import Path
 
 from fastapi import APIRouter, Depends, HTTPException
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, RedirectResponse
 
-from ..config import FIGURES_DIR, RIPPED_DIR
+from ..config import FIGURES_DIR, PDF_BASE_URL, RIPPED_DIR
 from ..db import get_db
 
 router = APIRouter(prefix="/api", tags=["files"])
@@ -31,6 +31,8 @@ def download_pdf(sha: str, con=Depends(get_db)):
         "SELECT original_paths FROM p.papers WHERE sha = ?", (sha,)).fetchone()
     if not row:
         raise HTTPException(404, "paper not found")
+    if PDF_BASE_URL:
+        return RedirectResponse(f"{PDF_BASE_URL}/{sha}.pdf")
     paths = json.loads(row[0]) if row[0] else []
     for rel in paths:
         pdf = RIPPED_DIR / rel
