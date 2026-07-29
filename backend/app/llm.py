@@ -14,7 +14,9 @@ from dotenv import load_dotenv
 REPO = Path(__file__).resolve().parents[2]
 load_dotenv(REPO / ".env")
 
-API_KEY = os.getenv("OPEN_AI_API_KEY") or os.getenv("OPENAI_API_KEY")
+API_KEY = (os.getenv("LLM_API_KEY") or os.getenv("OPEN_AI_API_KEY")
+           or os.getenv("OPENAI_API_KEY"))
+BASE_URL = os.getenv("LLM_BASE_URL")  # e.g. https://api.groq.com/openai/v1
 MODEL = os.getenv("CHAT_MODEL", "gpt-4o-mini")
 
 _lock = threading.Lock()
@@ -33,7 +35,10 @@ def client():
                 from openai import OpenAI
                 # short timeout: this sits on a request path, and a stalled
                 # connection should surface as a degraded reply, not a hang
-                _client = OpenAI(api_key=API_KEY, timeout=30.0, max_retries=1)
+                kwargs = {"api_key": API_KEY, "timeout": 30.0, "max_retries": 1}
+                if BASE_URL:
+                    kwargs["base_url"] = BASE_URL
+                _client = OpenAI(**kwargs)
     return _client
 
 
