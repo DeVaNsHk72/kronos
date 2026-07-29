@@ -1,7 +1,8 @@
 import axios from "axios";
 
-// Calls go through Vite's /api proxy to the FastAPI backend.
-const http = axios.create({ baseURL: "" });
+const http = axios.create({
+  baseURL: import.meta.env.VITE_API_URL || "",
+});
 
 export interface QImage {
   filename: string;
