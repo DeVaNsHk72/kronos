@@ -117,18 +117,9 @@ const LINE = "#e1dfd8";
 const BLUEPRINT = "#b02c33";
 const PAPER2 = "#fbfaf7";
 
-const tickLabel = (
-  // @ts-expect-error reaviz passes style to underlying SVG text
-  <LinearXAxisTickLabel
-    style={{ fill: INK2, fontSize: 11, fontFamily: "Departure Mono, monospace" }}
-  />
-);
-const yTickLabel = (
-  // @ts-expect-error reaviz passes style to underlying SVG text
-  <LinearYAxisTickLabel
-    style={{ fill: INK2, fontSize: 11, fontFamily: "Departure Mono, monospace" }}
-  />
-);
+const TICK_STYLE = { fill: INK2, fontSize: 11, fontFamily: "Departure Mono, monospace" } as Record<string, unknown>;
+const tickLabel = <LinearXAxisTickLabel {...TICK_STYLE} />;
+const yTickLabel = <LinearYAxisTickLabel {...TICK_STYLE} />;
 
 /* ── Page ─────────────────────────────────────────────────────────────── */
 
@@ -490,13 +481,8 @@ export default function Stats() {
                         tickSeries={
                           <LinearYAxisTickSeries
                             label={
-                              /* @ts-expect-error reaviz passes style to SVG text */
                               <LinearYAxisTickLabel
-                                style={{
-                                  fill: INK,
-                                  fontSize: 12,
-                                  fontFamily: "Newsreader, serif",
-                                }}
+                                {...({ style: { fill: INK, fontSize: 12, fontFamily: "Newsreader, serif" } } as Record<string, unknown>)}
                               />
                             }
                           />
