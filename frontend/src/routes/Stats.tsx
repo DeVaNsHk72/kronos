@@ -16,7 +16,6 @@ import {
   LinearYAxisTickSeries,
   LinearYAxisTickLabel,
   ChartTooltip,
-  TooltipArea,
 } from "reaviz";
 import {
   getCourseStats,
@@ -119,11 +118,13 @@ const BLUEPRINT = "#b02c33";
 const PAPER2 = "#fbfaf7";
 
 const tickLabel = (
+  // @ts-expect-error reaviz passes style to underlying SVG text
   <LinearXAxisTickLabel
     style={{ fill: INK2, fontSize: 11, fontFamily: "Departure Mono, monospace" }}
   />
 );
 const yTickLabel = (
+  // @ts-expect-error reaviz passes style to underlying SVG text
   <LinearYAxisTickLabel
     style={{ fill: INK2, fontSize: 11, fontFamily: "Departure Mono, monospace" }}
   />
@@ -461,7 +462,7 @@ export default function Stats() {
                           <HeatmapCell
                             tooltip={
                               <ChartTooltip
-                                content={(d) => {
+                                content={(d: unknown) => {
                                   const val =
                                     (d as { data?: { value?: number } })?.data
                                       ?.value ?? 0;
@@ -489,6 +490,7 @@ export default function Stats() {
                         tickSeries={
                           <LinearYAxisTickSeries
                             label={
+                              /* @ts-expect-error reaviz passes style to SVG text */
                               <LinearYAxisTickLabel
                                 style={{
                                   fill: INK,
@@ -593,10 +595,9 @@ export default function Stats() {
                         padding={0.3}
                         bar={
                           <Bar
-                            rounded
                             tooltip={
                               <ChartTooltip
-                                content={(d) => {
+                                content={(d: unknown) => {
                                   const val =
                                     (d as { y?: number })?.y ?? 0;
                                   return (
@@ -654,10 +655,9 @@ export default function Stats() {
                         padding={0.3}
                         bar={
                           <Bar
-                            rounded
                             tooltip={
                               <ChartTooltip
-                                content={(d) => {
+                                content={(d: unknown) => {
                                   const val =
                                     (d as { y?: number })?.y ?? 0;
                                   return (

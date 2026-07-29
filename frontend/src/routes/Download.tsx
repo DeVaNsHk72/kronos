@@ -5,7 +5,7 @@ import {
   ArrowUp,
   ArrowsDownUp,
   DownloadSimple as DownloadIcon,
-  FileText,
+
   MagnifyingGlass as Search,
   X,
 } from "@phosphor-icons/react";

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ChartBar as ChartColumn,
   DownloadSimple as DownloadIcon,
-  House,
+
   MagnifyingGlass as Search,
   Sparkle as Sparkles,
   TextT as TypeIcon,
