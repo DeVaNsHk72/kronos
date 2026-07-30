@@ -58,6 +58,11 @@ def chat(body: ChatIn, con=Depends(get_db)):
     if intent.get("course_hint") and not course_code:
         # say so rather than silently searching the whole corpus
         intent["unresolved_course"] = intent["course_hint"]
+        return {
+            "intent": {**intent, "course_code": None, "course_name": None},
+            "answer": C.no_match_reply(intent),
+            "results": [], "citations": [],
+        }
 
     if intent.get("kind") == "other":
         # no retrieval to ground a reply, but say why rather than going silent

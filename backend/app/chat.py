@@ -132,6 +132,12 @@ def parse_intent(message: str, con, history=None) -> dict:
             data[key] = None
     if not (data.get("query") or "").strip():
         data["query"] = message
+    # weaker chat models often miss the course code in `course_hint`; the
+    # pattern is unambiguous so pull it straight from the message as a fallback
+    if not data.get("course_hint"):
+        m = CODE_RE.search(message.upper())
+        if m:
+            data["course_hint"] = m.group(0)
     return data
 
 
