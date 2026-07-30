@@ -32,7 +32,7 @@ def download_pdf(sha: str, con=Depends(get_db)):
     if not row:
         raise HTTPException(404, "paper not found")
     if PDF_BASE_URL:
-        return RedirectResponse(f"{PDF_BASE_URL}/{sha}.pdf")
+        return RedirectResponse(f"{PDF_BASE_URL}/pdfs-{sha[0]}/{sha}.pdf")
     paths = json.loads(row[0]) if row[0] else []
     for rel in paths:
         pdf = RIPPED_DIR / rel

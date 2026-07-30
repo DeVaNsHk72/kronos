@@ -38,8 +38,9 @@ def shape_rows(con, rows, scores=None):
              "url": f"{API_BASE_URL}/api/figures/{r['sha']}/{fn}"}
             for fn in imgs.get(r["id"], [])
         ]
-        d["download_url"] = (f"{PDF_BASE_URL}/{r['sha']}.pdf" if PDF_BASE_URL
-                             else f"/api/download/{r['sha']}")
+        d["download_url"] = (
+            f"{PDF_BASE_URL}/pdfs-{r['sha'][0]}/{r['sha']}.pdf" if PDF_BASE_URL
+            else f"/api/download/{r['sha']}")
         if scores is not None:
             d["score"] = round(scores.get(r["id"], 0.0), 4)
         out.append(d)

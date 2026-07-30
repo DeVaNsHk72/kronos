@@ -77,7 +77,7 @@ def list_papers(
         pdf = _pdf_path(r["original_paths"])
         size = pdf.stat().st_size if pdf else 0
         total += size
-        url = (f"{PDF_BASE_URL}/{r['sha']}.pdf" if PDF_BASE_URL
+        url = (f"{PDF_BASE_URL}/pdfs-{r['sha'][0]}/{r['sha']}.pdf" if PDF_BASE_URL
                else f"/api/download/{r['sha']}")
         out.append({**{c: r[c] for c in PCOLS},
                     "filename": _name(r), "size_bytes": size,
@@ -119,7 +119,7 @@ def zip_papers(
         for r in rows:
             name = _name(r)
             if PDF_BASE_URL:
-                url = f"{PDF_BASE_URL}/{r['sha']}.pdf"
+                url = f"{PDF_BASE_URL}/pdfs-{r['sha'][0]}/{r['sha']}.pdf"
                 resp = requests.get(url, timeout=30, allow_redirects=True)
                 if resp.status_code != 200:
                     continue  # skip missing files rather than failing whole zip
