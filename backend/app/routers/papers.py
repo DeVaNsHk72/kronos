@@ -11,6 +11,7 @@ import tempfile
 import zipfile
 from pathlib import Path
 
+import requests
 from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import FileResponse
 from starlette.background import BackgroundTask
@@ -102,24 +103,37 @@ def zip_papers(
     if sha:
         wanted = set(sha)
         rows = [r for r in rows if r["sha"] in wanted]
-    files = [(p, _name(r)) for r in rows if (p := _pdf_path(r["original_paths"]))]
-    if not files:
+    if not rows:
         raise HTTPException(404, "no PDFs match that selection")
-    if len(files) > MAX_ZIP_FILES:
-        raise HTTPException(413, f"{len(files)} papers exceeds the "
+    if len(rows) > MAX_ZIP_FILES:
+        raise HTTPException(413, f"{len(rows)} papers exceeds the "
                                  f"{MAX_ZIP_FILES}-file limit; narrow the years")
-    total = sum(p.stat().st_size for p, _ in files)
-    if total > MAX_ZIP_BYTES:
-        raise HTTPException(413, f"{total // 1024 // 1024} MB exceeds the "
-                                 f"{MAX_ZIP_BYTES // 1024 // 1024} MB limit")
 
-    # PDFs are already compressed, so ZIP_STORED just concatenates them —
-    # far faster than DEFLATE for no meaningful size gain.
+    # Two sources for the PDF bytes: local disk (dev) or PDF_BASE_URL (prod).
+    # Sizes aren't known upfront in prod, so the MAX_ZIP_BYTES check happens
+    # opportunistically while writing.
     tmp = tempfile.NamedTemporaryFile(suffix=".zip", delete=False)
     tmp.close()
+    written = 0
     with zipfile.ZipFile(tmp.name, "w", zipfile.ZIP_STORED) as z:
-        for pdf, name in files:
-            z.write(pdf, name)
+        for r in rows:
+            name = _name(r)
+            if PDF_BASE_URL:
+                url = f"{PDF_BASE_URL}/{r['sha']}.pdf"
+                resp = requests.get(url, timeout=30, allow_redirects=True)
+                if resp.status_code != 200:
+                    continue  # skip missing files rather than failing whole zip
+                data = resp.content
+                written += len(data)
+                if written > MAX_ZIP_BYTES:
+                    os.unlink(tmp.name)
+                    raise HTTPException(413, f"exceeded "
+                        f"{MAX_ZIP_BYTES // 1024 // 1024} MB; select fewer papers")
+                z.writestr(name, data)
+            else:
+                pdf = _pdf_path(r["original_paths"])
+                if pdf:
+                    z.write(pdf, name)
 
     label = (course_code[0] if len(course_code) == 1 else f"{len(course_code)}-courses")
     return FileResponse(

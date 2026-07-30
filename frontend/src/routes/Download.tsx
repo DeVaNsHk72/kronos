@@ -282,9 +282,6 @@ export default function Download() {
   const overLimit =
     !!data &&
     (visible.length > data.max_files || visibleTotalBytes > data.max_bytes);
-  // When PDFs are served from external storage, download_url is absolute and
-  // the backend cannot build a zip locally — hide bulk zip in that case.
-  const canZip = !data?.papers[0]?.download_url.startsWith("http");
 
   const table = useReactTable({
     data: visible,
@@ -505,11 +502,7 @@ export default function Download() {
               )}
 
               <div className="ml-auto flex items-center gap-2">
-                {!canZip ? (
-                  <p className="text-xs text-ink-2">
-                    Click the download icon on each row to grab a paper.
-                  </p>
-                ) : selectedRows.length > 0 ? (
+                {selectedRows.length > 0 ? (
                   <a
                     href={papersZipUrl(codes, yearMin, yearMax, selectedShas)}
                     className="inline-flex items-center gap-1.5 rounded-md bg-ink px-3 py-2 text-xs font-medium text-paper transition-[opacity,transform] hover:opacity-90 active:scale-[0.98]"
@@ -594,7 +587,7 @@ export default function Download() {
             </div>
 
             {/* sticky bottom bar when rows are selected */}
-            {selectedRows.length > 0 && canZip && (
+            {selectedRows.length > 0 && (
               <div className="sticky bottom-4 z-10 mt-4 flex items-center justify-between rounded-lg border border-line bg-paper-2/95 px-4 py-3 shadow-md backdrop-blur-sm">
                 <p className="text-sm text-ink-2">
                   <b className="text-ink">{selectedRows.length}</b> selected ·{" "}

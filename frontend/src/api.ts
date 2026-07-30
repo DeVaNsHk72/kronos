@@ -255,7 +255,13 @@ export const papersZipUrl = (
   yearMin?: number,
   yearMax?: number,
   shas?: string[],
-) => `/api/papers/zip?${paperQuery(codes, yearMin, yearMax, shas)}`;
+) =>
+  `${import.meta.env.VITE_API_URL || ""}/api/papers/zip?${paperQuery(
+    codes,
+    yearMin,
+    yearMax,
+    shas,
+  )}`;
 
 export interface Stats {
   questions: number;
