@@ -76,10 +76,12 @@ def list_papers(
         pdf = _pdf_path(r["original_paths"])
         size = pdf.stat().st_size if pdf else 0
         total += size
+        url = (f"{PDF_BASE_URL}/{r['sha']}.pdf" if PDF_BASE_URL
+               else f"/api/download/{r['sha']}")
         out.append({**{c: r[c] for c in PCOLS},
                     "filename": _name(r), "size_bytes": size,
                     "available": pdf is not None or bool(PDF_BASE_URL),
-                    "download_url": f"/api/download/{r['sha']}"})
+                    "download_url": url})
     return {"count": len(out), "total_bytes": total,
             "max_files": MAX_ZIP_FILES, "max_bytes": MAX_ZIP_BYTES,
             "papers": out}
