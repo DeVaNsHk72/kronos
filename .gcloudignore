@@ -1,0 +1,11 @@
+.venv/
+.git/
+.claude/
+.env
+plans/
+scripts/
+frontend/
+RIPPED_PAPERS/
+node_modules/
+*.log
+__pycache__/

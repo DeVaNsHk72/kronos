@@ -1,0 +1,10 @@
+.venv/
+.git/
+.claude/
+.env
+plans/
+scripts/
+frontend/
+RIPPED_PAPERS/
+*.log
+__pycache__/

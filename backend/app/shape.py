@@ -2,7 +2,7 @@
 (no N+1). Column list is centralized so every endpoint returns the same shape.
 """
 
-from .config import PDF_BASE_URL
+from .config import API_BASE_URL, PDF_BASE_URL
 
 QCOLS = [
     "id", "sha", "unit", "qno", "subpart", "question_md", "marks", "co", "po",
@@ -34,7 +34,8 @@ def shape_rows(con, rows, scores=None):
     for r in rows:
         d = {c: r[c] for c in QCOLS}
         d["images"] = [
-            {"filename": fn, "url": f"/api/figures/{r['sha']}/{fn}"}
+            {"filename": fn,
+             "url": f"{API_BASE_URL}/api/figures/{r['sha']}/{fn}"}
             for fn in imgs.get(r["id"], [])
         ]
         d["download_url"] = (f"{PDF_BASE_URL}/{r['sha']}.pdf" if PDF_BASE_URL

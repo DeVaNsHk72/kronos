@@ -26,6 +26,10 @@ RIPPED_DIR = Path(os.getenv("PAPERS_ROOT") or REPO)
 # instead of serving from RIPPED_DIR (used in prod, where PDFs live on HF)
 PDF_BASE_URL = (os.getenv("PDF_BASE_URL") or "").rstrip("/")
 
+# public URL of this API — prefixed onto figure URLs so <img src=...> in the
+# frontend hits the backend directly, not the frontend's own origin
+API_BASE_URL = (os.getenv("API_BASE_URL") or "").rstrip("/")
+
 # sentence-transformer used for both the corpus and query embeddings
 EMB_MODEL = "BAAI/bge-small-en-v1.5"
 # bge-v1.5 is asymmetric: the query (not the corpus) gets this instruction
