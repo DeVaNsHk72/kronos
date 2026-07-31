@@ -14,9 +14,14 @@ from .. import llm, semantic
 from ..config import SEMANTIC_POOL
 from ..db import get_db
 from ..filters import Filters
+from ..ratelimit import limit
 from ..shape import SELECT, shape_rows
 
 router = APIRouter(prefix="/api", tags=["chat"])
+
+# each chat message triggers an LLM parse + compose call — cap per IP so one
+# visitor can't burn through the shared Groq quota for everyone else
+_chat_limit = limit(max_requests=10, window_seconds=60)
 
 MAX_RESULTS = 25
 
@@ -49,7 +54,7 @@ def _retrieve(con, intent, course_code):
     return rows[:MAX_RESULTS], score
 
 
-@router.post("/chat")
+@router.post("/chat", dependencies=[Depends(_chat_limit)])
 def chat(body: ChatIn, con=Depends(get_db)):
     history = [t.model_dump() for t in (body.history or [])]
     intent = C.parse_intent(body.message, con, history)
