@@ -17,7 +17,7 @@ function Wordmark() {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className="h-[13px] w-auto"
-      aria-label="Paperbank"
+      aria-label="Pyqheaven"
     >
       <text
         x="0"
@@ -28,7 +28,7 @@ function Wordmark() {
         fontWeight="400"
         letterSpacing="0.08em"
       >
-        PAPERBANK
+        PYQHEAVEN
       </text>
       <circle cx="122" cy="11" r="2.5" fill="var(--color-mark)" />
     </svg>
