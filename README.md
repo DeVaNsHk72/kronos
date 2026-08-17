@@ -1,8 +1,10 @@
-# Paperbank
+# Pyqheaven
 
 > A searchable, sorted, cite-able archive of ten years of BMSCE exam questions. 208,746 questions, 10,606 PDFs, one grounded AI assistant.
+>
+> **Live at [pyqheaven.in](https://pyqheaven.in)** — free, no login, no ads.
 
-Paperbank turns a decade of BMS College of Engineering question papers into something you can actually _use_ while revising. Every question is extracted, topic-labelled, embeddable, and citable. A grounded chatbot answers "what repeats in operating-system deadlock questions?" from real papers only — no hallucinated exam questions, ever.
+Pyqheaven (formerly "Paperbank") turns a decade of BMS College of Engineering question papers into something you can actually _use_ while revising. Every question is extracted, topic-labelled, embeddable, and citable. A grounded chatbot answers "what repeats in operating-system deadlock questions?" from real papers only — no hallucinated exam questions, ever.
 
 **Live corpus:**
 
@@ -16,9 +18,9 @@ Paperbank turns a decade of BMS College of Engineering question papers into some
 
 ## Table of contents
 
-- [What Paperbank does](#what-paperbank-does)
-- [Design principles](#design-principles)
+- [What Pyqheaven does](#what-pyqheaven-does)
 - [Architecture at a glance](#architecture-at-a-glance)
+- [Production deployment](#production-deployment)
 - [The data pipeline](#the-data-pipeline)
 - [Backend](#backend)
 - [Frontend](#frontend)
@@ -26,10 +28,9 @@ Paperbank turns a decade of BMS College of Engineering question papers into some
 - [Environment variables](#environment-variables)
 - [Directory map](#directory-map)
 - [API reference](#api-reference)
-- [Hosting notes](#hosting-notes)
 - [Deliberately simple](#deliberately-simple)
 
-## What Paperbank does
+## What Pyqheaven does
 
 Four pages, four jobs:
 
@@ -114,6 +115,56 @@ Four pages, four jobs:
                     └────────────────────────────────────────────────────────────────────┘
 ```
 
+## Production deployment
+
+Everything runs on free tiers. No servers to babysit, no card required beyond what each platform mandates.
+
+```
+pyqheaven.in ──▶ Cloudflare Worker (static SPA, frontend/dist)
+                        │
+                        │  fetch /api/*
+                        ▼
+              Google Cloud Run (FastAPI, 2 GiB, scale-to-zero)
+                        │
+          ┌─────────────┼──────────────────┬───────────────────┐
+          ▼             ▼                  ▼                    ▼
+  questions_v2.db  embeddings.npy   figures/ (bundled     PDFs — GitHub
+  papers_v2.db     (baked into      into the Docker       Releases, sharded
+  (baked into      the image)       image)                pdfs-0 … pdfs-f
+  the image)                                               (GitHub caps
+                                                             1000 assets/
+                                                             release; sha's
+                                                             first hex
+                                                             nibble picks
+                                                             the shard)
+          │
+          ▼
+  Groq (Llama / gpt-oss-120b) for /api/chat — OpenAI-
+  compatible endpoint, swapped in via LLM_BASE_URL so
+  chat costs $0 instead of burning an OpenAI budget
+```
+
+- **Frontend** — `frontend/dist` deployed as a Cloudflare Worker with static assets (`wrangler.jsonc`, `not_found_handling: "single-page-application"` so client-side routes survive a hard refresh). Build command: `npm install && npm run build`; deploy command: `npx wrangler deploy`.
+- **Backend** — a single Docker image (`Dockerfile`) built with `gcloud builds submit` and deployed to Cloud Run. The two SQLite DBs, `embeddings.npy`, `emb_keys.json`, and `figures/` are all `COPY`'d into the image at build time — no volume mounts, no GCS bucket. Image lives in Artifact Registry (`us-central1-docker.pkg.dev/…/paperbank/paperbank-api`).
+- **PDFs** — the ~8 GB corpus is too large for the Cloud Run image (and too many files for a single Hugging Face dataset directory, which caps at 10,000/folder, or a single GitHub Release, which caps at 1,000 assets). Sharded across **16 GitHub Releases** (`pdfs-0` … `pdfs-f`) keyed by the first hex character of each paper's SHA. `PDF_BASE_URL` + that shard math live in `backend/app/config.py` and every URL-building spot (`shape.py`, `routers/papers.py`, `routers/files.py`).
+- **Bulk zip in production** — `/api/papers/zip` streams each selected PDF from GitHub Releases via `requests.get()` and writes it straight into the in-memory zip (no local disk to read from, unlike dev). Still capped at 300 files / 750 MB.
+- **Chat LLM** — defaults to OpenAI, but production points `LLM_BASE_URL` at Groq's OpenAI-compatible endpoint (`https://api.groq.com/openai/v1`) with `CHAT_MODEL=openai/gpt-oss-120b`. Same `llm.py` code path, just a different `base_url` + key.
+- **Rate limiting** — `/api/chat` is capped at 10 requests/minute per IP (`backend/app/ratelimit.py`, in-memory sliding window). Client IP is read from `X-Forwarded-For` because Cloud Run's own proxy IP is what `request.client.host` would otherwise report.
+- **CORS** — locked to `https://pyqheaven.in` via the `CORS_ORIGINS` env var (comma-separated list, defaults to `*` for local dev).
+- **Analytics** — Google Analytics (`gtag.js`) + Umami, both loaded as static `<script>` tags in `frontend/index.html`. Not env-driven — the IDs are public and don't change per environment.
+- **SEO** — Open Graph + Twitter Card meta, JSON-LD `WebSite` schema with a `SearchAction`, `robots.txt`, `sitemap.xml`, all in `frontend/index.html` / `frontend/public/`.
+
+Redeploying after a code change:
+
+```bash
+# frontend — Cloudflare auto-builds on push to main
+
+# backend
+gcloud builds submit . --tag us-central1-docker.pkg.dev/bmsce-503918/paperbank/paperbank-api
+gcloud run services update paperbank-api --region us-central1 \
+  --image us-central1-docker.pkg.dev/bmsce-503918/paperbank/paperbank-api
+```
+
 ## The data pipeline
 
 **Nothing on this page runs at request time.** It's the offline path that produced the two SQLite files and one embedding matrix the backend serves from.
@@ -178,15 +229,17 @@ backend/app/
 ├── semantic.py       Loads embeddings.npy once; numpy cosine matmul; `search_rows()` shared
 │                     between /api/search/semantic and /api/chat so both paths rank identically
 ├── chat.py           Grounded RAG: parse_intent() → retrieve → compose_answer()
-├── llm.py            Lazy OpenAI client; degrades to a passive "no key configured" response
-│                     if OPEN_AI_API_KEY / OPENAIR isn't set
+├── llm.py            Lazy OpenAI-SDK client — works against OpenAI or any OpenAI-compatible
+│                     endpoint (prod points it at Groq via LLM_BASE_URL). Degrades to a passive
+│                     "no key configured" response if no key is set.
+├── ratelimit.py      In-memory per-IP sliding-window limiter (used on /api/chat)
 └── routers/
     ├── search.py     /api/search (keyword + filters), /api/search/semantic (BGE)
     ├── meta.py       /api/filters, /api/facets, /api/courses, /api/topics, /api/stats, /api/stats/course
     ├── questions.py  /api/question/{id}
     ├── files.py      /api/download/{sha} (PDF), /api/figures/{sha}/{filename}
-    ├── chat.py       /api/chat (POST; grounded, cited, deep-linkable)
-    └── papers.py     /api/papers (list with sizes), /api/papers/zip (bulk zip, ZIP_STORED)
+    ├── chat.py       /api/chat (POST; grounded, cited, deep-linkable; rate-limited 10/min/IP)
+    └── papers.py     /api/papers (list with sizes), /api/papers/zip (bulk zip)
 ```
 
 ### Key architectural choices
@@ -284,12 +337,16 @@ Serve `frontend/dist/` behind any static host (nginx, Caddy, Cloudflare Pages). 
 
 Set in `.env` at repo root. Loaded by `backend/app/config.py` before any other config resolution.
 
-| Var                            | Required                  | Default               | Purpose                                                                                          |
-| ------------------------------ | ------------------------- | --------------------- | ------------------------------------------------------------------------------------------------ |
-| `PAPERS_ROOT`                  | for `/api/download/{sha}` | repo root             | Path to the tree of source PDFs (the ~7.6 GB `RIPPED_PAPERS/`). Without this, PDF downloads 404. |
-| `DERIVED_DATA_DIR`             | no                        | `<repo>/DERIVED_DATA` | Where `questions_v2.db`, `papers_v2.db`, `embeddings.npy`, `emb_keys.json`, `figures/` live.     |
-| `OPEN_AI_API_KEY` or `OPENAIR` | for `/ask`                | —                     | OpenAI key. Chat degrades to `answer=null` + explanation if missing; retrieval still works.      |
-| `CORS_ORIGINS`                 | no                        | `["*"]`               | JSON array of allowed origins. **Restrict before public deploy.**                                |
+| Var                                            | Required                              | Default                | Purpose                                                                                                                                     |
+| ----------------------------------------------- | -------------------------------------- | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `PAPERS_ROOT`                                  | local dev, for `/api/download/{sha}`   | repo root               | Path to the tree of source PDFs. Ignored when `PDF_BASE_URL` is set (production).                                                          |
+| `DERIVED_DATA_DIR`                             | no                                     | `<repo>/DERIVED_DATA`   | Where `questions_v2.db`, `papers_v2.db`, `embeddings.npy`, `emb_keys.json`, `figures/` live.                                               |
+| `PDF_BASE_URL`                                 | production only                        | — (serves from disk)    | Base URL for sharded PDF hosting, e.g. `https://github.com/<user>/<repo>/releases/download`. Switches downloads/zips to fetch remotely.    |
+| `API_BASE_URL`                                 | production only                        | — (relative URLs)       | This API's own public URL. Prefixed onto `/api/figures/...` links so the frontend hits the backend directly.                              |
+| `OPEN_AI_API_KEY` / `OPENAIR` / `LLM_API_KEY`  | for `/ask`                             | —                        | Chat model key. `LLM_API_KEY` wins if set (paired with `LLM_BASE_URL` for Groq); otherwise falls back to the OpenAI vars.                   |
+| `LLM_BASE_URL`                                 | no                                     | OpenAI's default         | OpenAI-compatible base URL. Production sets `https://api.groq.com/openai/v1`.                                                              |
+| `CHAT_MODEL`                                   | no                                     | `gpt-4o-mini`            | Chat completion model ID. Production uses `openai/gpt-oss-120b` (Groq).                                                                     |
+| `CORS_ORIGINS`                                 | no                                     | `*`                      | Comma-separated allowed origins. Production sets `https://pyqheaven.in`.                                                                    |
 
 The `.env` file is `.gitignore`d. `.env.example` documents the shape.
 
@@ -303,20 +360,25 @@ paperbank/
 ├── .env.example               Environment template
 ├── .gitignore
 │
+├── Dockerfile                 Cloud Run image: deps, backend code, DERIVED_DATA baked in
+├── .dockerignore, .gcloudignore
+│
 ├── backend/                   FastAPI application
 │   └── app/
 │       ├── main.py
-│       ├── config.py, db.py, shape.py, filters.py, semantic.py, chat.py, llm.py
+│       ├── config.py, db.py, shape.py, filters.py, semantic.py, chat.py, llm.py, ratelimit.py
 │       └── routers/
 │           └── search.py, meta.py, questions.py, files.py, chat.py, papers.py
 │
-├── frontend/                  React + Vite SPA
+├── frontend/                  React + Vite SPA, deployed as a Cloudflare Worker
 │   ├── package.json, tsconfig.json, vite.config.ts
-│   ├── index.html             Google Fonts links, favicon, hero image preload
+│   ├── wrangler.jsonc         Cloudflare Worker config — static assets, SPA fallback routing
+│   ├── index.html             Google Fonts, favicon, SEO meta (OG/Twitter/JSON-LD), analytics
 │   ├── public/
-│   │   ├── herosection.jpg    Landing hero background
+│   │   ├── herosection.jpg    Landing hero background / OG share image
 │   │   ├── ending.jpg         (available for section backgrounds)
 │   │   ├── favicon.svg
+│   │   ├── robots.txt, sitemap.xml
 │   │   └── BMS_College_of_Engineering.svg
 │   └── src/
 │       ├── main.tsx, App.tsx, index.css, api.ts
@@ -401,7 +463,7 @@ Things that could be more sophisticated but aren't, on purpose:
 - **No vector DB.** In-process numpy matmul. Rebuild `embeddings.npy` when you change questions; the backend picks it up on next process start.
 - **No cache layer.** SQLite is fast enough for our load; adding Redis would be a bet on a bottleneck that doesn't exist.
 - **No client state manager.** React state + effects + URL params. Grew large without ever needing Zustand.
-- **No auth.** Public read-only archive. Add basic auth in front of `/api/chat` before public launch if you want to control the OpenAI bill.
+- **No auth.** Public read-only archive. `/api/chat` is rate-limited (10/min/IP) instead of gated behind login — enough to stop one visitor burning the shared quota without adding accounts to a paper archive.
 - **No test harness.** Every downstream artefact is a `.db` or `.npy` file you can verify by inspection; behaviour is verified end-to-end in the browser during development. Not defending this, just noting it.
 - **No queue / worker fleet.** OCR is offline (WSL2 + GPU, hours), everything else is per-request and returns in under a second.
 - **No feature flags.** Ship changes; roll back with git if wrong.
@@ -411,5 +473,6 @@ Things that could be more sophisticated but aren't, on purpose:
 - Original scraper + PDF corpus: [`shaansubbaiah/bmsce-paper-ripper`](https://github.com/shaansubbaiah/bmsce-paper-ripper).
 - OCR: [marker](https://github.com/VikParuchuri/marker) + [olmocr](https://github.com/allenai/olmocr) as a fallback.
 - Embeddings: [BGE-small-en-v1.5](https://huggingface.co/BAAI/bge-small-en-v1.5).
-- LLM: OpenAI `gpt-4o-mini` for parsing, labelling, and chat composition.
+- LLM: OpenAI `gpt-4o-mini` for the offline pipeline (parsing, labelling); production chat runs on Groq (`openai/gpt-oss-120b`) through the same OpenAI-compatible client.
+- Hosting: [Cloudflare Workers](https://developers.cloudflare.com/workers/) (frontend), [Google Cloud Run](https://cloud.google.com/run) (backend), [GitHub Releases](https://docs.github.com/en/repositories/releasing-projects-on-github) (PDF storage, sharded).
 - UI: React 19, Tailwind v4, Phosphor Icons, NumberFlow, Source Serif 4 + Instrument Serif via Google Fonts.
