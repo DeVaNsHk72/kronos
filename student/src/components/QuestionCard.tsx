@@ -154,7 +154,7 @@ export default function QuestionCard({
               {matchReasons.map((r) => (
                 <span
                   key={r}
-                  className="rounded-[4px] bg-blueprint/8 px-1.5 py-0.5 text-[10px] font-medium text-blueprint"
+                  className="rounded-[4px] border border-line bg-line-2 px-1.5 py-0.5 text-[10px] font-medium text-ink-2"
                 >
                   {r}
                 </span>

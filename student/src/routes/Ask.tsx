@@ -5,15 +5,15 @@ import {
   BookOpen,
   CalendarBlank as CalendarRange,
   ListChecks,
-  ChatCircleText as MessageSquareText,
   Repeat as Repeat2,
 } from "@phosphor-icons/react";
-import { askChat, getStats, type ChatResponse, type ChatTurn, type Question } from "../api";
+import { askChat, getStats, type ChatResponse, type ChatTurn, type Question, type Stats } from "../api";
 import QuestionCard from "../components/QuestionCard";
 import ChatAnswer from "../components/ChatAnswer";
 import ChatIntentPanel from "../components/ChatIntentPanel";
 import { computeOverview, ChatStats, ChatAlsoAskedIn } from "../components/ChatOverview";
 import PromptBox from "../components/PromptBox";
+import { archiveError, fmt } from "@/lib/utils";
 
 const EXAMPLES = [
   {
@@ -30,7 +30,7 @@ const EXAMPLES = [
   { icon: CalendarRange, label: "Last 3 years, one topic", q: "thermodynamics questions from the last 3 years" },
 ];
 
-const STEPS = ["Parsing your question", "Searching the archive", "Ranking by similarity", "Composing an answer"];
+const STEPS = ["Reading your question", "Writing the SQL", "Running it", "Composing an answer"];
 
 interface Turn {
   id: number;
@@ -78,7 +78,7 @@ function RetrievalProgress({ totalQuestions }: { totalQuestions: number | null }
   return (
     <div className="flex flex-col py-1.5">
       {visible.map((label, i) => {
-        const text = i === 1 && totalQuestions ? `Searching ${totalQuestions.toLocaleString()} questions` : label;
+        const text = i === 1 && totalQuestions ? `Searching ${fmt(totalQuestions)} questions` : label;
         const done = i < step;
         const active = i === step;
         const last = i === visible.length - 1;
@@ -87,12 +87,12 @@ function RetrievalProgress({ totalQuestions }: { totalQuestions: number | null }
             {/* dot + connecting line */}
             <div className="flex flex-col items-center">
               <span
-                className={`mt-1 inline-block h-2 w-2 shrink-0 rounded-full transition-colors ${
+                className={`mt-1 inline-block h-2 w-2 shrink-0 rounded-sm transition-colors ${
                   done ? "bg-mark" : active ? "animate-pulse bg-mark" : "bg-line"
                 }`}
               />
               {!last && (
-                <span className="mt-0.5 w-0.5 flex-1 rounded-full bg-line" />
+                <span className="mt-0.5 w-0.5 flex-1 rounded-sm bg-line" />
               )}
             </div>
             <span
@@ -114,7 +114,8 @@ export default function Ask() {
   const [q, setQ] = useState("");
   const [turns, setTurns] = useState<Turn[]>([]);
   const [flash, setFlash] = useState<string | null>(null);
-  const [totalQuestions, setTotalQuestions] = useState<number | null>(null);
+  const [dims, setDims] = useState<Stats | null>(null);
+  const totalQuestions = dims?.questions ?? null;
 
   // The landing hands a question over in navigation state. Fired once — a
   // re-render must not re-ask it, and neither must a back-navigation.
@@ -130,7 +131,7 @@ export default function Ask() {
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    getStats().then((s) => setTotalQuestions(s.questions)).catch(() => {});
+    getStats().then(setDims).catch(() => setDims(null));
   }, []);
 
   useEffect(() => {
@@ -159,7 +160,7 @@ export default function Ask() {
       const res = await askChat(text, history);
       setTurns((ts) => ts.map((t) => (t.id === id ? { ...t, response: res, asking: false } : t)));
     } catch (e) {
-      const msg = e instanceof Error ? e.message : "Something went wrong";
+      const msg = archiveError(e);
       setTurns((ts) => ts.map((t) => (t.id === id ? { ...t, error: msg, asking: false } : t)));
     }
   }
@@ -186,27 +187,69 @@ export default function Ask() {
       <div className="page w-full flex-1 pb-40 pt-8">
         <div className="mx-auto max-w-[860px]">
         {empty ? (
-          <div className="flex min-h-[55vh] flex-col items-center justify-center text-center">
-            <div className="icon-badge">
-              <MessageSquareText size={20} weight="regular" />
-            </div>
-            <h1 className="title-page mt-5">Ask the archive</h1>
-            <div className="mt-7 grid w-full max-w-md grid-cols-2 gap-2.5">
-              {EXAMPLES.map(({ icon: Icon, label, q: ex }) => (
-                <button
-                  key={ex}
-                  onClick={() => submit(ex)}
-                  className="card flex flex-col items-start gap-2 px-3.5 py-3 text-left transition-[border-color] duration-150 hover:border-ink-2"
-                >
-                  <Icon size={16} weight="regular" className="text-mark" />
-                  <span className="text-[13px] font-medium leading-snug text-ink">{label}</span>
-                </button>
+          /* At rest, the sheet shows what it is. The centred column of
+             icon-and-label tiles is the arrangement every AI tool ships, and
+             it says nothing before you have asked; a drawing at rest shows its
+             dimensions, so this one does — measured figures in fixed slots,
+             then the openers ruled into the same grid. */
+          <div className="pt-6 pb-4">
+            <h1 className="serif-display text-[clamp(2rem,4vw,2.9rem)] text-ink">
+              What do you need to know?
+            </h1>
+            <p className="serif mt-3 max-w-[54ch] text-[14.5px] text-ink-2">
+              Ask in plain words. Kronos writes SQL over this college's own exam tables,
+              runs it, and shows you both the query and the rows it came back with.
+            </p>
+
+            {/* The drawing's dimension block. Every figure is measured, every
+                slot holds its position whether or not the archive answered. */}
+            <dl className="mt-9 grid grid-cols-2 border-t border-l border-line sm:grid-cols-4">
+              {[
+                ["Questions", dims?.questions],
+                ["Papers", dims?.papers],
+                ["Subjects", dims?.courses],
+                ["Topics", dims?.topics],
+              ].map(([label, value]) => (
+                <div key={label as string} className="border-b border-r border-line px-3 py-2.5">
+                  <dt className="label-cap">{label}</dt>
+                  <dd className="mt-1.5 font-mono text-[15px] tabular-nums leading-none text-ink">
+                    {fmt(value)}
+                  </dd>
+                </div>
               ))}
-            </div>
+            </dl>
+            <p className="draft-caps mt-2">
+              {dims?.year_range
+                ? `Span ${dims.year_range[0]}\u2013${dims.year_range[1]}`
+                : "Span not answered \u2014 the archive is not reachable"}
+            </p>
+
+            <ul className="mt-9 border-t border-line">
+              {EXAMPLES.map(({ icon: Icon, label, q: ex }) => (
+                <li key={ex} className="border-b border-line">
+                  <button
+                    onClick={() => submit(ex)}
+                    className="group flex w-full items-center gap-3 py-3 text-left transition-colors duration-150"
+                  >
+                    <Icon
+                      size={15}
+                      weight="regular"
+                      className="shrink-0 text-ink-2 transition-colors duration-150 group-hover:text-ink"
+                    />
+                    <span className="min-w-0 flex-1 truncate text-[14px] text-ink-2 transition-colors duration-150 group-hover:text-ink">
+                      {label}
+                    </span>
+                    <span className="draft-caps opacity-0 transition-opacity duration-150 group-hover:opacity-100">
+                      Ask
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
           </div>
         ) : (
           <div className="flex flex-col gap-8">
-            {turns.map((t) => {
+            {turns.map((t, i) => {
               const cited = t.response?.citations.length ?? 0;
               const results = t.response?.results ?? [];
               const shown = t.expanded ? results : results.slice(0, CARD_LIMIT);
@@ -216,25 +259,36 @@ export default function Ask() {
 
               return (
                 <div key={t.id} className="flex flex-col gap-3 border-t border-line pt-8 first:border-t-0 first:pt-0">
-                  {/* user message — right-aligned bubble */}
-                  <div className="flex justify-end">
-                    <div className="max-w-[85%] rounded-lg bg-ink px-4 py-2.5 text-[15px] leading-relaxed text-paper">
-                      {t.question}
+                  {/* The question, written on the sheet. A bubble floating to
+                      the right is the category's arrangement and it puts the
+                      thing being asked furthest from the evidence answering
+                      it; here the turn is numbered in the margin the way a
+                      question is numbered on a paper, and the question and its
+                      answer sit in one column. */}
+                  <div className="flex gap-3 sm:gap-5">
+                    <div
+                      aria-hidden
+                      className="draft-dim w-8 shrink-0 pt-[3px] text-right sm:w-10"
+                    >
+                      {String(i + 1).padStart(2, "0")}
                     </div>
+                    <p className="min-w-0 flex-1 text-[17px] font-medium leading-snug text-ink">
+                      {t.question}
+                    </p>
                   </div>
 
                   {/* assistant message */}
-                  <div className="flex gap-3">
-                    <div className="mt-0.5 icon-badge-sm shrink-0">
-                      <MessageSquareText size={14} weight="regular" />
+                  <div className="flex gap-3 sm:gap-5">
+                    {/* The margin rule continues down the answer, so the whole
+                        turn reads as one measured block. */}
+                    <div aria-hidden className="w-8 shrink-0 sm:w-10">
+                      <div className="ml-auto h-full w-px bg-line" />
                     </div>
                     <div className="min-w-0 flex-1">
                       {t.asking && <RetrievalProgress totalQuestions={totalQuestions} />}
 
                       {t.error && (
-                        <p className="py-1.5 text-sm text-mark">
-                          Couldn't reach the archive. {t.error}
-                        </p>
+                        <p className="py-1.5 text-sm text-mark">{t.error}</p>
                       )}
 
                       {!t.asking && t.response?.answer && (
@@ -271,7 +325,7 @@ export default function Ask() {
                           {!t.expanded && results.length > CARD_LIMIT && (
                             <button
                               onClick={() => expand(t.id)}
-                              className="self-start text-xs font-medium text-blueprint hover:underline"
+                              className="self-start text-xs font-medium text-ink-2 transition-colors duration-150 hover:text-ink hover:underline"
                             >
                               Show {results.length - CARD_LIMIT} more
                             </button>
@@ -328,8 +382,12 @@ export default function Ask() {
         value={q}
         onChange={setQ}
         onSubmit={submit}
-        placeholder="ask about a subject — what repeats in thermodynamics?"
-        footnote={`answers grounded in ${totalQuestions?.toLocaleString() ?? "…"} archived questions`}
+        placeholder="Ask Kronos — what repeats in thermodynamics?"
+        footnote={
+          totalQuestions
+            ? `Its brain: ${fmt(totalQuestions)} questions from this college's own papers`
+            : "Every answer is a query you can read, and every row cites the paper it came from"
+        }
       />
     </div>
   );

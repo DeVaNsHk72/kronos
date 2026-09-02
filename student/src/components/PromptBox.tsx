@@ -19,7 +19,7 @@ export default function PromptBox({
   onSubmit,
   disabled,
   footnote,
-  placeholder = "ask about a subject…",
+  placeholder = "Ask about a subject, a unit, a year…",
 }: PromptBoxProps) {
   const ref = useRef<HTMLTextAreaElement>(null);
   const mediaRef = useRef<MediaRecorder | null>(null);
@@ -96,7 +96,9 @@ export default function PromptBox({
     >
       <div className="page">
         <div className="mx-auto max-w-[860px]">
-        <div className="card flex items-end gap-2 px-4 py-3 transition-[border-color] duration-150 ease-out focus-within:border-ink">
+        {/* The thread's own composer: a ruled strip, not a floating pill.
+            Nothing in this world floats. */}
+        <div className="flex items-end gap-2 border border-line bg-paper-2 px-4 py-3 transition-[border-color] duration-150 ease-out focus-within:border-ink">
           <textarea
             ref={ref}
             rows={1}
@@ -116,17 +118,17 @@ export default function PromptBox({
                 ? "Transcribing…"
                 : placeholder
             }
-            className="max-h-40 min-h-[28px] flex-1 resize-none bg-transparent text-[15px] leading-relaxed text-ink outline-none placeholder:text-ink-2/50"
+            className="max-h-40 min-h-[28px] flex-1 resize-none bg-transparent text-[15px] leading-relaxed text-ink outline-none"
           />
           <div className="mb-0.5 flex items-center gap-2">
             <button
               onClick={toggleMic}
               disabled={busy}
               aria-label={recording ? "Stop recording" : "Voice input"}
-              className={`grid h-9 w-9 shrink-0 place-items-center rounded-md transition-[background-color,color,opacity] duration-150 ease-out ${
+              className={`grid h-9 w-9 shrink-0 place-items-center rounded-xs transition-[background-color,color,opacity] duration-150 ease-out ${
                 recording
                   ? "bg-mark text-paper animate-pulse"
-                  : "bg-transparent text-ink-2 hover:text-ink hover:bg-line-2"
+                  : "bg-transparent text-ink-2 hover:bg-line-2 hover:text-ink"
               }`}
             >
               {recording ? (
@@ -142,16 +144,14 @@ export default function PromptBox({
               onClick={send}
               disabled={!hasContent || busy}
               aria-label="Send"
-              className="grid h-9 w-9 shrink-0 place-items-center rounded-md bg-ink text-paper transition-[background-color,opacity] duration-150 ease-out hover:bg-ink-2 disabled:opacity-20"
+              className="btn-primary h-9 w-9 shrink-0 !p-0"
             >
               <ArrowUp size={16} weight="bold" />
             </button>
           </div>
         </div>
         {footnote && (
-          <p className="mt-2 font-mono text-[10px] tracking-wide text-ink-2/60">
-            {footnote}
-          </p>
+          <p className="draft-caps mt-2">{footnote}</p>
         )}
         </div>
       </div>

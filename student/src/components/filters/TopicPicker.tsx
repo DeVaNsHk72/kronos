@@ -15,7 +15,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { getTopics, type TopicGroup } from "@/api";
-import { cn } from "@/lib/utils";
+import { cn, fmt } from "@/lib/utils";
 
 /** Only meaningful once a course is picked. Renders nothing before that. */
 export interface TopicPickerProps {
@@ -46,7 +46,7 @@ export function TopicPicker({ courseCode, value, onPick }: TopicPickerProps) {
           variant="outline"
           size="sm"
           className={cn(
-            "h-9 gap-1.5 rounded-md bg-paper-2 font-normal",
+            "h-9 gap-1.5 rounded-sm bg-paper-2 font-normal",
             active && "border-ink/30",
           )}
         >
@@ -84,7 +84,7 @@ export function TopicPicker({ courseCode, value, onPick }: TopicPickerProps) {
                     />
                     <span className="min-w-0 flex-1 truncate">{t.topic}</span>
                     <span className="font-mono text-[10px] tabular-nums text-ink-2">
-                      {t.count.toLocaleString()}
+                      {fmt(t.count)}
                     </span>
                   </CommandItem>
                 );

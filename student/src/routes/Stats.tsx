@@ -107,13 +107,32 @@ function isStale(lastAsked: number | null, latestYear: number) {
 
 /* ── reaviz theme tokens ──────────────────────────────────────────────── */
 
-const INK = "#16181d";
-const INK2 = "#5a6072";
-const LINE = "#e1dfd8";
-const BLUEPRINT = "#b02c33";
-const PAPER2 = "#fbfaf7";
+/* reaviz needs literal colours, so they are read off the live tokens once per
+   theme rather than frozen into this file. The previous constants here were the
+   single biggest reason the charts drifted away from the rest of the app. */
+function readVar(name: string, fallback: string) {
+  if (typeof window === "undefined") return fallback;
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
+}
 
-const TICK_STYLE = { fill: INK2, fontSize: 11, fontFamily: "Ubuntu Mono, monospace" } as Record<string, unknown>;
+const INK = readVar("--k-ink", "#e9f2fb");
+const INK2 = readVar("--k-ink-2", "#a3bcd4");
+const BLUEPRINT = readVar("--k-mark", "#ff6b4a");
+
+/* Magnitude is one hue stepped by lightness, validated for CVD separation and
+   for contrast against this surface. The accent red stays out of it: on this
+   sheet red means a mark, a citation, or a constraint that failed, and a
+   heatmap wearing it would spend that meaning on every warm cell. */
+const SEQ = [
+  readVar("--k-seq-1", "#3a72a8"),
+  readVar("--k-seq-2", "#5f95c6"),
+  readVar("--k-seq-3", "#8ab3d9"),
+  readVar("--k-seq-4", "#b2cfea"),
+  readVar("--k-seq-5", "#dcebf9"),
+];
+const SEQ_EMPTY = readVar("--k-seq-empty", "#16354f");
+
+const TICK_STYLE = { fill: INK2, fontSize: 10.5, fontFamily: "Martian Mono, ui-monospace, monospace" } as Record<string, unknown>;
 const tickLabel = <LinearXAxisTickLabel {...TICK_STYLE} />;
 const yTickLabel = <LinearYAxisTickLabel {...TICK_STYLE} />;
 
@@ -233,7 +252,7 @@ export default function Stats() {
                       value={query}
                       onChange={(e) => setQuery(e.target.value)}
                       placeholder="Search code or name…"
-                      className="w-full bg-transparent text-sm outline-none placeholder:text-ink-2/70"
+                      className="w-full bg-transparent text-sm outline-none"
                     />
                   </div>
                   <ul className="mt-1 max-h-72 overflow-auto thin-scroll">
@@ -325,7 +344,7 @@ export default function Stats() {
                     <button
                       key={c.course_code}
                       onClick={() => pick(c)}
-                      className="flex items-baseline gap-2 rounded-md border border-line bg-paper-2 px-3.5 py-2.5 text-left transition-[transform,border-color] duration-150 hover:border-ink/25 active:scale-[0.98]"
+                      className="flex items-baseline gap-2 rounded-sm border border-line bg-paper-2 px-3.5 py-2.5 text-left transition-[transform,border-color] duration-150 hover:border-ink/25 active:scale-[0.98]"
                     >
                       <span className="shrink-0 font-mono text-[11px] text-ink">
                         {c.course_code}
@@ -404,7 +423,7 @@ export default function Stats() {
                   <button
                     key={v}
                     onClick={() => setView(v)}
-                    className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
+                    className={`rounded-sm px-2.5 py-1 text-xs font-medium transition-colors ${
                       view === v
                         ? "bg-ink text-paper"
                         : "text-ink-2 hover:text-ink"
@@ -426,13 +445,8 @@ export default function Stats() {
                     data={heatData}
                     series={
                       <HeatmapSeries
-                        colorScheme={[
-                          PAPER2,
-                          "#e2b5b7",
-                          "#c8787c",
-                          BLUEPRINT,
-                        ]}
-                        emptyColor={LINE}
+                        colorScheme={SEQ}
+                        emptyColor={SEQ_EMPTY}
                         cell={
                           <HeatmapCell
                             tooltip={
@@ -444,7 +458,7 @@ export default function Stats() {
                                   return (
                                     <div
                                       style={{
-                                        fontFamily: "Ubuntu, sans-serif",
+                                        fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif",
                                         fontSize: 12,
                                         padding: "4px 8px",
                                       }}
@@ -466,7 +480,7 @@ export default function Stats() {
                           <LinearYAxisTickSeries
                             label={
                               <LinearYAxisTickLabel
-                                {...({ style: { fill: INK, fontSize: 12, fontFamily: "Ubuntu, sans-serif" } } as Record<string, unknown>)}
+                                {...({ style: { fill: INK, fontSize: 12, fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif" } } as Record<string, unknown>)}
                               />
                             }
                           />
@@ -572,7 +586,7 @@ export default function Stats() {
                                   return (
                                     <div
                                       style={{
-                                        fontFamily: "Ubuntu, sans-serif",
+                                        fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif",
                                         fontSize: 12,
                                         padding: "4px 8px",
                                       }}
@@ -631,7 +645,7 @@ export default function Stats() {
                                   return (
                                     <div
                                       style={{
-                                        fontFamily: "Ubuntu, sans-serif",
+                                        fontFamily: "Archivo, ui-sans-serif, system-ui, sans-serif",
                                         fontSize: 12,
                                         padding: "4px 8px",
                                       }}
@@ -663,7 +677,7 @@ export default function Stats() {
                     {data.repeats.map((r) => (
                       <li
                         key={r.text.slice(0, 60) + r.years.join()}
-                        className="flex gap-3 border-l-2 border-mark/50 pl-3"
+                        className="flex gap-3 border-l border-line pl-3"
                       >
                         <span className="mt-0.5 inline-flex shrink-0 items-center gap-1 font-mono text-[11px] font-semibold text-mark">
                           <Repeat size={12} weight="regular" />×{r.n}

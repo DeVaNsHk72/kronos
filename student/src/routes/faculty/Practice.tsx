@@ -22,7 +22,7 @@ type Item = {
  * Nothing here writes course content.
  */
 export default function Practice() {
-  const { subjects } = useSubjects();
+  const { subjects, err: subjectsErr } = useSubjects();
   const [key, setKey] = useState("");
   const [scope, setScope] = useState<"subject" | "unit">("subject");
   const [unit, setUnit] = useState<number | null>(null);
@@ -71,7 +71,7 @@ export default function Practice() {
     <div className="page py-8">
       <div className="mx-auto max-w-[900px]">
       <PageHead title="Practice"
-        right={<SubjectPicker subjects={subjects} value={key} onChange={setKey} />} />
+        right={<SubjectPicker subjects={subjects} value={key} onChange={setKey} failed={!!subjectsErr} />} />
 
       <div className="card flex flex-wrap items-end gap-3 p-3 no-print">
         <label className="flex flex-col gap-1.5">
@@ -141,7 +141,7 @@ export default function Practice() {
                     return (
                       <button key={o} disabled={revealed}
                         onClick={() => setPicked({ ...picked, [it.question_id]: o })}
-                        className={`text-left border rounded-md px-3 py-1.5 text-[13.5px]
+                        className={`text-left border rounded-sm px-3 py-1.5 text-[13.5px]
                                     transition-colors duration-150 ${tone}`}>
                         {o}
                         {revealed && isAnswer && <span className="text-ok ml-2">correct</span>}

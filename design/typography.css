@@ -3,31 +3,44 @@
  * console and one in the student app are the same object, not two that happen
  * to look alike.
  *
- * One family (Ubuntu), one numeric family (Ubuntu Mono), and weight + size
- * doing all the work. The class names are unchanged from the four-family
- * version so no call site had to be rewritten — `.serif` is now simply the
- * reading style, not a different typeface.
+ * One face — Archivo — from 11px to 96px. Where a second typeface would
+ * usually be reached for, the width axis does the work instead: a title block
+ * is condensed because a title block is condensed on a real drawing, not
+ * because it needed a different voice. Martian Mono appears only where the
+ * text was written by a machine (SQL, ids, source paths), which is a change of
+ * author rather than a change of tone.
+ *
+ * Class names are unchanged from the previous world so no call site had to be
+ * rewritten; `.serif` is now the reading style, not a different typeface.
  */
+
+/* The wordmark: drafting caps out of a title block. */
 .wordmark {
-  font-family: var(--k-font-mono);
-  font-weight: 700;
+  font-family: var(--k-font-sans);
+  font-weight: 600;
+  font-stretch: 88%;
   text-transform: uppercase;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.22em;
+  font-feature-settings: "ss01";
 }
 
 /* Content that reads as content — question text, topic names, prose. */
 .serif {
   font-family: var(--k-font-sans);
   font-weight: 400;
-  letter-spacing: -0.005em;
+  letter-spacing: 0;
+  line-height: 1.55;
 }
 
-/* The one heading style. Used at every size; the size carries the emphasis. */
+/* The one heading style. Used at every size; the size carries the emphasis,
+   and the tracking tightens as it grows because a drawn line does. */
 .serif-display {
   font-family: var(--k-font-sans);
   font-weight: 500;
-  letter-spacing: -0.03em;
-  line-height: 1.05;
+  font-stretch: 96%;
+  letter-spacing: -0.028em;
+  line-height: 1.02;
+  text-wrap: balance;
 }
 
 /* Small caption / field label. */
@@ -38,8 +51,47 @@
 }
 
 /* Anything numeric: marks, years, counts, ids. Tabular figures so columns of
-   numbers line up instead of shimmering. */
+   numbers line up instead of shimmering, and so a number never changes
+   position between two answers. */
 .mono {
   font-family: var(--k-font-mono);
   font-variant-numeric: tabular-nums;
+  letter-spacing: -0.04em;
+}
+
+/* ---- the drafting registers ----------------------------------------------
+   Three treatments taken straight off a technical drawing. They are what the
+   width axis exists for. */
+
+/* Title-block text: condensed caps, the way every stamp in the corner of a
+   drawing is set because the box is fixed and the words are not. */
+.draft-caps {
+  font-family: var(--k-font-sans);
+  font-weight: 500;
+  font-stretch: 80%;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 10.5px;
+  line-height: 1;
+  color: var(--k-ink-2);
+}
+
+/* A dimension: the number written along a measured line. Always tabular,
+   always the accent, because on this sheet a measured number is evidence. */
+.draft-dim {
+  font-family: var(--k-font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+  letter-spacing: -0.03em;
+  color: var(--k-mark);
+}
+
+/* A revision note: hand-added to a finished drawing, so it is the one place
+   the system permits an italic. */
+.draft-note {
+  font-family: var(--k-font-sans);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 12.5px;
+  color: var(--k-ink-2);
 }

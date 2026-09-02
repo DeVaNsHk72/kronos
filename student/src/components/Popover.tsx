@@ -40,7 +40,7 @@ export default function Popover({
       <button
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
-        className={`inline-flex max-w-[15rem] items-center gap-1.5 rounded-md border px-3 py-2 text-sm transition-[colors,transform] duration-150 ease-out active:scale-[0.98] ${
+        className={`inline-flex max-w-[15rem] items-center gap-1.5 rounded-sm border px-3 py-2 text-sm transition-[colors,transform] duration-150 ease-out active:scale-[0.98] ${
           active
             ? "border-ink/30 bg-paper-2 text-ink"
             : "border-line bg-paper-2 text-ink-2 hover:border-ink-2/50 hover:text-ink"
@@ -95,7 +95,7 @@ function Panel({
   return (
     <div
       data-mounted={mounted ? "true" : undefined}
-      className={`popover-panel absolute left-0 top-full z-30 mt-1.5 ${width} rounded-md border border-line bg-paper-2 p-1 shadow-lg shadow-ink/5`}
+      className={`popover-panel absolute left-0 top-full z-30 mt-1.5 ${width} rounded-sm border border-line bg-paper-2 p-1 shadow-lg shadow-ink/5`}
     >
       {children(onClose)}
     </div>

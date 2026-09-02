@@ -1,3 +1,4 @@
+import { fmt } from "@/lib/utils";
 import { useCallback, useEffect, useState } from "react";
 import { searchBank, type QueryResult } from "../../facultyApi";
 import { PageHead, SubjectPicker, useSubjects, SqlToggle, Skeleton, Empty }
@@ -13,7 +14,7 @@ type Filters = {
 };
 
 export default function Bank() {
-  const { subjects } = useSubjects();
+  const { subjects, err: subjectsErr } = useSubjects();
   const [key, setKey] = useState("");
   const [f, setF] = useState<Filters>({ sitting: "Main" });
   const [q, setQ] = useState("");
@@ -59,7 +60,7 @@ export default function Bank() {
   return (
     <div className="page py-8">
       <PageHead title="Question bank"
-        right={<SubjectPicker subjects={subjects} value={key} onChange={setKey} />} />
+        right={<SubjectPicker subjects={subjects} value={key} onChange={setKey} failed={!!subjectsErr} />} />
 
       <div className="card flex gap-2 flex-wrap items-center p-3">
         <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search question text…"
@@ -78,7 +79,7 @@ export default function Bank() {
       </div>
 
       <p className="font-mono text-[11px] text-ink-2 my-3">
-        {busy ? "loading…" : `${total.toLocaleString()} questions match`}
+        {busy ? "loading…" : `${fmt(total)} questions match`}
         {total > LIMIT && ` · showing ${page * LIMIT + 1}–${Math.min((page + 1) * LIMIT, total)}`}
       </p>
 

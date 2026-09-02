@@ -1,11 +1,11 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-/* Cream paper ground, one bookish-red accent, and Ubuntu as the only voice —
-   Ubuntu Mono for anything numeric. Palette and type come from the shared
-   design system (design/tokens.css); this block only maps them onto Tailwind
-   v4's theme, which needs the `--color-*` prefix for utilities like
-   `bg-paper` to resolve. */
+/* Cyanotype: a Prussian-blue field, the drawing in white line, and one
+   correction red that means a mark, a citation, or a constraint that failed.
+   Palette and type come from the shared design system (design/tokens.css);
+   this block only maps them onto Tailwind v4's theme, which needs the
+   `--color-*` prefix for utilities like `bg-paper` to resolve. */
 @import "../../design/tokens.css";
 @import "../../design/typography.css";
 
@@ -17,6 +17,12 @@
   --color-ink: var(--k-ink);
   --color-ink-2: var(--k-ink-2);
   --color-mark: var(--k-mark);
+  --color-warn: var(--k-warn);
+  --color-ok: var(--k-ok);
+  /* An alias for the accent, kept only for the citation treatments that were
+     already written against it (the numbered markers in an answer, the
+     source-paper link). It is NOT a second accent and NOT a link colour:
+     anything wearing it is claiming to be evidence. */
   --color-blueprint: var(--k-mark);
 
   --font-editorial: var(--k-font-editorial);
@@ -47,6 +53,32 @@
      input reads as an error state rather than focus. */
   --color-ring: var(--k-ink);
   --radius: var(--k-radius);
+
+  /* MD3 roles, addressable as Tailwind utilities (`bg-surface-container`,
+     `text-on-surface-variant`, `border-outline`) so a component can reach the
+     real ladder instead of overloading the two-ground shorthand. */
+  --color-surface: var(--md-surface);
+  --color-surface-dim: var(--md-surface-dim);
+  --color-surface-bright: var(--md-surface-bright);
+  --color-surface-lowest: var(--md-surface-container-lowest);
+  --color-surface-low: var(--md-surface-container-low);
+  --color-surface-container: var(--md-surface-container);
+  --color-surface-high: var(--md-surface-container-high);
+  --color-surface-highest: var(--md-surface-container-highest);
+  --color-on-surface: var(--md-on-surface);
+  --color-on-surface-variant: var(--md-on-surface-variant);
+  --color-outline: var(--md-outline);
+  --color-outline-variant: var(--md-outline-variant);
+  --color-primary-container: var(--md-primary-container);
+  --color-on-primary-container: var(--md-on-primary-container);
+  --color-secondary-container: var(--md-secondary-container);
+  --color-on-secondary-container: var(--md-on-secondary-container);
+  --color-error-container: var(--md-error-container);
+  --color-on-error-container: var(--md-on-error-container);
+
+  --radius-sm: var(--md-shape-sm);
+  --radius-md: var(--md-shape-md);
+  --radius-lg: var(--md-shape-lg);
 }
 
 html {
@@ -56,11 +88,16 @@ html {
   color-scheme: light dark;
 }
 
+/* The sheet, plain. The ruled grid that used to be painted here was pattern
+   competing with content on every screen at once; the world is carried by the
+   ground colour, the hairline rules that actually divide things, and the type.
+   A drawing sheet is blank until something is drawn on it. */
 body {
   margin: 0;
-  background: var(--color-paper);
+  background-color: var(--color-paper);
   color: var(--color-ink);
   font-family: var(--font-sans);
+  font-optical-sizing: auto;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -86,10 +123,12 @@ body {
   .title-page {
     font-family: var(--font-sans);
     font-weight: 500;
+    font-stretch: 96%;
     letter-spacing: -0.03em;
-    line-height: 1.05;
+    line-height: 1.04;
     font-size: 30px;
     color: var(--color-ink);
+    text-wrap: balance;
   }
   @media (min-width: 640px) {
     .title-page {
@@ -119,18 +158,47 @@ body {
      and they had drifted: three radii, two grounds, four label treatments. */
 
   /* Every bordered box: panels, tiles, filter bars, list rows. */
+  /* A drawn cell, not a floating card: a hairline rule, a barely-raised
+     ground, and corners tight enough to read as ruled. Nothing here casts a
+     shadow by default — on a drawing, depth is a lie. */
   .card {
     border: 1px solid var(--color-line);
     border-radius: var(--radius);
     background: var(--color-paper-2);
   }
 
+  /* The corner ticks of a drawing frame. Applied to a cell that is the
+     subject of the screen — the answer, the generated paper — so the eye
+     knows which cell was drawn on purpose. */
+  .cell-framed {
+    position: relative;
+  }
+  .cell-framed::before,
+  .cell-framed::after {
+    content: "";
+    position: absolute;
+    width: 9px;
+    height: 9px;
+    pointer-events: none;
+    border-color: var(--color-mark);
+  }
+  .cell-framed::before {
+    top: -1px; left: -1px;
+    border-top: 1px solid; border-left: 1px solid;
+  }
+  .cell-framed::after {
+    bottom: -1px; right: -1px;
+    border-bottom: 1px solid; border-right: 1px solid;
+  }
+
   /* Every small uppercase field label and tile caption. */
   .label-cap {
-    font-size: 11px;
+    font-size: 10.5px;
+    font-weight: 500;
+    font-stretch: 80%;
     line-height: 1;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.14em;
     color: var(--color-ink-2);
   }
 
@@ -152,35 +220,58 @@ body {
     gap: 2px;
   }
   .tab {
-    padding: 10px 12px;
+    position: relative;
+    padding: 11px 14px;
     margin-bottom: -1px;
     font-size: 13px;
+    font-weight: 400;
     color: var(--color-ink-2);
-    border-bottom: 2px solid transparent;
+    border-bottom: 1px solid transparent;
     transition: color 150ms var(--k-ease-out), border-color 150ms var(--k-ease-out);
   }
   .tab:hover {
     color: var(--color-ink);
   }
+  /* The active tab is drawn in: a full-weight white rule and a heavier tick
+     beneath it. The tick is ink, not the accent — which position you are at is
+     navigation, and the accent is spent only on evidence. */
   .tab-on {
     color: var(--color-ink);
     font-weight: 500;
-    border-bottom-color: var(--color-mark);
+    border-bottom-color: var(--color-ink);
+  }
+  .tab-on::after {
+    content: "";
+    position: absolute;
+    left: 14px;
+    bottom: -1px;
+    width: 10px;
+    height: 3px;
+    background: var(--color-ink);
   }
 
   /* Every input and select. One height, one radius, one focus treatment. */
+  /* MD3 outlined field, squared to the drawing. Focus thickens the rule
+     rather than colouring it: a red ring on every focused input would read as
+     an error, and red on this sheet means something specific. */
   .field {
     height: 36px;
     padding: 0 10px;
     font-size: 13px;
     color: var(--color-ink);
-    background: var(--color-paper);
+    background: var(--md-surface-container-low);
     border: 1px solid var(--color-line);
-    border-radius: 6px;
-    transition: border-color 150ms var(--k-ease-out);
+    border-radius: var(--md-shape-sm);
+    caret-color: var(--color-mark);
+    transition: border-color 150ms var(--k-ease-out),
+                box-shadow 150ms var(--k-ease-out);
   }
   .field:hover { border-color: var(--color-ink-2); }
-  .field:focus { outline: none; border-color: var(--color-ink); }
+  .field:focus {
+    outline: none;
+    border-color: var(--color-ink);
+    box-shadow: inset 0 0 0 1px var(--color-ink);
+  }
   textarea.field { height: auto; padding: 8px 10px; }
 
   /* Two buttons, and there is no third. */
@@ -194,26 +285,50 @@ body {
     padding: 0 14px;
     font-size: 13px;
     font-weight: 500;
-    border-radius: 6px;
+    border-radius: var(--md-shape-sm);
     white-space: nowrap;
     transition: background-color 150ms var(--k-ease-out),
                 border-color 150ms var(--k-ease-out),
                 opacity 150ms var(--k-ease-out);
   }
+  /* MD3 outlined button. Hover and press are state layers — a tint of the
+     content colour over the container at MD3's own opacities — not a second
+     background colour, which is what keeps every interactive surface in the
+     app behaving identically. */
   .btn {
-    border: 1px solid var(--color-line);
-    background: var(--color-paper-2);
+    position: relative;
+    isolation: isolate;
+    border: 1px solid var(--color-outline);
+    background: transparent;
     color: var(--color-ink);
   }
-  .btn:hover:not(:disabled) { border-color: var(--color-ink-2); }
-  .btn-primary {
-    border: 1px solid var(--color-ink);
-    background: var(--color-ink);
-    color: var(--color-paper);
+  .btn::before,
+  .btn-primary::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: currentColor;
+    opacity: 0;
+    transition: opacity var(--k-dur-press) var(--k-ease-out);
   }
-  .btn-primary:hover:not(:disabled) { background: var(--color-ink-2); border-color: var(--color-ink-2); }
+  .btn:hover:not(:disabled)::before { opacity: var(--md-state-hover); }
+  .btn:active:not(:disabled)::before { opacity: var(--md-state-pressed); }
+
+  /* MD3 filled button. Primary on this sheet is the drafting white, so the
+     main action reads as the one thing actually drawn on the blueprint. */
+  .btn-primary {
+    position: relative;
+    isolation: isolate;
+    border: 1px solid var(--md-primary);
+    background: var(--md-primary);
+    color: var(--md-on-primary);
+  }
+  .btn-primary:hover:not(:disabled)::before { opacity: var(--md-state-hover); }
+  .btn-primary:active:not(:disabled)::before { opacity: var(--md-state-pressed); }
+
   .btn:disabled,
-  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-primary:disabled { opacity: var(--md-state-disabled); cursor: not-allowed; }
 
   /* Every data table. The header row was written four different ways. */
   .table-wrap {
@@ -221,18 +336,27 @@ body {
     border-radius: var(--radius);
     overflow: hidden;
   }
-  .table-wrap table { width: 100%; font-size: 13px; }
+  /* Every quantity in this app sits in a fixed slot. Tabular figures are what
+     make a column of marks a column rather than a shimmer, and what stops a
+     number moving position between two answers. */
+  .table-wrap table {
+    width: 100%;
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+  }
   .table-wrap thead tr {
     text-align: left;
     background: var(--color-paper-2);
   }
   .table-wrap th {
-    padding: 8px 16px;
-    font-size: 11px;
+    padding: 9px 16px;
+    font-size: 10.5px;
     font-weight: 500;
+    font-stretch: 80%;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.14em;
     color: var(--color-ink-2);
+    border-bottom: 1px solid var(--color-line);
   }
   .table-wrap td { padding: 8px 16px; }
   .table-wrap tbody tr { border-top: 1px solid var(--color-line); }
@@ -240,32 +364,40 @@ body {
 
   /* Round backdrop for a foreground icon. 44px is the empty-state size;
      `.icon-badge-sm` is the 28px chat avatar. Both use the accent bg at 10%. */
-  .icon-badge {
-    display: grid;
-    place-items: center;
-    width: 44px;
-    height: 44px;
-    border-radius: 999px;
-    background: color-mix(in srgb, var(--color-mark) 10%, transparent);
-    color: var(--color-mark);
-  }
+  /* A ruled well rather than a soft disc: on a drawing, a symbol sits inside
+     a drawn box. Drawn in ink — these mark empty states and avatars, and an
+     empty state is not a mark, a citation, or a failed constraint. Add
+     `.icon-badge-mark` where the symbol really is one of those three. */
+  .icon-badge,
   .icon-badge-sm {
     display: grid;
     place-items: center;
-    width: 28px;
-    height: 28px;
-    border-radius: 999px;
+    border-radius: var(--md-shape-xs);
+    border: 1px solid var(--color-line);
+    background: var(--color-line-2);
+    color: var(--color-ink-2);
+  }
+  .icon-badge { width: 40px; height: 40px; }
+  .icon-badge-sm { width: 26px; height: 26px; }
+  .icon-badge-mark {
+    border-color: color-mix(in srgb, var(--color-mark) 40%, transparent);
     background: color-mix(in srgb, var(--color-mark) 10%, transparent);
     color: var(--color-mark);
   }
 }
 
+/* An unruled patch of the sheet: used where content needs to sit clear of the
+   background grid without becoming a card. */
 .grid-paper {
   background-color: var(--color-paper-2);
+  background-image: none;
 }
 
 /* THE SIGNATURE — the margin rule from a printed question paper. Content sits
    left of the hairline, the number that matters sits right of it. */
+/* THE SIGNATURE — the margin rule from a printed question paper, now the
+   dimension line of a drawing. Content sits left of the rule, the number that
+   matters sits right of it, and the number is always a measured one. */
 .margin-rule {
   box-shadow: inset 1px 0 0 var(--color-line);
 }
@@ -276,16 +408,52 @@ body {
   color: var(--color-mark);
   font-weight: 500;
   font-variant-numeric: tabular-nums;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.04em;
+  font-feature-settings: "zero";
 }
 
-:where(a, button, input, select):focus-visible {
-  outline: none;
+/* Placeholder text is text: it carries the 4.5:1 floor like any other body
+   copy, and the tinted-down variants that read as "quiet" were failing it at
+   roughly 4:1. One token, used everywhere a placeholder appears. */
+::placeholder {
+  color: var(--color-ink-2);
+  opacity: 1;
+}
+
+/* ---- the surfaces the browser draws --------------------------------------
+   Focus ring, caret, selection and scrollbars ship with defaults that belong
+   to no design system. On a drenched field an unthemed focus ring is the most
+   visible foreign object on the page. */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 2px;
+  border-radius: var(--md-shape-xs);
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--color-blueprint) 30%, transparent);
+  background: color-mix(in srgb, var(--color-mark) 34%, transparent);
+  color: var(--color-ink);
 }
+
+:root {
+  caret-color: var(--color-mark);
+  accent-color: var(--color-mark);
+  scrollbar-color: var(--color-line) transparent;
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar { width: 11px; height: 11px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--color-line);
+  border: 3px solid var(--color-paper);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--color-ink-2); }
+
+/* A link is underlined, and the underline is drawn where a drafter would put
+   it rather than where the browser would. */
+a { text-underline-offset: 0.22em; text-decoration-thickness: 1px; }
 
 .thin-scroll::-webkit-scrollbar {
   width: 6px;
@@ -293,6 +461,7 @@ body {
 }
 .thin-scroll::-webkit-scrollbar-thumb {
   background: var(--color-line);
+  border: none;
   border-radius: 8px;
 }
 .thin-scroll {
@@ -323,10 +492,12 @@ body {
 /* metadata badges — mono, quiet, grouped */
 .badge {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.04em;
   line-height: 1;
-  padding: 3px 6px;
-  border-radius: 3px;
+  padding: 4px 6px;
+  border-radius: var(--md-shape-xs);
   border: 1px solid var(--color-line);
   color: var(--color-ink-2);
   background: var(--color-paper);
@@ -353,8 +524,8 @@ body {
 .chip {
   font-size: 11px;
   line-height: 1;
-  padding: 4px 9px;
-  border-radius: 999px;
+  padding: 5px 9px;
+  border-radius: var(--md-shape-xs);
   border: 1px solid var(--color-line);
   color: var(--color-ink-2);
   background: var(--color-paper);
@@ -373,7 +544,7 @@ body {
   font-size: 12px;
   line-height: 1;
   padding: 5px 6px 5px 10px;
-  border-radius: 999px;
+  border-radius: var(--md-shape-sm);
   border: 1px solid color-mix(in srgb, var(--color-ink) 18%, var(--color-line));
   background: var(--color-paper-2);
   color: var(--color-ink);
@@ -381,10 +552,13 @@ body {
 
 /* An actual highlighter stripe: the bright amber that was too light for text on
    paper is exactly right as ink laid over it. */
+/* A highlighter on a blueprint is the correction pencil, laid over the line
+   rather than replacing it. */
 mark.hl {
-  background: rgba(176, 44, 51, 0.16);
+  background: color-mix(in srgb, var(--color-mark) 24%, transparent);
+  box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--color-mark) 60%, transparent);
   color: var(--color-ink);
-  border-radius: 2px;
+  border-radius: 0;
   padding: 0 2px;
 }
 
@@ -435,9 +609,27 @@ mark.hl {
 /* ---- print: the generated paper, and nothing else ------------------------
    A lecturer prints this for the exam section. Chrome, controls and provenance
    buttons are working aids, not part of the document. */
+/* The blueline print. The screen is the working sheet in Prussian blue; what
+   goes to the exam section is the print of it — white stock, blue line. The
+   inversion is the process, not a concession, so the token layer is switched
+   rather than the colours being overridden one by one. */
 @media print {
+  :root {
+    --k-paper: #ffffff;
+    --k-paper-2: #ffffff;
+    --k-line: #9db8d0;
+    --k-line-2: #eef4fa;
+    --k-ink: #0c2338;
+    --k-ink-2: #445d76;
+    --k-mark: #b3341f;
+  }
   header, nav, aside, .no-print { display: none !important; }
-  body { background: #fff !important; color: #000 !important; }
+  body {
+    background-image: none !important;
+    background-color: var(--k-paper) !important;
+    color: #0c2338 !important;
+  }
+  .cell-framed::before, .cell-framed::after { display: none; }
   .paper-sheet { font-size: 11pt; border: none !important; padding: 0 !important; }
   .paper-sheet section { break-inside: avoid; }
   @page { margin: 18mm 16mm; size: A4; }

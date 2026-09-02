@@ -39,7 +39,7 @@ export default function ChatIntentPanel({
     <div className="mb-3">
       <button
         onClick={() => setOpen((o) => !o)}
-        className="group inline-flex items-center gap-1.5 rounded-md border border-line bg-paper-2 px-3 py-1.5 transition-colors hover:border-ink/25"
+        className="group inline-flex items-center gap-1.5 rounded-sm border border-line bg-paper-2 px-3 py-1.5 transition-colors hover:border-ink/25"
       >
         <span className="serif-note">Understood</span>
         {!open && rows.length > 0 && (
@@ -61,7 +61,7 @@ export default function ChatIntentPanel({
         }`}
       >
         <div className="overflow-hidden">
-          <div className="inline-flex flex-col gap-1 rounded-md border border-line bg-paper-2 px-3 py-2">
+          <div className="inline-flex flex-col gap-1 rounded-sm border border-line bg-paper-2 px-3 py-2">
             <div className="flex flex-wrap gap-x-4 gap-y-1">
               {rows.map(([k, v]) => (
                 <div key={k} className="flex items-baseline gap-1.5 text-xs">

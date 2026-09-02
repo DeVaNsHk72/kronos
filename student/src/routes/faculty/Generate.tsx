@@ -6,7 +6,7 @@ import { PageHead, SubjectPicker, useSubjects, Banner, Skeleton, Empty }
 const BLOOMS = ["remember", "understand", "apply", "analyse", "evaluate"];
 
 export default function Generate() {
-  const { subjects } = useSubjects();
+  const { subjects, err: subjectsErr } = useSubjects();
   const [key, setKey] = useState("");
   const [examType, setExamType] = useState("SEE");
   const [excl, setExcl] = useState(3);
@@ -40,7 +40,7 @@ export default function Generate() {
   return (
     <div className="page py-8">
       <PageHead title="Generate"
-        right={<SubjectPicker subjects={subjects} value={key} onChange={setKey} />} />
+        right={<SubjectPicker subjects={subjects} value={key} onChange={setKey} failed={!!subjectsErr} />} />
 
       <div className="grid lg:grid-cols-[280px_1fr] gap-6 items-start">
         <aside className="card p-4 flex flex-col gap-5 no-print">

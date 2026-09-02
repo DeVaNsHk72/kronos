@@ -36,7 +36,7 @@ export function YearRangePicker({
           variant="outline"
           size="sm"
           className={cn(
-            "h-9 gap-1.5 rounded-md bg-paper-2 font-normal",
+            "h-9 gap-1.5 rounded-sm bg-paper-2 font-normal",
             active && "border-ink/30",
           )}
         >

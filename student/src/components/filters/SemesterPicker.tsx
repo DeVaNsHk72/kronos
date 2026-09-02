@@ -6,7 +6,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
+import { cn, fmt } from "@/lib/utils";
 
 export interface SemesterPickerProps {
   value?: number;
@@ -27,7 +27,7 @@ export function SemesterPicker({ value, counts = {}, onPick }: SemesterPickerPro
           variant="outline"
           size="sm"
           className={cn(
-            "h-9 gap-1.5 rounded-md bg-paper-2 font-normal",
+            "h-9 gap-1.5 rounded-sm bg-paper-2 font-normal",
             active && "border-ink/30",
           )}
         >
@@ -49,9 +49,9 @@ export function SemesterPicker({ value, counts = {}, onPick }: SemesterPickerPro
                   onPick(on ? undefined : s);
                   setOpen(false);
                 }}
-                title={`${n.toLocaleString()} questions`}
+                title={`${fmt(n)} questions`}
                 className={cn(
-                  "rounded-md border py-2 text-sm transition-colors disabled:opacity-30",
+                  "rounded-sm border py-2 text-sm transition-colors disabled:opacity-30",
                   on
                     ? "border-mark bg-mark text-paper"
                     : "border-line text-ink-2 hover:border-ink-2/50 hover:text-ink",

@@ -14,7 +14,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
+import { cn, fmt } from "@/lib/utils";
 
 /** Popover + Command combobox for enum facets. Feeds it `[value, count]` pairs
  *  (from `/api/facets`) and the currently-selected value. Selecting the same
@@ -48,7 +48,7 @@ export function FacetPicker({
           variant="outline"
           size="sm"
           className={cn(
-            "h-9 gap-1.5 rounded-md bg-paper-2 font-normal",
+            "h-9 gap-1.5 rounded-sm bg-paper-2 font-normal",
             active && "border-ink/30",
           )}
         >
@@ -89,7 +89,7 @@ export function FacetPicker({
                       {raw.replace(/_/g, " ")}
                     </span>
                     <span className="font-mono text-[10px] tabular-nums text-ink-2">
-                      {count.toLocaleString()}
+                      {fmt(count)}
                     </span>
                   </CommandItem>
                 );

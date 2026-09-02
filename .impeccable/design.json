@@ -1,0 +1,215 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-03T00:00:00Z",
+  "title": "Design System: Kronos",
+  "extensions": {
+    "colorMeta": {
+      "paper": { "role": "neutral", "displayName": "Cyanotype Field", "canonical": "#0e2740", "tonalRamp": ["#000000", "#071726", "#0e2740", "#16395b", "#1f4c78", "#2a6096", "#4a7fb4", "#6e9dcb", "#9bbfe0", "#c9dcef"] },
+      "paper-2": { "role": "neutral", "displayName": "Raised Field", "canonical": "#102c46", "tonalRamp": ["#071726", "#0c2338", "#102c46", "#16354f", "#1d4062", "#2c4a68", "#55708d", "#a3bcd4", "#c9dcef", "#e3edf7"] },
+      "line": { "role": "neutral", "displayName": "Drafting Rule", "canonical": "#2c4a68", "tonalRamp": ["#0d1319", "#182029", "#2a343e", "#3e4954", "#57626d", "#717c88", "#8b96a2", "#a6b1bd", "#c2cdd9", "#dfe9f5"] },
+      "ink": { "role": "neutral", "displayName": "Sheet Ink", "canonical": "#e9f2fb", "tonalRamp": ["#071726", "#0e2740", "#16395b", "#1f4c78", "#2a6096", "#4a7fb4", "#6e9dcb", "#9bbfe0", "#c9dcef", "#f6fafd"] },
+      "ink-2": { "role": "neutral", "displayName": "Ink Half-Tone", "canonical": "#a3bcd4", "tonalRamp": ["#0d1319", "#182029", "#2a343e", "#3e4954", "#57626d", "#717c88", "#8b96a2", "#a6b1bd", "#c2cdd9", "#f7fafd"] },
+      "primary": { "role": "primary", "displayName": "Drafting White", "canonical": "#eaf4ff", "tonalRamp": ["#000000", "#071726", "#0e2740", "#16395b", "#1f4c78", "#2a6096", "#4a7fb4", "#6e9dcb", "#9bbfe0", "#e3edf7"], "note": "MD3 primary re-cast as the drawn line: on a drenched blue field, white is the product's own colour." },
+      "secondary": { "role": "secondary", "displayName": "Faded Blueprint", "canonical": "#a9c0d6" },
+      "mark": { "role": "error", "displayName": "Correction Red", "canonical": "#ff6b4a", "printValue": "#b3341f", "tonalRamp": ["#5a1e12", "#7d2b1c", "#b3341f", "#d2452c", "#e4664d", "#ff6b4a", "#ffb4a2", "#ffdad2"], "note": "Error, citation and failed-constraint as one semantic family. Never decoration." },
+      "ok": { "role": "status", "displayName": "Verified Green", "canonical": "#7fd6a0", "printValue": "#276b47" },
+      "warn": { "role": "status", "displayName": "Caution Amber", "canonical": "#f0b429", "printValue": "#8a5a12" },
+      "seq-1": { "role": "chart", "displayName": "Sequential Ramp", "canonical": "#3a72a8", "tonalRamp": ["#24557f", "#3a72a8", "#5f95c6", "#8ab3d9", "#b2cfea", "#dcebf9"], "note": "Ordinal only. --k-seq-min #24557f is present-but-below-step; --k-seq-empty #16354f is absent." }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "The landing headline, set on the exposed field. Line breaks authored, never left to the measure." },
+      "headline": { "displayName": "Page Title", "purpose": "One per screen (.title-page). Every screen picks this one." },
+      "title": { "displayName": "Section Title", "purpose": "The heading on a panel (.title-section). There is no third heading size." },
+      "body": { "displayName": "Reading", "purpose": "Question text, topic names, prose (.serif). Held at 52-54ch." },
+      "label": { "displayName": "Title-Block Caps", "purpose": "Every field label, tile caption and table header (.label-cap / .draft-caps), at width 80." },
+      "wordmark": { "displayName": "Wordmark", "purpose": "Drafting caps out of a title block. Kronos, and nothing else." },
+      "mono": { "displayName": "Machine Output", "purpose": "Martian Mono: SQL, ids, source paths, and every tabular figure. A change of author, not a change of tone." },
+      "note": { "displayName": "Revision Note", "purpose": ".draft-note - hand-added to a finished drawing, and the one place an italic is permitted." }
+    },
+    "shadows": [
+      { "name": "elev-0", "value": "none", "purpose": "The default. Cards, panels, tiles and rails never cast a shadow; depth is the surface ladder." },
+      { "name": "elev-1", "value": "0 1px 2px rgba(2,10,20,0.30), 0 1px 3px 1px rgba(2,10,20,0.15)", "purpose": "A resting overlay such as a popover panel." },
+      { "name": "elev-2", "value": "0 1px 2px rgba(2,10,20,0.30), 0 2px 6px 2px rgba(2,10,20,0.15)", "purpose": "A raised overlay opened over content." },
+      { "name": "elev-3", "value": "0 4px 8px 3px rgba(2,10,20,0.15), 0 1px 3px rgba(2,10,20,0.30)", "purpose": "A modal or drawer that owns the screen. Halved in opacity on white stock." }
+    ],
+    "stateLayers": [
+      { "name": "hover", "value": "0.08", "purpose": "A tint of the content colour over the container, never a swapped background." },
+      { "name": "focus", "value": "0.10" },
+      { "name": "pressed", "value": "0.10" },
+      { "name": "dragged", "value": "0.16" },
+      { "name": "disabled", "value": "0.38" }
+    ],
+    "motion": [
+      { "name": "k-ease-out", "value": "cubic-bezier(0.23, 1, 0.32, 1)", "purpose": "Entering and exiting. The default for every state transition." },
+      { "name": "k-ease-in-out", "value": "cubic-bezier(0.77, 0, 0.175, 1)", "purpose": "Moving on screen." },
+      { "name": "k-ease-emph", "value": "cubic-bezier(0.05, 0.7, 0.1, 1)", "purpose": "MD3 emphasized-decelerate, for the one authored moment per surface." },
+      { "name": "k-dur-press", "value": "140ms", "purpose": "Button press feedback." },
+      { "name": "k-dur-pop", "value": "180ms", "purpose": "Tooltips, small popovers, disclosures." },
+      { "name": "k-dur-panel", "value": "220ms", "purpose": "Dropdowns, panels, revealed content, k-rise." },
+      { "name": "k-dur-draw", "value": "620ms", "purpose": "A line drawing itself in." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px", "note": "The drafting rail becomes a fixed 228px margin at this width." }
+    ],
+    "containers": [
+      { "name": "page", "value": "max-width 1400px, padding-inline 24px" },
+      { "name": "thread", "value": "max-width 860px" },
+      { "name": "composer", "value": "max-width 880px" },
+      { "name": "reading", "value": "52-54ch" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one filled action. Drafting white on the blue field, so the main action reads as the thing actually drawn on the blueprint.",
+      "html": "<button class=\"ds-btn-primary\">Ask the archive</button>",
+      "css": ".ds-btn-primary { position: relative; isolation: isolate; display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 36px; padding: 0 14px; font-family: var(--k-font-sans, Archivo, system-ui, sans-serif); font-size: 13px; font-weight: 500; white-space: nowrap; border: 1px solid var(--md-primary, #eaf4ff); border-radius: 6px; background: var(--md-primary, #eaf4ff); color: var(--md-on-primary, #0b2137); cursor: pointer; transition: background-color 150ms cubic-bezier(.23,1,.32,1), border-color 150ms cubic-bezier(.23,1,.32,1), opacity 150ms cubic-bezier(.23,1,.32,1); } .ds-btn-primary::before { content: \"\"; position: absolute; inset: 0; z-index: -1; background: currentColor; opacity: 0; transition: opacity 140ms cubic-bezier(.23,1,.32,1); } .ds-btn-primary:hover:not(:disabled)::before { opacity: 0.08; } .ds-btn-primary:active:not(:disabled)::before { opacity: 0.10; } .ds-btn-primary:focus-visible { outline: 2px solid var(--k-ink, #e9f2fb); outline-offset: 2px; border-radius: 2px; } .ds-btn-primary:disabled { opacity: 0.38; cursor: not-allowed; }"
+    },
+    {
+      "name": "Outlined Button",
+      "kind": "button",
+      "refersTo": "button-outlined",
+      "description": "The secondary action, and there is no third. A drawn outline on the sheet with an MD3 state layer.",
+      "html": "<button class=\"ds-btn\">Show the SQL</button>",
+      "css": ".ds-btn { position: relative; isolation: isolate; display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 36px; padding: 0 14px; font-family: var(--k-font-sans, Archivo, system-ui, sans-serif); font-size: 13px; font-weight: 500; white-space: nowrap; border: 1px solid var(--md-outline, #55708d); border-radius: 6px; background: transparent; color: var(--k-ink, #e9f2fb); cursor: pointer; transition: border-color 150ms cubic-bezier(.23,1,.32,1); } .ds-btn::before { content: \"\"; position: absolute; inset: 0; z-index: -1; background: currentColor; opacity: 0; transition: opacity 140ms cubic-bezier(.23,1,.32,1); } .ds-btn:hover:not(:disabled)::before { opacity: 0.08; } .ds-btn:active:not(:disabled)::before { opacity: 0.10; } .ds-btn:focus-visible { outline: 2px solid var(--k-ink, #e9f2fb); outline-offset: 2px; } .ds-btn:disabled { opacity: 0.38; cursor: not-allowed; }"
+    },
+    {
+      "name": "Field",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "Every input and select. One height, one radius, one focus treatment: the rule thickens to ink rather than colouring, because red on this sheet means something specific. Caret is the accent.",
+      "html": "<input class=\"ds-field\" placeholder=\"Ask about a subject, a unit, a year…\" aria-label=\"Ask the archive\">",
+      "css": ".ds-field { height: 36px; width: 280px; max-width: 100%; padding: 0 10px; font-family: var(--k-font-sans, Archivo, system-ui, sans-serif); font-size: 13px; color: var(--k-ink, #e9f2fb); background: var(--md-surface-container-low, #0c2338); border: 1px solid var(--k-line, #2c4a68); border-radius: 4px; caret-color: var(--k-mark, #ff6b4a); transition: border-color 150ms cubic-bezier(.23,1,.32,1), box-shadow 150ms cubic-bezier(.23,1,.32,1); } .ds-field::placeholder { color: var(--k-ink-2, #a3bcd4); opacity: 1; } .ds-field:hover { border-color: var(--k-ink-2, #a3bcd4); } .ds-field:focus { outline: none; border-color: var(--k-ink, #e9f2fb); box-shadow: inset 0 0 0 1px var(--k-ink, #e9f2fb); }"
+    },
+    {
+      "name": "Subject Picker",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "A native select with its platform chrome suppressed and the caret drawn in, because a platform arrow is the one control belonging to no design system. Carries three distinct states: in flight, empty, and failed.",
+      "html": "<div class=\"ds-picker\"><select class=\"ds-field ds-picker-select\" aria-label=\"Subject\"><option>Sem 3 · Operating Systems</option><option>Sem 4 · Cloud Computing</option></select><svg class=\"ds-picker-caret\" width=\"13\" height=\"13\" viewBox=\"0 0 256 256\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M213.66 101.66l-80 80a8 8 0 0 1-11.32 0l-80-80A8 8 0 0 1 53.66 90.34L128 164.69l74.34-74.35a8 8 0 0 1 11.32 11.32Z\"/></svg></div>",
+      "css": ".ds-picker { position: relative; width: 280px; max-width: 100%; } .ds-picker-select { width: 100%; appearance: none; -webkit-appearance: none; background: var(--k-paper-2, #102c46); padding-right: 32px; } .ds-picker-select:disabled { opacity: 0.6; cursor: not-allowed; } .ds-picker-caret { pointer-events: none; position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--k-ink-2, #a3bcd4); }"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "A drawn cell, not a floating card: a hairline rule, a barely-raised ground, corners tight enough to read as ruled, and no shadow at rest.",
+      "html": "<section class=\"ds-card\"><h2 class=\"ds-card-title\">Marks by unit</h2><p class=\"ds-card-body\">Nine years of Cloud Computing, ranked by marks carried.</p></section>",
+      "css": ".ds-card { border: 1px solid var(--k-line, #2c4a68); border-radius: 4px; background: var(--k-paper-2, #102c46); padding: 20px; font-family: var(--k-font-sans, Archivo, system-ui, sans-serif); } .ds-card-title { margin: 0 0 16px; font-size: 20px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.15; color: var(--k-ink, #e9f2fb); } .ds-card-body { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--k-ink-2, #a3bcd4); }"
+    },
+    {
+      "name": "Framed Cell",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "The cell that is the subject of the screen — the answer, the generated paper. Corner ticks in the accent, borrowed from a drawing frame, so the eye knows which cell was drawn on purpose. Suppressed in print.",
+      "html": "<div class=\"ds-cell-framed\"><p class=\"ds-cell-body\">Unit 3 carries 24% of all marks across nine years.</p></div>",
+      "css": ".ds-cell-framed { position: relative; border: 1px solid var(--k-line, #2c4a68); border-radius: 4px; background: var(--k-paper-2, #102c46); padding: 20px; } .ds-cell-framed::before, .ds-cell-framed::after { content: \"\"; position: absolute; width: 9px; height: 9px; pointer-events: none; border-color: var(--k-mark, #ff6b4a); } .ds-cell-framed::before { top: -1px; left: -1px; border-top: 1px solid; border-left: 1px solid; } .ds-cell-framed::after { bottom: -1px; right: -1px; border-bottom: 1px solid; border-right: 1px solid; } .ds-cell-body { margin: 0; font-family: var(--k-font-sans, Archivo, system-ui, sans-serif); font-size: 15px; line-height: 1.55; color: var(--k-ink, #e9f2fb); }"
+    },
+    {
+      "name": "Tab Strip",
+      "kind": "nav",
+      "refersTo": "tab",
+      "description": "Every horizontal nav in the app. The active tab is drawn in with a full-weight ink rule and a heavier tick beneath its left edge — ink, not the accent, because position is navigation and the accent is spent only on evidence.",
+      "html": "<nav class=\"ds-tabstrip\"><a class=\"ds-tab ds-tab-on\" href=\"#\">Overview</a><a class=\"ds-tab\" href=\"#\">Generate</a><a class=\"ds-tab\" href=\"#\">Bank</a></nav>",
+      "css": ".ds-tabstrip { display: flex; flex-wrap: wrap; gap: 2px; border-bottom: 1px solid var(--k-line, #2c4a68); font-family: var(--k-font-sans, Archivo, system-ui, sans-serif); } .ds-tab { position: relative; padding: 11px 14px; margin-bottom: -1px; font-size: 13px; font-weight: 400; text-decoration: none; color: var(--k-ink-2, #a3bcd4); border-bottom: 1px solid transparent; transition: color 150ms cubic-bezier(.23,1,.32,1), border-color 150ms cubic-bezier(.23,1,.32,1); } .ds-tab:hover { color: var(--k-ink, #e9f2fb); } .ds-tab-on { color: var(--k-ink, #e9f2fb); font-weight: 500; border-bottom-color: var(--k-ink, #e9f2fb); } .ds-tab-on::after { content: \"\"; position: absolute; left: 14px; bottom: -1px; width: 10px; height: 3px; background: var(--k-ink, #e9f2fb); } .ds-tab:focus-visible { outline: 2px solid var(--k-ink, #e9f2fb); outline-offset: 2px; }"
+    },
+    {
+      "name": "Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "A follow-up refinement offered under an answer. Quiet at rest, raised toward ink on hover.",
+      "html": "<button class=\"ds-chip\">Main exams only</button> <button class=\"ds-chip ds-chip-topic\">Virtualization</button>",
+      "css": ".ds-chip { font-family: var(--k-font-sans, Archivo, system-ui, sans-serif); font-size: 11px; line-height: 1; padding: 5px 9px; border-radius: 2px; border: 1px solid var(--k-line, #2c4a68); color: var(--k-ink-2, #a3bcd4); background: var(--k-paper, #0e2740); white-space: nowrap; cursor: pointer; transition: color 150ms cubic-bezier(.23,1,.32,1), border-color 150ms cubic-bezier(.23,1,.32,1); } .ds-chip:hover { color: var(--k-ink, #e9f2fb); border-color: color-mix(in srgb, var(--k-ink-2, #a3bcd4) 50%, transparent); } .ds-chip-topic { color: var(--k-ink, #e9f2fb); background: var(--k-paper-2, #102c46); border-color: color-mix(in srgb, var(--k-ink, #e9f2fb) 20%, var(--k-line, #2c4a68)); } .ds-chip:focus-visible { outline: 2px solid var(--k-ink, #e9f2fb); outline-offset: 2px; }"
+    },
+    {
+      "name": "Dimension Block",
+      "kind": "custom",
+      "refersTo": "tile",
+      "description": "The title block's figures, ruled into one measured strip rather than laid out as cards. The block owns the outer top and left rules; each cell draws only its own bottom and right. An unanswered slot prints an em-dash and holds its position.",
+      "html": "<dl class=\"ds-tilerow\"><div class=\"ds-tile\"><dt class=\"ds-tile-label\">Questions</dt><dd class=\"ds-tile-value\">15,888</dd></div><div class=\"ds-tile\"><dt class=\"ds-tile-label\">Papers</dt><dd class=\"ds-tile-value\">10,623</dd></div><div class=\"ds-tile\"><dt class=\"ds-tile-label\">Subjects</dt><dd class=\"ds-tile-value\">30</dd></div><div class=\"ds-tile\"><dt class=\"ds-tile-label\">Topics</dt><dd class=\"ds-tile-value\">—</dd></div></dl>",
+      "css": ".ds-tilerow { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0; border-top: 1px solid var(--k-line, #2c4a68); border-left: 1px solid var(--k-line, #2c4a68); font-family: var(--k-font-sans, Archivo, system-ui, sans-serif); } .ds-tile { border-bottom: 1px solid var(--k-line, #2c4a68); border-right: 1px solid var(--k-line, #2c4a68); padding: 10px 12px; } .ds-tile-label { font-size: 10.5px; font-weight: 500; font-stretch: 80%; line-height: 1; text-transform: uppercase; letter-spacing: 0.14em; color: var(--k-ink-2, #a3bcd4); } .ds-tile-value { margin: 6px 0 0; font-family: var(--k-font-mono, \"Martian Mono\", ui-monospace, monospace); font-size: 15px; font-variant-numeric: tabular-nums; letter-spacing: -0.04em; line-height: 1; color: var(--k-ink, #e9f2fb); }"
+    },
+    {
+      "name": "Margin Rule",
+      "kind": "custom",
+      "refersTo": "card",
+      "description": "The signature: the margin rule from a printed question paper, read as the dimension line of a drawing. Content sits left of the rule, the measured number sits right of it, and the number is always evidence.",
+      "html": "<div class=\"ds-margin-row\"><p class=\"ds-margin-body\">Explain Type-1 and Type-2 hypervisors with a neat diagram.</p><span class=\"ds-mark\">08</span></div>",
+      "css": ".ds-margin-row { display: flex; align-items: flex-start; gap: 16px; padding: 10px 0 10px 16px; box-shadow: inset 1px 0 0 var(--k-line, #2c4a68); font-family: var(--k-font-sans, Archivo, system-ui, sans-serif); } .ds-margin-body { margin: 0; flex: 1 1 auto; min-width: 0; font-size: 15px; line-height: 1.55; color: var(--k-ink, #e9f2fb); } .ds-mark { flex: 0 0 auto; font-family: var(--k-font-mono, \"Martian Mono\", ui-monospace, monospace); font-weight: 500; font-size: 13px; font-variant-numeric: tabular-nums; letter-spacing: -0.04em; font-feature-settings: \"zero\"; color: var(--k-mark, #ff6b4a); }"
+    },
+    {
+      "name": "Disclosure (show the SQL)",
+      "kind": "custom",
+      "refersTo": "card",
+      "description": "Every number can show the statement that produced it. Opens by animating grid-template-rows 0fr to 1fr, so a panel reveals without knowing its own height.",
+      "html": "<div class=\"ds-disclosure-wrap\"><button class=\"ds-disclosure-trigger\" onclick=\"var p=this.nextElementSibling;p.dataset.open=p.dataset.open==='true'?'false':'true'\">show the sql genie wrote</button><div class=\"ds-disclosure\" data-open=\"false\"><div><pre class=\"ds-sql\">SELECT unit, SUM(marks) AS marks\nFROM fact_question\nWHERE subject_key = 'cloud_computing'\nGROUP BY unit ORDER BY marks DESC</pre></div></div></div>",
+      "css": ".ds-disclosure-wrap { font-family: var(--k-font-sans, Archivo, system-ui, sans-serif); } .ds-disclosure-trigger { font-family: var(--k-font-mono, \"Martian Mono\", ui-monospace, monospace); font-size: 10px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--k-ink-2, #a3bcd4); background: none; border: 0; padding: 0; cursor: pointer; transition: color 150ms cubic-bezier(.23,1,.32,1); } .ds-disclosure-trigger:hover { color: var(--k-mark, #ff6b4a); } .ds-disclosure { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows 220ms cubic-bezier(.23,1,.32,1), opacity 220ms cubic-bezier(.23,1,.32,1); } .ds-disclosure[data-open=\"true\"] { grid-template-rows: 1fr; opacity: 1; } .ds-disclosure > * { overflow: hidden; } .ds-sql { margin: 8px 0 0; padding: 12px; border: 1px solid var(--k-line, #2c4a68); border-radius: 4px; background: var(--k-paper, #0e2740); font-family: var(--k-font-mono, \"Martian Mono\", ui-monospace, monospace); font-size: 11px; line-height: 1.6; color: var(--k-ink-2, #a3bcd4); overflow-x: auto; white-space: pre; }"
+    },
+    {
+      "name": "Global Composer",
+      "kind": "custom",
+      "refersTo": "field",
+      "description": "The agent reachable from every screen, drawn as the sheet's bottom margin: a ruled strip the width of the content column with the caret in the accent. Not a floating pill, because nothing in this world floats.",
+      "html": "<div class=\"ds-composer\"><svg width=\"15\" height=\"15\" viewBox=\"0 0 256 256\" fill=\"currentColor\" aria-hidden=\"true\" class=\"ds-composer-icon\"><path d=\"M208 144a15.78 15.78 0 0 1-10.42 14.94l-51.65 19-19 51.61a15.92 15.92 0 0 1-29.88 0L78 178l-51.62-19a15.92 15.92 0 0 1 0-29.88l51.65-19 19-51.61a15.92 15.92 0 0 1 29.88 0l19 51.65 51.61 19A15.78 15.78 0 0 1 208 144Z\"/></svg><input class=\"ds-composer-input\" placeholder=\"Ask the archive — it answers in SQL you can read\" aria-label=\"Ask the archive\"><kbd class=\"ds-kbd\">/</kbd><button class=\"ds-composer-send\" aria-label=\"Ask\"><svg width=\"15\" height=\"15\" viewBox=\"0 0 256 256\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M205.66 117.66a8 8 0 0 1-11.32 0L136 59.31V216a8 8 0 0 1-16 0V59.31l-58.34 58.35a8 8 0 0 1-11.32-11.32l72-72a8 8 0 0 1 11.32 0l72 72a8 8 0 0 1 0 11.32Z\"/></svg></button></div>",
+      "css": ".ds-composer { display: flex; align-items: center; gap: 8px; max-width: 880px; padding: 8px 12px; border: 1px solid var(--k-line, #2c4a68); background: var(--k-paper-2, #102c46); font-family: var(--k-font-sans, Archivo, system-ui, sans-serif); transition: border-color 150ms cubic-bezier(.23,1,.32,1); } .ds-composer:focus-within { border-color: var(--k-ink, #e9f2fb); } .ds-composer-icon { flex: 0 0 auto; color: var(--k-ink-2, #a3bcd4); } .ds-composer-input { flex: 1 1 auto; min-width: 0; background: transparent; border: 0; outline: none; font-size: 14px; color: var(--k-ink, #e9f2fb); caret-color: var(--k-mark, #ff6b4a); } .ds-composer-input::placeholder { color: var(--k-ink-2, #a3bcd4); opacity: 1; } .ds-kbd { font-size: 10.5px; font-weight: 500; font-stretch: 80%; text-transform: uppercase; letter-spacing: 0.14em; line-height: 1; color: var(--k-ink-2, #a3bcd4); border: 1px solid var(--k-line, #2c4a68); padding: 4px 6px; user-select: none; } .ds-composer-send { position: relative; isolation: isolate; display: grid; place-items: center; flex: 0 0 auto; width: 32px; height: 32px; border: 1px solid var(--md-primary, #eaf4ff); border-radius: 6px; background: var(--md-primary, #eaf4ff); color: var(--md-on-primary, #0b2137); cursor: pointer; } .ds-composer-send::before { content: \"\"; position: absolute; inset: 0; z-index: -1; background: currentColor; opacity: 0; transition: opacity 140ms cubic-bezier(.23,1,.32,1); } .ds-composer-send:hover::before { opacity: 0.08; } .ds-composer-send:active::before { opacity: 0.10; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Blueprint",
+    "overview": "Kronos is a cyanotype. A question paper's blueprint — the unit × marks × CO matrix that a student and a lecturer already argue over — is a Prussian-blue field with the drawing in white line, and the only other ink on it is the red an examiner corrects with. The app is the working sheet; anything that goes to paper is the blueline print of it. That is not a light/dark toggle dressed as a metaphor: in this process the working surface and the printed artifact genuinely differ, so the two schemes are two materials, not two moods.\n\nUnderneath, the system is Material Design 3 taken as tokens rather than as a component library: a full tonal ramp per key colour seeded on Prussian blue (#16395b), MD3's surface-container hierarchy, state layers at MD3's own opacities, and MD3's shape scale — all as CSS custom properties over Tailwind v4, so no value is written twice and no second component library was added. MD3's primary role is deliberately re-cast: on a drenched blue field the drafting white is what reads as the product's own colour, so --md-primary is #eaf4ff and a lighter blue would have vanished into the ground.\n\nThe arrangement is ruled, never floating. Every bordered box is a drawn cell with a hairline rule and a barely-raised ground; nothing casts a shadow at rest, because on a drawing depth is a lie. The body itself carries the grid — 8px minor and 64px major rules, fixed-attachment — so panels align to the sheet rather than stacking on top of it. The system explicitly refuses the category arrangement it was measured against: no gray thread rail, no centred bubble column, no evidence demoted to cards beneath an answer. Navigation lives in the margin of the drawing with a title block stamped in its corner, and the figures in that block are real.",
+    "keyCharacteristics": [
+      "Prussian-blue field owns the viewport; the drawing is white line on it.",
+      "One correction red (--k-mark), spent only on a mark, a citation, or a failed constraint.",
+      "One typeface — Archivo — from 10.5px to 96px, its width axis carrying register.",
+      "Martian Mono only where the text is literally machine output.",
+      "Ruled cells with hairline borders; a 4px radius, and mostly none at all.",
+      "Every quantity sits in a fixed tabular slot and prints an em-dash rather than collapsing.",
+      "Print inverts the token layer to white stock and blue line — never per-element overrides."
+    ],
+    "rules": [
+      { "name": "The Evidence Red Rule", "body": "Red means a mark, a citation, or a failed constraint. It is never decoration, never a link colour, never a brand flourish, and never a chart series. In a system whose whole value is traceability, the colour that signals evidence cannot also signal nothing.", "section": "colors" },
+      { "name": "The Ordinal Ramp Rule", "body": "Ordered series take the sequential ramp, stepped by magnitude. Categorical hue cycling is banned — a palette that wraps around tells the reader unit 6 is unit 1 again. Series past the ramp's length fold into one labelled band; they are never dropped and never given an invented hue.", "section": "colors" },
+      { "name": "The Reserved Meaning Rule", "body": "--k-ok, --k-warn and the accent are status, not palette. A series wearing a status colour steals a meaning the app needs elsewhere.", "section": "colors" },
+      { "name": "The One Material Rule", "body": "Neutrals are tinted toward the seed, not gray. Anything truly gray on this sheet reads as a foreign object pasted onto the drawing.", "section": "colors" },
+      { "name": "The One Face Rule", "body": "Archivo alone, 10.5px to 96px. Size and width carry register; a second display face is a costume. Martian Mono is admitted only where the text is literally machine output.", "section": "typography" },
+      { "name": "The Width-Not-Weight Rule", "body": "When a register needs to change — a stamp, a title block, a display line — move the width axis (80 / 88 / 96) before reaching for weight. Weight is too blunt for a drawing.", "section": "typography" },
+      { "name": "The Two Headings Rule", "body": "Every screen has one .title-page and as many .title-sections as it has panels. A third heading size is a drift, not a need.", "section": "typography" },
+      { "name": "The Tabular Figure Rule", "body": "Every number is font-variant-numeric: tabular-nums, so a figure never changes position between two answers.", "section": "typography" },
+      { "name": "The One Gutter Rule", "body": "Everything on a screen sits on .page. A panel that insets itself differently from the one above it breaks the drawing.", "section": "layout" },
+      { "name": "The Fixed Slot Rule", "body": "Every quantity lives in a fixed tabular slot and prints an em-dash when the archive has not answered. Columns do not move when an answer arrives, and a missing figure is stated rather than hidden by collapsing its row.", "section": "layout" },
+      { "name": "The No-Float Rule", "body": "Nothing in this world floats. Surfaces are ruled onto the sheet; elevation is reserved for an overlay that is genuinely above it.", "section": "elevation" },
+      { "name": "The State-Layer Rule", "body": "Hover and press are a tint of the content colour at MD3's opacities, applied through a ::before at z-index -1 on an isolated stacking context — never a swapped background colour.", "section": "elevation" },
+      { "name": "The Ruled-Not-Rounded Rule", "body": "4px is the ceiling for content surfaces and 2px is the common case. A pill shape is reserved for the scrollbar thumb.", "section": "shapes" },
+      { "name": "The Hairline Rule", "body": "Structure is one 1px line in the rule colour. Two-tone borders, inner glows and double rules belong to a different material.", "section": "shapes" }
+    ],
+    "dos": [
+      "Do spend red only on a mark, a citation, or a failed constraint. If it is not one of those three, it is ink.",
+      "Do give every quantity a fixed tabular slot and print an em-dash when there is no value, so columns hold their position whether or not the archive answered.",
+      "Do use the sequential ramp (--k-seq-1..5) for ordered series, and fold anything past it into one labelled band.",
+      "Do distinguish present but below the step (--k-seq-min) from absent (--k-seq-empty). They are different facts.",
+      "Do build every bordered box from .card / Panel, every label from .label-cap, every control from .field / .btn / .btn-primary.",
+      "Do express hover and press as MD3 state layers at 0.08 / 0.10 over the container.",
+      "Do move the width axis (80 / 88 / 96) to change register before reaching for weight.",
+      "Do name the problem and the recovery in the product's own language when something fails — \"The archive is not answering right now. Nothing was lost — try again in a moment.\" (archiveError, src/lib/utils.ts).",
+      "Do theme the browser's own surfaces — focus ring, caret, selection, scrollbars, ::placeholder, color-scheme — because on a drenched field an unthemed focus ring is the most visible foreign object on the page.",
+      "Do let printing invert through the token layer, so a new component is print-correct the day it ships."
+    ],
+    "donts": [
+      "Don't use the accent as a link colour, a brand flourish, a chart series, or a hover tint. Red that means \"nothing\" destroys red that means \"evidence\".",
+      "Don't cycle hues for a categorical series, and don't reuse --k-ok or --k-warn as series colours.",
+      "Don't render a figure the system does not have. No placeholder counts, no filled bar for an empty cell, no plausible-looking number to keep an animation interesting.",
+      "Don't float anything. No resting shadows on cards, panels, tiles or rails; depth is the surface ladder.",
+      "Don't colour a focus ring with the accent — thicken the rule to ink instead.",
+      "Don't introduce a second typeface. Martian Mono is admitted only where the text is literally machine output.",
+      "Don't add a third heading size, a third button, or a fourth radius.",
+      "Don't ship a native select arrow, an unthemed scrollbar, or a browser-default focus outline.",
+      "Don't write print rules per element. Switch the tokens.",
+      "Don't let a raw library or HTTP error string reach the screen.",
+      "Don't exceed 300ms for a UI transition; a 180ms disclosure reads as more responsive than a 400ms one."
+    ]
+  }
+}

@@ -1,76 +1,305 @@
 /**
  * Kronos design tokens — the single source for both apps.
  *
- * Cream paper ground, one bookish red, Ubuntu throughout. Red means "a mark, a
- * citation, or a constraint that failed" — never decoration.
+ * THE WORLD: cyanotype. A question-paper blueprint is a Prussian-blue field
+ * with the drawing in white line, and the only other ink on it is the red the
+ * examiner corrects with. The app is the working sheet (blue ground); anything
+ * printed inverts to the blueline print (white stock, blue line), because in
+ * this process the working surface and the artifact genuinely differ.
+ *
+ * THE SYSTEM: Material Design 3, as tokens rather than as a component library.
+ * A full tonal ramp per key colour, MD3's surface-container hierarchy, state
+ * layers at MD3's own opacities, and MD3's shape scale — all as custom
+ * properties over Tailwind, so nothing is rewritten twice.
+ *
+ * RED MEANS ONE THING: a mark, a citation, or a constraint that failed. It is
+ * never decoration. In a system whose whole value is traceability, the colour
+ * that signals evidence cannot also signal nothing.
  */
+
+/* ---- tonal ramps ---------------------------------------------------------
+   MD3 generates these from a seed. Seed is Prussian blue #16395B — the
+   cyanotype field. Neutrals are tinted toward it rather than gray, so nothing
+   on the sheet reads as a foreign material. */
 :root {
-  /* ground + ink */
-  --k-paper:    #f6f5f1;
-  --k-paper-2:  #fbfaf7;
-  --k-line:     #e1dfd8;
-  --k-line-2:   #eceae3;
-  --k-ink:      #16181d;
-  --k-ink-2:    #5a6072;
+  /* primary — cyanotype blue */
+  --md-p-0:   #000000;
+  --md-p-10:  #071726;
+  --md-p-20:  #0e2740;
+  --md-p-30:  #16395b;
+  --md-p-40:  #1f4c78;
+  --md-p-50:  #2a6096;
+  --md-p-60:  #4a7fb4;
+  --md-p-70:  #6e9dcb;
+  --md-p-80:  #9bbfe0;
+  --md-p-90:  #c9dcef;
+  --md-p-95:  #e3edf7;
+  --md-p-99:  #f6fafd;
+  --md-p-100: #ffffff;
+
+  /* neutral — graphite, tinted blue */
+  --md-n-10:  #0d1319;
+  --md-n-20:  #182029;
+  --md-n-30:  #2a343e;
+  --md-n-40:  #3e4954;
+  --md-n-50:  #57626d;
+  --md-n-60:  #717c88;
+  --md-n-70:  #8b96a2;
+  --md-n-80:  #a6b1bd;
+  --md-n-90:  #c2cdd9;
+  --md-n-95:  #dfe9f5;
+  --md-n-99:  #f7fafd;
+
+  /* error / the correction pencil. MD3 calls it error; here it also carries
+     citation and failed-constraint, which is the same semantic family: this
+     needs your attention and traces somewhere. */
+  --md-e-20:  #5a1e12;
+  --md-e-30:  #7d2b1c;
+  --md-e-40:  #b3341f;
+  --md-e-50:  #d2452c;
+  --md-e-60:  #e4664d;
+  --md-e-70:  #ff6b4a;
+  --md-e-80:  #ffb4a2;
+  --md-e-90:  #ffdad2;
+
+  /* ---- shape scale (MD3) ---- */
+  --md-shape-none:  0px;
+  --md-shape-xs:    2px;
+  --md-shape-sm:    4px;
+  --md-shape-md:    8px;
+  --md-shape-lg:    12px;
+  --md-shape-xl:    20px;
+  --md-shape-full:  999px;
+
+  /* ---- state layers (MD3 opacities) ----
+     Applied as a tint of the content colour over the container, never as a
+     different background colour. */
+  --md-state-hover:    0.08;
+  --md-state-focus:    0.10;
+  --md-state-pressed:  0.10;
+  --md-state-dragged:  0.16;
+  --md-state-disabled: 0.38;
+
+  /* ---- elevation ----
+     On a drenched field, MD3's tonal elevation does the work and the shadow is
+     a whisper. Levels carry a real offset and a soft blur; a zero-offset halo
+     is decoration, not depth. */
+  --md-elev-0: none;
+  --md-elev-1: 0 1px 2px rgba(2, 10, 20, 0.30), 0 1px 3px 1px rgba(2, 10, 20, 0.15);
+  --md-elev-2: 0 1px 2px rgba(2, 10, 20, 0.30), 0 2px 6px 2px rgba(2, 10, 20, 0.15);
+  --md-elev-3: 0 4px 8px 3px rgba(2, 10, 20, 0.15), 0 1px 3px rgba(2, 10, 20, 0.30);
+}
+
+/* ---- the sheet (default: the working surface, blue ground) ----------------
+   Dark is not a category default here. The physical scene decided it: a
+   student at 1am in a hostel room with one lamp, and a lecturer who prints
+   the artifact rather than reading it on glass. The screen is the sheet; the
+   print is the print. */
+:root {
+  /* ground + ink — names kept from the previous world so no call site moved */
+  --k-paper:    #0e2740;  /* MD3 surface — the cyanotype field */
+  --k-paper-2:  #102c46;  /* MD3 surface-container */
+  --k-line:     #2c4a68;  /* MD3 outline-variant — the drafting rule */
+  --k-line-2:   #16354f;  /* MD3 surface-container-high, used as a fill */
+  --k-ink:      #e9f2fb;  /* MD3 on-surface — the white drawing line */
+  --k-ink-2:    #a3bcd4;  /* MD3 on-surface-variant */
 
   /* the one accent */
-  --k-mark:     #b02c33;
+  --k-mark:     #ff6b4a;
 
   /* semantic, separate from the accent */
-  --k-ok:       #2f6b46;
-  --k-warn:     #8a5a12;
+  --k-ok:       #7fd6a0;
+  --k-warn:     #f0b429;
 
-  --k-radius:   0.5rem;
+  /* MD3 surface hierarchy, exposed for anything that needs a real ladder
+     rather than the two-ground shorthand above. */
+  --md-surface-dim:               #0a1e33;
+  --md-surface:                   #0e2740;
+  --md-surface-bright:            #1a3a58;
+  --md-surface-container-lowest:  #071726;
+  --md-surface-container-low:     #0c2338;
+  --md-surface-container:         #102c46;
+  --md-surface-container-high:    #16354f;
+  --md-surface-container-highest: #1d4062;
+  --md-on-surface:                #e9f2fb;
+  --md-on-surface-variant:        #a3bcd4;
+  --md-outline:                   #55708d;
+  --md-outline-variant:           #2c4a68;
+  --md-inverse-surface:           #e3edf7;
+  --md-inverse-on-surface:        #0e2740;
 
-  /* One voice. Ubuntu for everything that reads as language, Ubuntu Mono for
-     anything numeric so columns of marks and years line up. The four-family
-     stack this replaced was the main reason two screens never looked alike. */
-  --k-font-sans:      "Ubuntu", ui-sans-serif, system-ui, sans-serif;
-  --k-font-mono:      "Ubuntu Mono", ui-monospace, monospace;
+  /* MD3 key-colour roles. Primary is the drafting white: on a drenched blue
+     field the drawn line is what reads as the product's own colour, and a
+     lighter blue would vanish into the ground. */
+  --md-primary:               #eaf4ff;
+  --md-on-primary:            #0b2137;
+  --md-primary-container:     #1d4062;
+  --md-on-primary-container:  #cfe4f8;
+  --md-secondary:             #a9c0d6;
+  --md-on-secondary:          #12293f;
+  --md-secondary-container:   #16395b;
+  --md-on-secondary-container:#d4e5f6;
+  --md-error:                 #ff6b4a;
+  --md-on-error:              #4a1408;
+  --md-error-container:       #6b2415;
+  --md-on-error-container:    #ffdad2;
+
+  --k-radius: 4px; /* the blueprint is ruled, not rounded */
+
+  /* ---- chart ramps ----
+     Units, years and marks are ordinal, not identities, so magnitude gets one
+     hue stepped by lightness rather than a set of cycled colours. Validated
+     for CVD separation and contrast against this surface; the accent red and
+     the ok/warn status colours are deliberately absent, because a series
+     wearing a status colour steals a meaning the app needs elsewhere. */
+  --k-seq-1: #3a72a8;
+  --k-seq-2: #5f95c6;
+  --k-seq-3: #8ab3d9;
+  --k-seq-4: #b2cfea;
+  --k-seq-5: #dcebf9;
+  /* A value that is present but too small to step, and one that is absent. */
+  --k-seq-min: #24557f;
+  --k-seq-empty: #16354f;
+}
+
+/* ---- the print -----------------------------------------------------------
+   Blueline: white stock, blue line. Used when the viewer asks for light, and
+   forced for anything that goes to paper (see index.css @media print). */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --k-paper:   #f4f8fc;
+    --k-paper-2: #ffffff;
+    --k-line:    #b9cee2;
+    --k-line-2:  #e6eef7;
+    --k-ink:     #0c2338;
+    --k-ink-2:   #445d76;
+    --k-mark:    #b3341f;
+    --k-ok:      #276b47;
+    --k-warn:    #8a5a12;
+
+    --md-surface-dim:               #d9e5f1;
+    --md-surface:                   #f4f8fc;
+    --md-surface-bright:            #ffffff;
+    --md-surface-container-lowest:  #ffffff;
+    --md-surface-container-low:     #eef4fa;
+    --md-surface-container:         #e8f0f8;
+    --md-surface-container-high:    #e1ebf5;
+    --md-surface-container-highest: #dae6f2;
+    --md-on-surface:                #0c2338;
+    --md-on-surface-variant:        #445d76;
+    --md-outline:                   #74889d;
+    --md-outline-variant:           #b9cee2;
+    --md-inverse-surface:           #0e2740;
+    --md-inverse-on-surface:        #e9f2fb;
+
+    --md-primary:               #16395b;
+    --md-on-primary:            #ffffff;
+    --md-primary-container:     #cfe4f8;
+    --md-on-primary-container:  #0a1f34;
+    --md-secondary:             #3e5872;
+    --md-on-secondary:          #ffffff;
+    --md-secondary-container:   #d4e5f6;
+    --md-on-secondary-container:#12293f;
+    --md-error:                 #b3341f;
+    --md-on-error:              #ffffff;
+    --md-error-container:       #ffdad2;
+    --md-on-error-container:    #4a1408;
+
+    --md-elev-1: 0 1px 2px rgba(12, 35, 56, 0.14), 0 1px 3px 1px rgba(12, 35, 56, 0.07);
+    --md-elev-2: 0 1px 2px rgba(12, 35, 56, 0.14), 0 2px 6px 2px rgba(12, 35, 56, 0.07);
+    --md-elev-3: 0 4px 8px 3px rgba(12, 35, 56, 0.08), 0 1px 3px rgba(12, 35, 56, 0.14);
+
+    --k-seq-1: #b9d6f0;
+    --k-seq-2: #8ab3d9;
+    --k-seq-3: #5f95c6;
+    --k-seq-4: #33689e;
+    --k-seq-5: #16395b;
+    --k-seq-min: #dbe9f7;
+    --k-seq-empty: #eef4fa;
+  }
+}
+
+:root[data-theme="light"] {
+  --k-paper:   #f4f8fc;
+  --k-paper-2: #ffffff;
+  --k-line:    #b9cee2;
+  --k-line-2:  #e6eef7;
+  --k-ink:     #0c2338;
+  --k-ink-2:   #445d76;
+  --k-mark:    #b3341f;
+  --k-ok:      #276b47;
+  --k-warn:    #8a5a12;
+
+  --md-surface-dim:               #d9e5f1;
+  --md-surface:                   #f4f8fc;
+  --md-surface-bright:            #ffffff;
+  --md-surface-container-lowest:  #ffffff;
+  --md-surface-container-low:     #eef4fa;
+  --md-surface-container:         #e8f0f8;
+  --md-surface-container-high:    #e1ebf5;
+  --md-surface-container-highest: #dae6f2;
+  --md-on-surface:                #0c2338;
+  --md-on-surface-variant:        #445d76;
+  --md-outline:                   #74889d;
+  --md-outline-variant:           #b9cee2;
+  --md-inverse-surface:           #0e2740;
+  --md-inverse-on-surface:        #e9f2fb;
+
+  --md-primary:               #16395b;
+  --md-on-primary:            #ffffff;
+  --md-primary-container:     #cfe4f8;
+  --md-on-primary-container:  #0a1f34;
+  --md-secondary:             #3e5872;
+  --md-on-secondary:          #ffffff;
+  --md-secondary-container:   #d4e5f6;
+  --md-on-secondary-container:#12293f;
+  --md-error:                 #b3341f;
+  --md-on-error:              #ffffff;
+  --md-error-container:       #ffdad2;
+  --md-on-error-container:    #4a1408;
+
+  --md-elev-1: 0 1px 2px rgba(12, 35, 56, 0.14), 0 1px 3px 1px rgba(12, 35, 56, 0.07);
+  --md-elev-2: 0 1px 2px rgba(12, 35, 56, 0.14), 0 2px 6px 2px rgba(12, 35, 56, 0.07);
+  --md-elev-3: 0 4px 8px 3px rgba(12, 35, 56, 0.08), 0 1px 3px rgba(12, 35, 56, 0.14);
+
+  --k-seq-1: #b9d6f0;
+  --k-seq-2: #8ab3d9;
+  --k-seq-3: #5f95c6;
+  --k-seq-4: #33689e;
+  --k-seq-5: #16395b;
+  --k-seq-min: #dbe9f7;
+  --k-seq-empty: #eef4fa;
+}
+
+/* ---- type ----------------------------------------------------------------
+   One face across the whole system, from an 11px machine-print label to a
+   96px display line; the width axis carries register where weight would be
+   too blunt. Archivo is a workhorse grotesk with a real width axis, which is
+   what a drafting hand needs — condensed in a title block, normal in prose.
+   Martian Mono appears in exactly one situation: text that is literally
+   machine output (the SQL, a question_id, a source path). A second face for
+   "technical feel" would be a costume; here it marks a different author. */
+:root {
+  --k-font-sans:      "Archivo", ui-sans-serif, system-ui, "Helvetica Neue", sans-serif;
+  --k-font-mono:      "Martian Mono", ui-monospace, "SFMono-Regular", monospace;
   /* Kept as aliases so nothing has to be renamed at every call site. */
   --k-font-editorial: var(--k-font-sans);
   --k-font-serif:     var(--k-font-sans);
 }
 
-/* Dark is a deliberate re-mapping, not an inversion: the cream ground becomes a
-   cool near-black, and the red lifts so it still reads as a mark on it. */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --k-paper:   #14151a;
-    --k-paper-2: #1b1d23;
-    --k-line:    #2b2e37;
-    --k-line-2:  #23262d;
-    --k-ink:     #ecebe6;
-    --k-ink-2:   #9aa0b0;
-    --k-mark:    #e0656b;
-    --k-ok:      #6fbf8e;
-    --k-warn:    #d9a441;
-  }
-}
-:root[data-theme="dark"] {
-  --k-paper:   #14151a;
-  --k-paper-2: #1b1d23;
-  --k-line:    #2b2e37;
-  --k-line-2:  #23262d;
-  --k-ink:     #ecebe6;
-  --k-ink-2:   #9aa0b0;
-  --k-mark:    #e0656b;
-  --k-ok:      #6fbf8e;
-  --k-warn:    #d9a441;
-}
-
 /* ---- motion --------------------------------------------------------------
    Built-in CSS easings are too weak for UI. These are the standard strong
-   curves, taken as-is rather than approximated — the codebase previously
-   hand-rolled cubic-bezier(0.22, 1, 0.36, 1) inline, close to but not the
-   same as --k-ease-out, with no scale to extend. */
+   curves, taken as-is rather than approximated. */
 :root {
   --k-ease-out: cubic-bezier(0.23, 1, 0.32, 1);      /* entering and exiting */
   --k-ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);  /* moving on screen */
+  /* MD3's emphasized-decelerate, for the one authored moment per surface. */
+  --k-ease-emph: cubic-bezier(0.05, 0.7, 0.1, 1);
 
   /* UI motion stays under 300ms. A 180ms dropdown reads as more responsive
      than a 400ms one. */
   --k-dur-press: 140ms;    /* button press feedback */
   --k-dur-pop: 180ms;      /* tooltips, small popovers, disclosures */
   --k-dur-panel: 220ms;    /* dropdowns, panels, revealed content */
+  --k-dur-draw: 620ms;     /* a line drawing itself in */
 }

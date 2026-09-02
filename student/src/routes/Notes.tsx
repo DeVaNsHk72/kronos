@@ -63,7 +63,7 @@ export default function Notes() {
           {[...Array(5)].map((_, i) => <div key={i} className="h-14 bg-line-2 rounded animate-pulse" />)}
         </div>
       ) : bySubject.length === 0 ? (
-        <div className="border border-dashed border-line rounded-lg py-12 text-center">
+        <div className="border border-dashed border-line rounded-sm py-12 text-center">
           <p className="text-[14px] text-ink-2">Nothing matches</p>
         </div>
       ) : (

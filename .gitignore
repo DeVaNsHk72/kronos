@@ -53,3 +53,9 @@ npm-debug.log*
 
 # Plans
 plans/
+
+# Impeccable working artifacts. The design system (DESIGN.md, .impeccable/design.json)
+# and the surface briefs are committed; the review screenshots and the hook's
+# cache are per-run scratch and do not belong in history.
+**/.impeccable/review/
+**/.impeccable/hook.cache.json

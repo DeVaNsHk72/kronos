@@ -328,7 +328,7 @@ export default function Download() {
                       value={query}
                       onChange={(e) => setQuery(e.target.value)}
                       placeholder="Search code or name…"
-                      className="w-full bg-transparent text-sm outline-none placeholder:text-ink-2/70"
+                      className="w-full bg-transparent text-sm outline-none"
                     />
                   </div>
                   <ul className="mt-1 max-h-72 overflow-auto thin-scroll">
@@ -418,7 +418,7 @@ export default function Download() {
                         )
                       }
                       aria-label={`Remove ${c.course_code}`}
-                      className="grid h-4 w-4 place-items-center rounded-full text-ink-2 transition-colors hover:bg-line hover:text-mark"
+                      className="grid h-4 w-4 place-items-center rounded-sm text-ink-2 transition-colors hover:bg-line hover:text-mark"
                     >
                       <X size={11} weight="bold" />
                     </button>
@@ -482,7 +482,7 @@ export default function Download() {
                         key={t}
                         onClick={() => toggleExam(t)}
                         aria-pressed={on}
-                        className={`rounded-full border px-2.5 py-0.5 text-[11px] font-medium transition-[colors,transform] active:scale-[0.96] ${
+                        className={`rounded-sm border px-2.5 py-0.5 text-[11px] font-medium transition-[colors,transform] active:scale-[0.96] ${
                           on
                             ? "border-mark bg-mark text-paper"
                             : "border-line bg-paper-2 text-ink-2 hover:border-ink-2/50 hover:text-ink"
@@ -499,7 +499,7 @@ export default function Download() {
                 {selectedRows.length > 0 ? (
                   <a
                     href={papersZipUrl(codes, yearMin, yearMax, selectedShas)}
-                    className="inline-flex items-center gap-1.5 rounded-md bg-ink px-3 py-2 text-xs font-medium text-paper transition-[opacity,transform] hover:opacity-90 active:scale-[0.98]"
+                    className="inline-flex items-center gap-1.5 rounded-sm bg-ink px-3 py-2 text-xs font-medium text-paper transition-[opacity,transform] hover:opacity-90 active:scale-[0.98]"
                   >
                     <DownloadIcon size={14} />
                     Download selected ({selectedRows.length},{" "}
@@ -513,7 +513,7 @@ export default function Download() {
                 ) : (
                   <a
                     href={papersZipUrl(codes, yearMin, yearMax)}
-                    className="inline-flex items-center gap-1.5 rounded-md bg-mark px-3 py-2 text-xs font-medium text-paper transition-[opacity,transform] hover:opacity-90 active:scale-[0.98]"
+                    className="inline-flex items-center gap-1.5 rounded-sm bg-mark px-3 py-2 text-xs font-medium text-paper transition-[opacity,transform] hover:opacity-90 active:scale-[0.98]"
                   >
                     <DownloadIcon size={14} />
                     Download all ({niceSize(visibleTotalBytes)})
@@ -523,7 +523,7 @@ export default function Download() {
             </div>
 
             {/* TanStack table */}
-            <div className="rounded-md border border-line">
+            <div className="rounded-sm border border-line">
               <Table>
                 <TableHeader>
                   {table.getHeaderGroups().map((hg) => (
@@ -582,7 +582,7 @@ export default function Download() {
 
             {/* sticky bottom bar when rows are selected */}
             {selectedRows.length > 0 && (
-              <div className="sticky bottom-4 z-10 mt-4 flex items-center justify-between rounded-lg border border-line bg-paper-2/95 px-4 py-3 shadow-md backdrop-blur-sm">
+              <div className="sticky bottom-4 z-10 mt-4 flex items-center justify-between rounded-sm border border-line bg-paper-2/95 px-4 py-3 shadow-md backdrop-blur-sm">
                 <p className="text-sm text-ink-2">
                   <b className="text-ink">{selectedRows.length}</b> selected ·{" "}
                   {niceSize(selectedBytes)}
@@ -596,7 +596,7 @@ export default function Download() {
                   </button>
                   <a
                     href={papersZipUrl(codes, yearMin, yearMax, selectedShas)}
-                    className="inline-flex items-center gap-1.5 rounded-md bg-ink px-4 py-2 text-sm font-medium text-paper transition-[opacity,transform] hover:opacity-90 active:scale-[0.98]"
+                    className="inline-flex items-center gap-1.5 rounded-sm bg-ink px-4 py-2 text-sm font-medium text-paper transition-[opacity,transform] hover:opacity-90 active:scale-[0.98]"
                   >
                     <DownloadIcon size={14} />
                     Download {selectedRows.length} paper

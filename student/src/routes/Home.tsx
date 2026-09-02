@@ -14,6 +14,7 @@ import {
   type Facets,
 } from "@/api";
 import QuestionCard from "@/components/QuestionCard";
+import { archiveError, fmt } from "@/lib/utils";
 import { CoursePicker } from "@/components/filters/CoursePicker";
 import { FacetPicker } from "@/components/filters/FacetPicker";
 import { TopicPicker } from "@/components/filters/TopicPicker";
@@ -102,7 +103,7 @@ export default function Home() {
       })
       .catch((e) => {
         if (id !== reqId.current) return;
-        setError(e?.message ?? "Something went wrong");
+        setError(archiveError(e));
       })
       .finally(() => id === reqId.current && setLoading(false));
   }, [effective, page]);
@@ -121,7 +122,7 @@ export default function Home() {
           information; a search screen should open on the search box. */}
       <section className="border-b border-line">
         <div className="page py-10 sm:py-12">
-          <h1 className="title-page">Search the archive</h1>
+          <h1 className="title-page">Search every question</h1>
 
           <div className="relative mt-5 max-w-2xl">
             <span className="pointer-events-none absolute inset-y-0 left-4 grid place-items-center text-ink-2">
@@ -135,7 +136,7 @@ export default function Home() {
                   ? "describe a concept — finding area under a curve"
                   : "laplace transform, breakpoint chlorination…"
               }
-              className="h-12 rounded-lg border-line bg-paper-2 pl-12 pr-12 text-[15px] shadow-none focus-visible:border-ink/30 focus-visible:ring-0"
+              className="h-12 rounded-sm border-line bg-paper-2 pl-12 pr-12 text-[15px] shadow-none focus-visible:border-ink/30 focus-visible:ring-0"
             />
             {filter.q && (
               <button
@@ -225,7 +226,7 @@ export default function Home() {
             onClick={() =>
               patch({ has_images: filter.has_images ? undefined : true })
             }
-            className="h-9 gap-1.5 rounded-md font-normal"
+            className="h-9 gap-1.5 rounded-sm font-normal"
           >
             <ImageIcon size={14} weight="regular" />
             With figures
@@ -242,7 +243,7 @@ export default function Home() {
             {loading && !data
               ? "searching…"
               : data
-                ? `${data.total.toLocaleString()} question${
+                ? `${fmt(data.total)} question${
                     data.total === 1 ? "" : "s"
                   }`
                 : ""}
@@ -251,7 +252,7 @@ export default function Home() {
 
         {error && (
           <div className="py-16 text-center text-sm text-mark">
-            Couldn't reach the archive. {error}
+            {error}
           </div>
         )}
 
@@ -387,13 +388,13 @@ function ActiveFilterChips({
         <Badge
           key={c.label}
           variant="secondary"
-          className="gap-1.5 rounded-full pl-2.5 pr-1 font-normal"
+          className="gap-1.5 rounded-sm pl-2.5 pr-1 font-normal"
         >
           <span className="truncate">{c.label}</span>
           <button
             onClick={() => onChange(c.unset)}
             aria-label={`Remove ${c.label}`}
-            className="grid h-4 w-4 place-items-center rounded-full text-ink-2 hover:bg-line hover:text-mark"
+            className="grid h-4 w-4 place-items-center rounded-sm text-ink-2 hover:bg-line hover:text-mark"
           >
             <X size={11} weight="bold" />
           </button>
