@@ -157,10 +157,10 @@ export function Empty({ title }: { title: string }) {
 }
 
 const FACULTY_TABS = [
-  { to: "/faculty", label: "Overview", end: true },
-  { to: "/faculty/generate", label: "Generate" },
+  { to: "/faculty", label: "Dashboard", end: true },
+  { to: "/faculty/generate", label: "Set a paper" },
   { to: "/faculty/practice", label: "Practice" },
-  { to: "/faculty/bank", label: "Bank" },
+  { to: "/faculty/bank", label: "Question bank" },
 ];
 
 /** Same shape as the student side's tab strip, so the two halves of the app

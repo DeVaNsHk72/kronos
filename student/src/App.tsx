@@ -23,8 +23,9 @@ function FacultyShell({ children }: { children: React.ReactNode }) {
   return (
     <>
       {/* no-print: the nav itself is hidden when printing a paper, and its
-          hairline wrapper has to go with it. */}
-      <div className="border-b border-line no-print">
+          hairline wrapper has to go with it. Hidden from lg up too — the rail
+          already lists these, and two copies of one nav is not a hierarchy. */}
+      <div className="border-b border-line no-print lg:hidden">
         <FacultyNav />
       </div>
       {children}

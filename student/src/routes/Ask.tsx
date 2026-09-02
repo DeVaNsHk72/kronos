@@ -1,19 +1,18 @@
 import { useEffect, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   BookOpen,
   CalendarBlank as CalendarRange,
   ListChecks,
   Repeat as Repeat2,
 } from "@phosphor-icons/react";
-import { askChat, getStats, type ChatResponse, type ChatTurn, type Question, type Stats } from "../api";
+import { askChat, type ChatResponse, type ChatTurn, type Question } from "../api";
 import QuestionCard from "../components/QuestionCard";
 import ChatAnswer from "../components/ChatAnswer";
 import ChatIntentPanel from "../components/ChatIntentPanel";
 import { computeOverview, ChatStats, ChatAlsoAskedIn } from "../components/ChatOverview";
 import PromptBox from "../components/PromptBox";
-import { archiveError, fmt } from "@/lib/utils";
+import { archiveError } from "@/lib/utils";
 
 const EXAMPLES = [
   {
@@ -65,7 +64,7 @@ function matchReasons(q: Question, response: ChatResponse): string[] {
  *  in flight. The backend doesn't stream real pipeline state, so this can't
  *  report true intermediate counts — it advances on a timer and holds on the
  *  last step until the response actually lands. */
-function RetrievalProgress({ totalQuestions }: { totalQuestions: number | null }) {
+function RetrievalProgress() {
   const [step, setStep] = useState(0);
   useEffect(() => {
     if (step >= STEPS.length - 1) return;
@@ -78,7 +77,7 @@ function RetrievalProgress({ totalQuestions }: { totalQuestions: number | null }
   return (
     <div className="flex flex-col py-1.5">
       {visible.map((label, i) => {
-        const text = i === 1 && totalQuestions ? `Searching ${fmt(totalQuestions)} questions` : label;
+        const text = label;
         const done = i < step;
         const active = i === step;
         const last = i === visible.length - 1;
@@ -114,8 +113,6 @@ export default function Ask() {
   const [q, setQ] = useState("");
   const [turns, setTurns] = useState<Turn[]>([]);
   const [flash, setFlash] = useState<string | null>(null);
-  const [dims, setDims] = useState<Stats | null>(null);
-  const totalQuestions = dims?.questions ?? null;
 
   // The landing hands a question over in navigation state. Fired once — a
   // re-render must not re-ask it, and neither must a back-navigation.
@@ -131,7 +128,6 @@ export default function Ask() {
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    getStats().then(setDims).catch(() => setDims(null));
   }, []);
 
   useEffect(() => {
@@ -197,34 +193,10 @@ export default function Ask() {
               What do you need to know?
             </h1>
             <p className="serif mt-3 max-w-[54ch] text-[14.5px] text-ink-2">
-              Ask in plain words. Kronos writes SQL over this college's own exam tables,
-              runs it, and shows you both the query and the rows it came back with.
+              Ask in plain words. Kronos writes the SQL, runs it, and shows you both.
             </p>
 
-            {/* The drawing's dimension block. Every figure is measured, every
-                slot holds its position whether or not the archive answered. */}
-            <dl className="mt-9 grid grid-cols-2 border-t border-l border-line sm:grid-cols-4">
-              {[
-                ["Questions", dims?.questions],
-                ["Papers", dims?.papers],
-                ["Subjects", dims?.courses],
-                ["Topics", dims?.topics],
-              ].map(([label, value]) => (
-                <div key={label as string} className="border-b border-r border-line px-3 py-2.5">
-                  <dt className="label-cap">{label}</dt>
-                  <dd className="mt-1.5 font-mono text-[15px] tabular-nums leading-none text-ink">
-                    {fmt(value)}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-            <p className="draft-caps mt-2">
-              {dims?.year_range
-                ? `Span ${dims.year_range[0]}\u2013${dims.year_range[1]}`
-                : "Span not answered \u2014 the archive is not reachable"}
-            </p>
-
-            <ul className="mt-9 border-t border-line">
+            <ul className="mt-10 border-t border-line">
               {EXAMPLES.map(({ icon: Icon, label, q: ex }) => (
                 <li key={ex} className="border-b border-line">
                   <button
@@ -285,7 +257,7 @@ export default function Ask() {
                       <div className="ml-auto h-full w-px bg-line" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      {t.asking && <RetrievalProgress totalQuestions={totalQuestions} />}
+                      {t.asking && <RetrievalProgress />}
 
                       {t.error && (
                         <p className="py-1.5 text-sm text-mark">{t.error}</p>
@@ -383,11 +355,7 @@ export default function Ask() {
         onChange={setQ}
         onSubmit={submit}
         placeholder="Ask Kronos — what repeats in thermodynamics?"
-        footnote={
-          totalQuestions
-            ? `Its brain: ${fmt(totalQuestions)} questions from this college's own papers`
-            : "Every answer is a query you can read, and every row cites the paper it came from"
-        }
+        footnote="Every answer shows the SQL it ran, and every row cites the paper it came from"
       />
     </div>
   );

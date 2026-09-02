@@ -8,11 +8,12 @@ const TABS = [
   { to: "/ask/notes", label: "Notes" },
 ];
 
-/** One home for the student side. Shares `.tabstrip` with the Intelligence
- *  nav, so both halves of the app navigate the same way. */
+/** The student side's four destinations, for the widths where the drafting
+ *  rail is folded away. From lg up the rail lists these already, and showing
+ *  both put the same four links on screen twice. */
 export default function StudyTabs() {
   return (
-    <div className="border-b border-line">
+    <div className="border-b border-line lg:hidden">
       <nav className="tabstrip page">
         {TABS.map((t) => (
           <NavLink key={t.to} to={t.to} end={t.end}

@@ -424,14 +424,13 @@ Borders do the structural work. Every surface is defined by a 1px hairline in
 element ever falls back to `currentColor` and draws an ink-weight rule that looks like an
 error.
 
-Two recurring silhouettes:
+One recurring silhouette:
 
-- **Corner ticks** (`.cell-framed`): 9px L-shaped marks in the accent at the top-left and
-  bottom-right of a cell, borrowed from a drawing frame. Applied only to the cell that is
-  the subject of the screen — the answer, the generated paper — so the eye knows which cell
-  was drawn on purpose. They are suppressed in print.
 - **The margin rule** (`.margin-rule`): `inset 1px 0 0` — the vertical rule down a printed
   question paper. Content sits left of it, the measured number sits right of it.
+
+The gate and the welcome sheet draw a frame of four corner ticks at the page edge, inline
+and in `--k-line`. That is a page frame, not a component: no cell wears corner marks.
 
 ### Named Rules
 
@@ -536,18 +535,18 @@ the width of the content column on a paper-to-transparent gradient, with an acce
 and a filled 32px submit. `/` focuses it from anywhere. It is not a floating pill, because
 nothing in this world floats.
 
-### Signature: the Cyanotype Exposure (landing hero)
+### The ground is plain
 
-A WebGL field — instanced bars on a real line-segment grid, one bar per (year, unit) cell,
-height set by marks carried — with a light bar sweeping across it once and leaving the
-matrix behind, the way a cyanotype is exposed. It sweeps once and holds; a looping hero is
-a screensaver. Bars run pale drafting blue and lerp toward the correction red at the
-heaviest cells, so the topics carrying the most marks are literally the ones marked in red.
-**A cell with no value is not drawn at all** — rendering a flat plate would put a mark on
-the sheet for a row that does not exist. With no data the sheet stays unexposed, which is
-the honest state. It fails silently to the CSS grid underneath if WebGL is unavailable,
-pauses off-screen via IntersectionObserver, and holds a static tilted frame under
-`prefers-reduced-motion`.
+The page ground is one flat surface colour. An earlier revision painted a ruled 8px/64px
+blueprint grid on `body` and ran a WebGL cyanotype exposure behind the landing; both were
+removed. The grid was pattern competing with content on every screen at once, and the
+field made the one page it appeared on unlike every other. The world is carried by the
+ground colour, the hairline rules that actually divide something, and the type. A drawing
+sheet is blank until something is drawn on it.
+
+**Rule.** Nothing is painted behind content. Background images, page-scale patterns and
+decorative canvases are outside the system; a surface earns ink by dividing, labelling or
+measuring something.
 
 ### Charts
 

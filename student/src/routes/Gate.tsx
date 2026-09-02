@@ -17,12 +17,12 @@ const DOORS: { role: Role; label: string; line: string }[] = [
   {
     role: "student",
     label: "I'm studying",
-    line: "Ask where to start, and it works out what carries the marks — showing the SQL and the papers it read.",
+    line: "Ask where to start. It works out what carries the marks, and shows the SQL and the papers behind it.",
   },
   {
     role: "teacher",
     label: "I set the papers",
-    line: "Have it assemble a paper from real past questions, flag what has been asked to death, and hand you the evidence.",
+    line: "It assembles a paper from real past questions, flags what has been asked to death, and hands you the evidence.",
   },
 ];
 
@@ -61,7 +61,7 @@ export default function Gate() {
           Who is asking?
         </h1>
         <p className="serif mt-4 max-w-[48ch] text-[15px] text-ink-2">
-          Kronos is the same agent either way. What you need it to work out is not.
+          Same agent either way. What you need it to work out is not.
         </p>
 
         {/* Two ruled cells, equal weight. Neither is the recommended one —

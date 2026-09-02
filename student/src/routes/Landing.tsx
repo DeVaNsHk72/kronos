@@ -79,9 +79,8 @@ export default function Landing() {
           </div>
 
           <p className="serif mt-6 max-w-[54ch] text-[15.5px] text-ink-2">
-            Not a chatbot over a folder of PDFs. Kronos runs on Databricks Genie: you ask in
-            plain words, it writes SQL over governed tables built from this college's own
-            papers, and it shows you the query it ran.
+            Not a chatbot over a folder of PDFs. Ask in plain words; Kronos writes SQL over
+            governed tables built from this college's own papers, and shows you the query.
           </p>
 
           {/* The first action is the product's only verb. */}

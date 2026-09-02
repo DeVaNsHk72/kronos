@@ -167,30 +167,6 @@ body {
     background: var(--color-paper-2);
   }
 
-  /* The corner ticks of a drawing frame. Applied to a cell that is the
-     subject of the screen — the answer, the generated paper — so the eye
-     knows which cell was drawn on purpose. */
-  .cell-framed {
-    position: relative;
-  }
-  .cell-framed::before,
-  .cell-framed::after {
-    content: "";
-    position: absolute;
-    width: 9px;
-    height: 9px;
-    pointer-events: none;
-    border-color: var(--color-mark);
-  }
-  .cell-framed::before {
-    top: -1px; left: -1px;
-    border-top: 1px solid; border-left: 1px solid;
-  }
-  .cell-framed::after {
-    bottom: -1px; right: -1px;
-    border-bottom: 1px solid; border-right: 1px solid;
-  }
-
   /* Every small uppercase field label and tile caption. */
   .label-cap {
     font-size: 10.5px;
@@ -362,12 +338,9 @@ body {
   .table-wrap tbody tr { border-top: 1px solid var(--color-line); }
   .table-wrap tbody tr:hover { background: color-mix(in srgb, var(--color-line-2) 50%, transparent); }
 
-  /* Round backdrop for a foreground icon. 44px is the empty-state size;
-     `.icon-badge-sm` is the 28px chat avatar. Both use the accent bg at 10%. */
-  /* A ruled well rather than a soft disc: on a drawing, a symbol sits inside
-     a drawn box. Drawn in ink — these mark empty states and avatars, and an
-     empty state is not a mark, a citation, or a failed constraint. Add
-     `.icon-badge-mark` where the symbol really is one of those three. */
+  /* A ruled well for a foreground icon: on a drawing a symbol sits inside a
+     drawn box, not on a soft disc. Drawn in ink — these mark empty states and
+     avatars, and neither is a mark, a citation, or a failed constraint. */
   .icon-badge,
   .icon-badge-sm {
     display: grid;
@@ -379,11 +352,6 @@ body {
   }
   .icon-badge { width: 40px; height: 40px; }
   .icon-badge-sm { width: 26px; height: 26px; }
-  .icon-badge-mark {
-    border-color: color-mix(in srgb, var(--color-mark) 40%, transparent);
-    background: color-mix(in srgb, var(--color-mark) 10%, transparent);
-    color: var(--color-mark);
-  }
 }
 
 /* An unruled patch of the sheet: used where content needs to sit clear of the
@@ -467,26 +435,6 @@ a { text-underline-offset: 0.22em; text-decoration-thickness: 1px; }
 .thin-scroll {
   scrollbar-width: thin;
   scrollbar-color: var(--color-line) transparent;
-}
-
-/* Fades the top/bottom edge of a scrollable list instead of cutting it off
-   hard — the list reads as continuing, not broken. Harmless when the list
-   isn't scrolled: the fade band is only ~14px. */
-.scroll-fade {
-  mask-image: linear-gradient(
-    to bottom,
-    transparent,
-    black 14px,
-    black calc(100% - 14px),
-    transparent
-  );
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    transparent,
-    black 14px,
-    black calc(100% - 14px),
-    transparent
-  );
 }
 
 /* metadata badges — mono, quiet, grouped */
@@ -629,7 +577,6 @@ mark.hl {
     background-color: var(--k-paper) !important;
     color: #0c2338 !important;
   }
-  .cell-framed::before, .cell-framed::after { display: none; }
   .paper-sheet { font-size: 11pt; border: none !important; padding: 0 !important; }
   .paper-sheet section { break-inside: avoid; }
   @page { margin: 18mm 16mm; size: A4; }

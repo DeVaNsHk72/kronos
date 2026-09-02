@@ -44,6 +44,7 @@ const STUDENT = [
 const FACULTY = [
   { to: "/faculty", label: "Dashboard", Icon: Gauge, end: true },
   { to: "/faculty/generate", label: "Set a paper", Icon: FilePlus },
+  { to: "/faculty/practice", label: "Practice", Icon: ListChecks },
   { to: "/faculty/bank", label: "Question bank", Icon: Archive },
 ];
 
