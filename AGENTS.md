@@ -1,211 +1,173 @@
-# Kronos agents
+# The Kronos agent
 
-Six AI components run in Kronos. They differ in one thing that matters more than
-their models or prompts: **what stops them inventing an answer.**
+**Kronos has one agent: Databricks AI/BI Genie.**
 
-Everything here is built on a college's exam archive, and a fabricated past
-question is worse than no answer at all — a student revises from it, or a
-lecturer prints it on a paper. Each agent below is described by its grounding
-first, because that is the part that can fail silently.
+It is a text-to-SQL agent over Unity Catalog tables. A student or lecturer asks
+in plain words, Genie writes SQL, runs it against governed tables, and returns
+rows — with the query visible.
 
-| Agent | Where | Model | What grounds it |
-|---|---|---|---|
-| [Grounded chat](#1-grounded-chat) | student | `gpt-4o-mini` | retrieved rows + mandatory citations |
-| [Genie](#2-genie-text-to-sql) | both | Databricks Genie | Unity Catalog tables; SQL is shown |
-| [Paper generator](#3-paper-generator) | faculty | **none** | constraint satisfaction over real questions |
-| [Similarity check](#4-similarity-check) | faculty | **none** | IDF-weighted term overlap in SQL |
-| [Telegram bot](#5-telegram-bot) | messaging | Databricks serving endpoint | same tables as Genie |
-| [Voice](#6-voice) | student | `whisper-1`, `eleven_multilingual_v2` | transcription only, no reasoning |
+Everything else in Kronos is either deterministic SQL or a transport. That is the
+architecture, not a limitation:
 
-Two of the six use no model at all. That is deliberate, not an omission.
+> Genie does not read PDFs and it does not query vector stores.
+> **Embeddings are not the product. Rows are.**
+
+The corpus work — OCR, question extraction, topic clustering, embeddings — exists
+to *build the tables*. Once the tables exist, the agent is Genie querying them.
 
 ---
 
-## 1. Grounded chat
+## What Genie sees
 
-`backend/app/chat.py` · `POST /api/chat` · `gpt-4o-mini`
+Seven gold tables in Unity Catalog. Genie's accuracy is driven almost entirely by
+how narrow and well-described this surface is, which is why it is seven tables
+and not seventeen.
 
-Answers "what has been asked about X" from the question bank. **Three steps, and
-only the first and last involve a model.**
+| Table | Rows | What it answers |
+|---|---|---|
+| `fact_question` | 1,107 | every question ever asked — marks, unit, CO, PO, Bloom, year, source |
+| `dim_topic` | 63 | what each question is *about* |
+| `dim_subject` | 1 | one subject across every code it has run under |
+| `dim_exam_pattern` | 6 | the shape of a paper, per unit |
+| `fact_note_coverage` | 91 | where the study material for a topic is |
+| `fact_attempt` | 0 | quiz answers — **empty, no data exists yet** |
+| `fact_engagement` | 0 | topic views near an exam — **empty** |
 
-```
-message ──parse──> filters + semantic query ──search──> rows ──compose──> reply
-         (model)      (no model, existing            (model, restricted
-                       search machinery)              to those rows)
-```
+`bronze_page` (2,691 pages of note text) is deliberately **kept out of the Genie
+space**. Genie is text-to-SQL; a wide table of raw markdown cannot answer a
+question and dilutes the schema that makes the rest work.
 
-**Parse** turns free text into structured filters. Its governing instruction is a
-bias toward *not* filtering:
-
-> A field is null unless the user actually said it. Every filter you set removes
-> questions. Setting one the user did not ask for hides the results they wanted
-> and they cannot tell that happened. When in doubt, null.
-
-That asymmetry is the point: an over-eager filter produces a confident, wrong,
-*small* answer, and the student has no way to see what was silently excluded.
-The canonical filter vocabulary (branches, exam types, programmes, year range) is
-read from the corpus and injected into the prompt, so the model picks from values
-that exist rather than inventing plausible-looking branch names.
-
-**Search** is the existing filter and semantic machinery, unchanged. No model.
-
-**Compose** writes the reply from the top 12 retrieved rows and nothing else:
-
-> You answer using ONLY the numbered past exam questions given to you. They are
-> the complete evidence; you have no other knowledge of this course.
->
-> Citations are mandatory. Every sentence that states something about the
-> questions must carry at least one bracketed marker like `[3]` or `[2][7]`. A
-> sentence with no marker is not allowed, because the student cannot check it.
-
-Plus: never invent a question, year, mark value or topic; do not *answer* the
-exam questions, describe what has been asked; if the rows don't support an
-answer, say so.
-
-**Failure modes.** Retrieval returning nothing means the reply says nothing —
-that path is explicit (`no_match_reply`), not left to the model. A citation
-marker with no matching row is treated as a grounding failure and shown plainly
-rather than rendered as a link that goes nowhere. Rate limited to 10 requests
-per minute per IP.
+**Every `COMMENT` matters.** Genie reads column comments, so they are written in
+the vocabulary a student uses, not the vocabulary the schema uses. Eight of the
+47 columns currently carry no information (see `SCHEMA` notes) — pruning them is
+the cheapest available accuracy win.
 
 ---
 
-## 2. Genie (text-to-SQL)
+## Where the agent is exposed
 
-`backend/app/genie.py`, `faculty/app/api/genie/route.ts` · Databricks Genie
+| Surface | Path |
+|---|---|
+| Faculty console — Ask | `faculty/app/api/genie/route.ts` |
+| Student backend | `backend/app/genie.py` → `POST /api/chat` |
+| Telegram | `backend/app/routers/telegram.py` |
 
-Natural language becomes SQL against Unity Catalog tables, runs, and returns rows
-with the query that produced them.
+All three hit the same Genie space over the same tables, so an answer does not
+change depending on where it was asked.
 
-**This is the only agent whose reasoning is fully inspectable.** Both surfaces
-expose a *show the SQL* toggle on every answer, which matters because the usual
-text-to-SQL failure isn't a crash — it's answering a subtly different question
-than the one asked. The SQL is the only way to see that.
+### Show the SQL
 
-Genie is asynchronous. The faculty client polls through every non-terminal state:
+Every surface exposes a **show the SQL** toggle on every answer.
+
+This is not a debug affordance. The characteristic text-to-SQL failure is not a
+crash — it is confidently answering a *subtly different question* than the one
+asked. Filtering to the wrong exam type, pooling re-exam sittings into "what is
+normally asked", silently dropping rows where marks are NULL. The prose reads
+fine in every one of those cases. **The SQL is the only place it shows.**
+
+### Polling states
+
+Genie is asynchronous. A client must wait through every non-terminal state:
 
 ```
 SUBMITTED · IN_PROGRESS · PENDING · FILTERING_CONTEXT
 ASKING_AI · EXECUTING_QUERY · FETCHING_METADATA · PENDING_WAREHOUSE
 ```
 
-Omitting states here is a real bug and was one: an early version waited on only
-some of them, returned as soon as it saw `SUBMITTED`, and **echoed the user's own
-question back as the answer.** It looked like a working reply.
+Omitting one is a real bug and was one here: an early client waited on only some,
+returned as soon as it saw `SUBMITTED`, and **echoed the user's own question back
+as the answer.** It looked like a working reply — no error, no empty state.
 
-**The catalog must match.** `DATABRICKS_CATALOG` in the faculty console has to
-point at the same catalog the Genie space is configured against. When they
-diverge, the ask panel answers about a different dataset than every other screen
-— an app quietly disagreeing with itself, with nothing on screen to reveal it.
+### The catalog must match
 
-Degrades gracefully: with credentials absent, `available()` returns false and the
-feature is hidden rather than erroring.
+`DATABRICKS_CATALOG` in the faculty console has to name the same catalog the
+Genie space is configured against. When they diverge, the Ask panel answers about
+a different dataset than every other screen — an application quietly disagreeing
+with itself, with nothing on screen to reveal it. This has already happened once:
+Genie pointed at `hackathon_project.default` while the console read
+`workspace.kronos`.
 
 ---
 
-## 3. Paper generator
+## What the agent is deliberately not asked to do
 
-`faculty/app/api/generate/route.ts` · **no model**
+Two features could have been LLM calls and are not. Both are SQL.
 
-Assembles a question paper. The governing rule:
+### Paper generation — `faculty/app/api/generate/route.ts`
 
 > **SQL selects, the model only phrases.**
 
-Every question on a generated paper is a row from `fact_question`, carrying its
-`question_id`, source PDF and the year it was last asked. Selection is constraint
-satisfaction, not generation:
+A generated paper is assembled by constraint satisfaction over real past
+questions. Every line traces to a `question_id`, its source PDF and the year it
+was last asked. No model invents a question, because a paper has to be defended
+line by line to an exam committee.
 
-1. **Structure** comes from a declared format where one exists (the CIE shape —
-   Part A 1×5, Part B 3×5, Part C 3×10 answer 2 — is printed on the papers
-   themselves), otherwise from the observed shape of past papers, **and the UI
-   says which**.
-2. **Exclusion** — anything in a repeat cluster asked within the last *N* years
-   is out of the pool.
-3. **CO coverage** — when required, each slot prefers a question carrying a CO
-   not yet placed.
-4. **Bloom mix** — slots target the requested distribution as far as the pool allows.
-5. **No duplicate `repeat_cluster_id`** within one paper.
-6. **Marks must total** the declared format exactly.
+Constraints: blueprint structure · exclude anything asked in the last *N* years ·
+CO coverage · Bloom mix · no repeated cluster · exact marks total.
 
 **When a constraint cannot be met it is printed on the paper, not dropped.** A
-banner reading *"CO3 could not be placed"* or *"no 3-mark question exists in this
-unit; used 4"* is more useful than a paper that looks complete and quietly isn't.
-This is the whole reason the feature is defensible to an exam committee.
+banner saying *"CO3 could not be placed"* is more useful than a paper that looks
+complete and quietly isn't.
 
-The single place a model is allowed: an **optional, off-by-default rephrase** of
-one question for freshness, keeping the content identical, marked visibly as
-edited with the original one click away.
+The one place a model is permitted: an optional, **off-by-default** rephrase of a
+single question for freshness, content unchanged, marked visibly as edited with
+the original one click away.
 
-**Known limit.** Where no declared blueprint exists, structure is averaged from
-real papers, whose unit totals sum to 155 or 201 rather than 100 — so the paper
-is scaled and reports the scaling. Declared formats (CIE) produce clean papers
-with zero warnings; observed ones do not. The fix is parsing real blueprints out
-of the syllabus PDFs.
+### Similarity check — `faculty/app/api/similar/route.ts`
 
----
-
-## 4. Similarity check
-
-`faculty/app/api/similar/route.ts` · **no model**
-
-Answers the question a lecturer actually has while drafting: *has this been asked
-before?* Ranked matches from nine years of papers, with the year and marks.
-
-Scoring is **IDF-weighted term overlap computed in SQL**. Rare words carry the
-signal — "virtualization" counts, "explain" barely does — so no stopword list has
-to be guessed in advance.
+*Has this question been asked before?* — IDF-weighted term overlap computed in
+SQL. Rare words carry the signal, so no stopword list has to be guessed.
 
 Two simpler scorings were tried and both were wrong in ways that looked fine:
 
 | Scoring | A verbatim repeat scored | Why it fails |
 |---|---|---|
-| Jaccard overlap | **18%** | diluted by every unshared word; a duplicate reads as "not similar" |
-| Containment | **100%** — for an unrelated question | a short probe trivially fits inside a long one |
-| **IDF-weighted** | 100% exact · 92% rephrased · 70% variant | rare terms dominate; correct drop-off |
+| Jaccard | **18%** | diluted by unshared words — a duplicate reads as "not similar" |
+| Containment | **100%** for an unrelated question | a short probe trivially fits inside a long one |
+| **IDF-weighted** | 100% exact · 92% rephrased · 70% variant | correct ranking and drop-off |
 
-Requires the Databricks backend (`array_intersect` / `array_union` have no SQLite
-equivalent). On the local mirror it **returns an explicit "this needs Databricks"
-error** rather than an empty result — "no similar questions found" that really
-means "the feature didn't run" would let someone re-set a question asked five
-times.
-
----
-
-## 5. Telegram bot
-
-`backend/app/telegram.py` · `POST /api/telegram/webhook`
-
-The archive over Telegram, hitting a Databricks serving endpoint. Per-user
-conversation history so context carries across messages.
-
-**Sessions are in-memory** — correct for a single process, and the thing to
-change first when this runs on more than one.
+On a backend without Databricks array functions it returns an explicit *"this
+needs Databricks"* error rather than an empty result — "no similar questions
+found" that really means "the feature did not run" would let someone re-set a
+question asked five times.
 
 ---
 
-## 6. Voice
+## Voice
 
-`backend/app/routers/voice.py` · `POST /api/voice/stt`, `POST /api/voice/tts`
+`backend/app/routers/voice.py` — Whisper for speech-to-text, ElevenLabs for
+text-to-speech.
 
-- **STT** — `whisper-1`, browser audio → text, feeding the same chat pipeline
-- **TTS** — ElevenLabs `eleven_multilingual_v2`, replies read aloud
-
-**Neither reasons about content.** Voice is a transport for the grounded chat
-agent, so it inherits that agent's citation guarantees rather than introducing a
-path around them. Multilingual TTS matters for a college where the same lecture
-happens in more than one language.
+**Neither reasons about content.** Voice is a transport into the same Genie
+pipeline, so it inherits whatever grounding that pipeline has rather than opening
+a path around it.
 
 ---
 
-## The pattern worth keeping
+## Legacy: the GPT chat path
 
-The two agents doing the highest-stakes work — **assembling a real exam paper**
-and **telling a lecturer whether a question is a repeat** — use no language model
-at all. Both are SQL.
+`backend/app/chat.py` predates the Genie integration. It is a retrieval-grounded
+chat over the local SQLite question bank using `gpt-4o-mini` — parse the message
+into filters, run the existing search, compose a reply citing only retrieved rows.
 
-That is not conservatism. A generated paper has to be defended line by line to an
-exam committee, and a similarity score has to be trustworthy enough to act on.
-Neither tolerates a plausible answer, and both have a deterministic method
-available. The model is used where it genuinely helps — turning messy human
-phrasing into structured filters, and reading rows back as prose — and kept out
-of the places where being confidently wrong is expensive.
+**It is not part of the agent story and should not be presented as one.** It
+answers from a local database rather than governed Unity Catalog tables, which is
+precisely the architecture the Genie requirement exists to rule out.
+
+It still runs because the student app depends on it. To remove the GPT dependency
+entirely, `POST /api/chat` routes to `genie.ask()` instead of the parse/compose
+pipeline — `backend/app/genie.py` already implements the call, and the Telegram
+router already uses it.
+
+---
+
+## Why this shape
+
+The corpus pipeline is elaborate — 12,698 pages OCR'd, questions parsed, topics
+clustered, embeddings built. None of that is the agent. It is how the tables got
+made.
+
+The agent is Genie writing SQL over those tables, and the two places where a
+wrong-but-plausible answer would be expensive — printing an exam paper, telling a
+lecturer a question is fresh — are handled by deterministic SQL instead, with the
+query visible either way.
