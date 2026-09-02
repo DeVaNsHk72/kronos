@@ -83,7 +83,7 @@ export default function FacultyDashboard() {
                   <YAxis tickLine={false} axisLine={false} tick={{ fontSize: 11, fill: "var(--color-ink-2)" }} />
                   <Tooltip contentStyle={{ background: "var(--color-paper-2)",
                     border: "1px solid var(--color-line)", borderRadius: 6, fontSize: 12 }} />
-                  <Bar dataKey="marks" fill="var(--color-mark)" radius={[3, 3, 0, 0]} />
+                  <Bar isAnimationActive={false} dataKey="marks" fill="var(--color-mark)" radius={[3, 3, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             ) : <Empty title="No marks recorded" />}
@@ -104,7 +104,7 @@ export default function FacultyDashboard() {
                     border: "1px solid var(--color-line)", borderRadius: 6, fontSize: 12 }} />
                   <Legend wrapperStyle={{ fontSize: 11 }} />
                   {driftData.keys.map((u, i) => (
-                    <Area key={u} type="monotone" dataKey={u} stackId="1"
+                    <Area isAnimationActive={false} key={u} type="monotone" dataKey={u} stackId="1"
                           stroke={TONES[i % TONES.length]} fill={TONES[i % TONES.length]} fillOpacity={0.18} />
                   ))}
                 </AreaChart>

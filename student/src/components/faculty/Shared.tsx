@@ -63,8 +63,12 @@ export function SqlToggle({ sql, ms, engine, fallbackReason }: {
       {fallbackReason && (
         <p className="text-[10px] text-warn mt-1">Genie unavailable: {fallbackReason}</p>
       )}
-      {open && <pre className="mt-2 p-3 rounded border border-line bg-paper text-[11px]
-        leading-relaxed overflow-x-auto font-mono text-ink-2 whitespace-pre">{sql.trim()}</pre>}
+      <div className="disclosure" data-open={open}>
+        <div>
+          <pre className="mt-2 p-3 rounded border border-line bg-paper text-[11px]
+            leading-relaxed overflow-x-auto font-mono text-ink-2 whitespace-pre">{sql.trim()}</pre>
+        </div>
+      </div>
     </div>
   );
 }

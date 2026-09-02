@@ -83,7 +83,7 @@ export default function Attainment() {
                     [`${v}% · ${p.payload.total_marks} marks · ${p.payload.questions} questions`,
                      `CO${p.payload.course_outcome}`]} />
                 <ReferenceLine y={FLOOR} stroke="var(--color-ink-2)" strokeDasharray="4 4" />
-                <Bar dataKey="pct_of_paper" radius={[3, 3, 0, 0]}>
+                <Bar isAnimationActive={false} dataKey="pct_of_paper" radius={[3, 3, 0, 0]}>
                   {rows.map((r) => (
                     <Cell key={String(r.course_outcome)}
                       fill={Number(r.pct_of_paper) < FLOOR ? "var(--color-mark)" : "var(--color-ink-2)"} />
@@ -108,7 +108,7 @@ export default function Attainment() {
                     tick={{ fontSize: 11, fill: "var(--color-ink-2)" }} />
                   <Tooltip contentStyle={{ background: "var(--color-paper-2)",
                     border: "1px solid var(--color-line)", borderRadius: 6, fontSize: 12 }} />
-                  <Bar dataKey="total_marks" fill="var(--color-ink-2)" radius={[3, 3, 0, 0]} />
+                  <Bar isAnimationActive={false} dataKey="total_marks" fill="var(--color-ink-2)" radius={[3, 3, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             )}

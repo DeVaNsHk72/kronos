@@ -80,7 +80,7 @@ export default function ChatAnswer({
         onClick={toggleSpeak}
         disabled={loading}
         aria-label={playing ? "Stop speaking" : "Read aloud"}
-        className={`mt-2 inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-all ${
+        className={`mt-2 inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-[background-color,color] duration-150 ease-out ${
           playing
             ? "bg-red-500/10 text-red-600 hover:bg-red-500/20"
             : "bg-ink/5 text-ink-2 hover:text-ink hover:bg-ink/10"

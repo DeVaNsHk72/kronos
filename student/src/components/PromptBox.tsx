@@ -95,7 +95,7 @@ export default function PromptBox({
       }}
     >
       <div className="mx-auto max-w-[860px]">
-        <div className="flex items-end gap-2 rounded-2xl border border-line bg-paper-2 px-4 py-3 shadow-[0_4px_24px_rgba(0,0,0,0.07)] transition-all focus-within:border-ink/30 focus-within:shadow-[0_4px_28px_rgba(0,0,0,0.11)]">
+        <div className="flex items-end gap-2 rounded-2xl border border-line bg-paper-2 px-4 py-3 shadow-[0_4px_24px_rgba(0,0,0,0.07)] transition-[border-color,box-shadow] duration-150 ease-out focus-within:border-ink/30 focus-within:shadow-[0_4px_28px_rgba(0,0,0,0.11)]">
           <textarea
             ref={ref}
             rows={1}
@@ -122,7 +122,7 @@ export default function PromptBox({
               onClick={toggleMic}
               disabled={busy}
               aria-label={recording ? "Stop recording" : "Voice input"}
-              className={`grid h-9 w-9 shrink-0 place-items-center rounded-xl transition-all ${
+              className={`grid h-9 w-9 shrink-0 place-items-center rounded-xl transition-[background-color,color,opacity] duration-150 ease-out ${
                 recording
                   ? "bg-red-500 text-white animate-pulse"
                   : "bg-transparent text-ink-2 hover:text-ink hover:bg-ink/5"
@@ -141,7 +141,7 @@ export default function PromptBox({
               onClick={send}
               disabled={!hasContent || busy}
               aria-label="Send"
-              className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-ink text-paper transition-all hover:bg-ink/85 disabled:opacity-15"
+              className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-ink text-paper transition-[background-color,opacity] duration-150 ease-out hover:bg-ink/85 disabled:opacity-15"
             >
               <ArrowUp size={16} weight="bold" />
             </button>

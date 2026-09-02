@@ -64,7 +64,7 @@ export default function Coverage() {
                         </p>
                       </div>);
                   }} />
-                <Scatter data={rows} fill="var(--color-mark)" fillOpacity={0.55} />
+                <Scatter isAnimationActive={false} data={rows} fill="var(--color-mark)" fillOpacity={0.55} />
               </ScatterChart>
             </ResponsiveContainer>
             <SqlToggle sql={gap?.sql} ms={gap?.ms} engine={gap?.engine} fallbackReason={gap?.fallback_reason} />

@@ -103,7 +103,9 @@ export default function Generate() {
 
 function Paper({ paper, subject, open, setOpen }: any) {
   return (
-    <div className="flex flex-col gap-4">
+    // k-rise: the agent takes 20-60s, then a whole paper would otherwise
+    // teleport in. Fade + 6px rise, ease-out 220ms.
+    <div className="flex flex-col gap-4 k-rise">
       {paper.warnings?.length > 0 && (
         <Banner>
           <p className="font-medium mb-1">
@@ -130,7 +132,9 @@ function Paper({ paper, subject, open, setOpen }: any) {
         </button>
       </div>
 
-      <article className="paper-sheet border border-line rounded-lg bg-paper-2 p-8 serif">
+      {/* sections stagger 40ms so the eye is led down the page rather than
+          hit with the whole paper at once */}
+      <article className="paper-sheet border border-line rounded-lg bg-paper-2 p-8 serif k-stagger">
         <header className="text-center border-b border-line pb-4 mb-5">
           <p className="font-semibold text-[17px] text-ink">B.M.S. College of Engineering, Bengaluru-560019</p>
           <p className="text-[13px] text-ink-2">Autonomous Institute Affiliated to VTU</p>
@@ -167,15 +171,17 @@ function Paper({ paper, subject, open, setOpen }: any) {
                           className="font-mono text-[10px] uppercase tracking-wider text-ink-2 hover:text-mark mt-1 no-print">
                           {open === k ? "hide source" : "source"}
                         </button>
-                        {open === k && (
-                          <div className="mt-2 p-2 rounded border border-line bg-paper text-[11px] font-mono text-ink-2 space-y-0.5">
-                            <div>question_id: {p.q.question_id}</div>
-                            <div>source: {p.q.source_file}</div>
-                            <div>page: {p.q.source_page ?? "— not recorded in the corpus"}</div>
-                            <div>last asked: {p.q.exam_year} ({p.q.exam_session})</div>
-                            <div>unit {p.q.unit_no ?? "—"} · bloom {p.q.bloom_level ?? "unclassified"}</div>
+                        <div className="disclosure" data-open={open === k}>
+                          <div>
+                            <div className="mt-2 p-2 rounded border border-line bg-paper text-[11px] font-mono text-ink-2 space-y-0.5">
+                              <div>question_id: {p.q.question_id}</div>
+                              <div>source: {p.q.source_file}</div>
+                              <div>page: {p.q.source_page ?? "— not recorded in the corpus"}</div>
+                              <div>last asked: {p.q.exam_year} ({p.q.exam_session})</div>
+                              <div>unit {p.q.unit_no ?? "—"} · bloom {p.q.bloom_level ?? "unclassified"}</div>
+                            </div>
                           </div>
-                        )}
+                        </div>
                       </>
                     ) : (
                       <p className="text-[14px] text-mark italic">No question available — see the notice above.</p>

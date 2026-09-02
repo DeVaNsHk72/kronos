@@ -60,3 +60,19 @@
   --k-ok:      #6fbf8e;
   --k-warn:    #d9a441;
 }
+
+/* ---- motion --------------------------------------------------------------
+   Built-in CSS easings are too weak for UI. These are the standard strong
+   curves, taken as-is rather than approximated — the codebase previously
+   hand-rolled cubic-bezier(0.22, 1, 0.36, 1) inline, close to but not the
+   same as --k-ease-out, with no scale to extend. */
+:root {
+  --k-ease-out: cubic-bezier(0.23, 1, 0.32, 1);      /* entering and exiting */
+  --k-ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);  /* moving on screen */
+
+  /* UI motion stays under 300ms. A 180ms dropdown reads as more responsive
+     than a 400ms one. */
+  --k-dur-press: 140ms;    /* button press feedback */
+  --k-dur-pop: 180ms;      /* tooltips, small popovers, disclosures */
+  --k-dur-panel: 220ms;    /* dropdowns, panels, revealed content */
+}
