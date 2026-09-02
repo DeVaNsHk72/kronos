@@ -10,7 +10,7 @@ from fastapi import APIRouter, Depends
 from pydantic import BaseModel, Field
 
 from .. import chat as C
-from .. import llm, semantic
+from .. import genie, llm, semantic
 from ..config import SEMANTIC_POOL
 from ..db import get_db
 from ..filters import Filters
@@ -56,12 +56,25 @@ def _retrieve(con, intent, course_code):
 
 @router.post("/chat", dependencies=[Depends(_chat_limit)])
 def chat(body: ChatIn, con=Depends(get_db)):
+    # --- Genie path: send question directly, it queries the data itself ---
+    if genie.available():
+        try:
+            answer = genie.ask(body.message)
+            return {
+                "intent": {"kind": "genie", "query": body.message},
+                "answer": answer,
+                "results": [], "citations": [],
+            }
+        except Exception as e:
+            # fall through to local pipeline on Genie failure
+            pass
+
+    # --- Local RAG pipeline (fallback) ---
     history = [t.model_dump() for t in (body.history or [])]
     intent = C.parse_intent(body.message, con, history)
 
     course_code, course_name = C.resolve_course(intent.get("course_hint"), con)
     if intent.get("course_hint") and not course_code:
-        # say so rather than silently searching the whole corpus
         intent["unresolved_course"] = intent["course_hint"]
         return {
             "intent": {**intent, "course_code": None, "course_name": None},
@@ -70,7 +83,6 @@ def chat(body: ChatIn, con=Depends(get_db)):
         }
 
     if intent.get("kind") == "other":
-        # no retrieval to ground a reply, but say why rather than going silent
         return {
             "intent": {**intent, "course_code": course_code,
                        "course_name": course_name},
@@ -79,8 +91,6 @@ def chat(body: ChatIn, con=Depends(get_db)):
         }
 
     rows, score = _retrieve(con, intent, course_code)
-    # the composer sees a prefix of the rows; citations cover exactly that
-    # prefix so a [n] marker always resolves to a row the model was shown
     cited = rows[:C.CONTEXT_ROWS]
 
     answer = None
