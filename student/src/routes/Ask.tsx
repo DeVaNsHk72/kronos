@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import {
   BookOpen,
@@ -114,6 +115,18 @@ export default function Ask() {
   const [turns, setTurns] = useState<Turn[]>([]);
   const [flash, setFlash] = useState<string | null>(null);
   const [totalQuestions, setTotalQuestions] = useState<number | null>(null);
+
+  // The landing hands a question over in navigation state. Fired once — a
+  // re-render must not re-ask it, and neither must a back-navigation.
+  const handoff = (useLocation().state as { question?: string } | null)?.question;
+  const fired = useRef(false);
+  useEffect(() => {
+    if (handoff && !fired.current) {
+      fired.current = true;
+      submit(handoff);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [handoff]);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

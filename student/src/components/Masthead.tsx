@@ -4,7 +4,8 @@ import { Command as CommandIcon } from "@phosphor-icons/react";
 import CommandK from "./CommandK";
 
 const TABS = [
-  { to: "/home", label: "Home" },
+  { to: "/", label: "Home" },
+  { to: "/home", label: "Search" },
   { to: "/ask", label: "Ask" },
   { to: "/stats", label: "Stats" },
   { to: "/download", label: "Download" },
