@@ -66,7 +66,9 @@ export default function PromptBox({
         const blob = new Blob(chunksRef.current, { type: "audio/webm" });
         try {
           const text = await speechToText(blob);
-          onChange((prev) => (prev ? prev + " " + text : text));
+          // onChange takes a string, not an updater — read the current value
+          // from props. As an updater this silently discarded the transcript.
+          onChange(value ? `${value} ${text}` : text);
         } catch (e) {
           console.error("STT failed:", e);
         } finally {

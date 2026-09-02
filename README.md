@@ -8,34 +8,23 @@ what the exam has been over- and under-examining.
 
 ```
 kronos/
-├── student/    Vite + React 19 — the student-facing archive (search, ask, stats, bulk export)
-├── faculty/    Next.js 15 — the faculty console (paper generator, coverage, CO/PO, Genie)
-├── backend/    FastAPI — serves the student app from SQLite + embeddings
-├── design/     Shared design tokens. Both apps import these; neither owns a palette.
+├── student/    Vite + React 19 — ONE app: student archive + faculty console
+│   └── src/routes/faculty/   dashboard · generate · coverage · attainment · bank · similar
+├── backend/    FastAPI — student archive, and the Databricks proxy the console calls
+├── design/     Shared design tokens
 └── scripts/    Corpus pipeline: OCR, extraction, embeddings, topic clustering
 ```
 
-## The two apps, and why they are separate
+## One app, two audiences
 
-They answer different questions and are deployed independently, but they are one
-product visually: `design/tokens.css` and `design/typography.css` hold the palette
-and type, and each app maps them into its own build system's theme layer. Changing
-the accent in one file changes both. Previously the palette was duplicated per app
-and had begun to drift.
+Students and faculty share a build, a router and a design system — they are the
+same product seen from two sides, not two products. `/home`, `/ask`, `/stats`,
+`/download` for students; `/faculty/*` for lecturers.
 
-| | student | faculty |
-|---|---|---|
-| Stack | Vite + React Router + Tailwind v4 | Next.js App Router + Tailwind v3 |
-| Data | FastAPI → SQLite + embeddings | Databricks SQL (Unity Catalog) |
-| Deploy | Cloudflare Pages | any Node host |
-
-Start with **[PROJECT.md](PROJECT.md)** for the full explanation — problem, gold
-table design, every feature, the pipeline, and the skills involved.
-
-See **[SCHEMA.md](SCHEMA.md)** for the complete database reference — every
-column, every coverage gap, and the eight traps that produce plausible wrong
-answers. See **[AGENTS.md](AGENTS.md)** for how each AI component is grounded — the part
-that decides whether an answer can be trusted.
+**The Databricks token lives in the backend, never the bundle.** A static SPA has
+no secrets, so the console names a query (`POST /api/faculty/query`) and the
+server holds the credentials and the SQL. This is why the faculty screens need
+the API running, where a server-rendered version would not.
 
 ## Faculty console
 
@@ -50,8 +39,9 @@ Screens: dashboard · paper generator · coverage gaps · CO/PO attainment ·
 question bank · "has this been asked?" · syllabus gaps · Genie ask panel.
 
 ```bash
-cd faculty && cp .env.example .env.local   # fill in Databricks host/token/warehouse
-npm install && npm run dev                 # http://localhost:3100
+cp .env.example .env          # Databricks host / token / warehouse / genie space
+uvicorn backend.app.main:app --reload
+cd student && pnpm install && pnpm dev
 ```
 
 `DATABRICKS_CATALOG` must match the catalog the Genie space is configured
@@ -61,7 +51,7 @@ other screen, which is very hard to notice.
 ## Student app
 
 ```bash
-cd student && npm install && npm run dev
+cd student && pnpm install && pnpm dev
 ```
 
 ---

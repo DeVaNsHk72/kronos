@@ -313,8 +313,8 @@ number is allowed to claim:
 
 ```
 kronos/
-├── student/        Vite + React 19 — search, ask, stats, download, voice
-├── faculty/        the faculty console (being merged into student/)
+├── student/        Vite + React 19 — ONE app, both audiences
+│   └── src/routes/faculty/   the faculty console, same router and design system
 ├── backend/        FastAPI — student archive + Databricks proxy
 │   └── app/
 │       ├── databricks.py     SQL Statement Execution client (holds the token)

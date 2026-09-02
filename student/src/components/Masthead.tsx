@@ -8,6 +8,7 @@ const TABS = [
   { to: "/ask", label: "Ask" },
   { to: "/stats", label: "Stats" },
   { to: "/download", label: "Download" },
+  { to: "/faculty", label: "Faculty" },
 ];
 
 function Wordmark() {

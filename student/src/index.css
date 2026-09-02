@@ -330,3 +330,14 @@ mark.hl {
     animation: none;
   }
 }
+
+/* ---- print: the generated paper, and nothing else ------------------------
+   A lecturer prints this for the exam section. Chrome, controls and provenance
+   buttons are working aids, not part of the document. */
+@media print {
+  header, nav, aside, .no-print { display: none !important; }
+  body { background: #fff !important; color: #000 !important; }
+  .paper-sheet { font-size: 11pt; border: none !important; padding: 0 !important; }
+  .paper-sheet section { break-inside: avoid; }
+  @page { margin: 18mm 16mm; size: A4; }
+}
