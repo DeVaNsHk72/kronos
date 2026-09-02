@@ -10,7 +10,6 @@ export default function Generate() {
   const [key, setKey] = useState("");
   const [examType, setExamType] = useState("SEE");
   const [excl, setExcl] = useState(3);
-  const [requireCo, setRequireCo] = useState(true);
   const [mix, setMix] = useState<Record<string, number>>({
     remember: 10, understand: 30, apply: 40, analyse: 20, evaluate: 0 });
   const [paper, setPaper] = useState<any>(null);
@@ -19,13 +18,12 @@ export default function Generate() {
   const [open, setOpen] = useState<string | null>(null);
 
   useEffect(() => { if (subjects?.length && !key) setKey(subjects[0].subject_key); }, [subjects, key]);
-  const mixTotal = Object.values(mix).reduce((a, b) => a + b, 0);
 
   async function go() {
     setBusy(true); setErr(null);
     try {
       setPaper(await generatePaper({ subject_key: key, exam_type: examType,
-        exclude_years: excl, require_co: requireCo, bloom_mix: mix,
+        exclude_years: excl, bloom_mix: mix,
         // A blueprint saved on the Blueprint screen is authoritative for this
         // subject; the declared format is only the fallback.
         blueprint: (() => {
@@ -42,7 +40,7 @@ export default function Generate() {
   return (
     <div className="max-w-[1400px] mx-auto px-6 py-8">
       <PageHead title="Set the next paper"
-        blurb="Assembled by constraint satisfaction from questions that were actually set. Nothing is written by a language model — every line traces to a question id, its source PDF and the year it was last asked."
+        blurb="Assembled from questions that were actually set. Nothing is written by a language model — every line traces to a real past paper and the year it was last asked."
         right={<SubjectPicker subjects={subjects} value={key} onChange={setKey} />} />
 
       <div className="grid lg:grid-cols-[280px_1fr] gap-6 items-start">
@@ -63,9 +61,11 @@ export default function Generate() {
               onChange={(e) => setExcl(Number(e.target.value))} className="w-full accent-mark" />
           </div>
           <div>
-            <div className="flex justify-between items-baseline mb-2">
-              <span className="text-[11px] uppercase tracking-wider text-ink-2">Difficulty mix</span>
-              <span className={`font-mono text-[11px] ${mixTotal === 100 ? "text-ink-2" : "text-mark"}`}>{mixTotal}%</span>
+            <div className="mb-2">
+              <span className="text-[11px] uppercase tracking-wider text-ink-2">Difficulty preference</span>
+              <span className="block text-[11px] text-ink-2 mt-0.5">
+                Slots prefer the highest-weighted level first. A level at 0 is never preferred.
+              </span>
             </div>
             {BLOOMS.map((b) => (
               <div key={b} className="flex items-center gap-2 mb-1.5">
@@ -77,10 +77,6 @@ export default function Generate() {
               </div>
             ))}
           </div>
-          <label className="flex items-center gap-2 text-[13px] text-ink cursor-pointer">
-            <input type="checkbox" checked={requireCo} onChange={(e) => setRequireCo(e.target.checked)}
-              className="accent-mark" /> Require every CO to appear
-          </label>
           <button onClick={go} disabled={busy || !key}
             className="bg-mark text-paper rounded-md py-2 text-[14px] font-medium disabled:opacity-40">
             {busy ? "Assembling…" : paper ? "Regenerate" : "Generate paper"}
@@ -92,7 +88,7 @@ export default function Generate() {
           {busy && !paper && <Skeleton className="h-[480px] w-full" />}
           {!busy && !paper && !err && (
             <Empty title="No paper yet"
-              hint="Any constraint that cannot be met will be stated on the paper, not hidden." />
+              hint="Choose the exam and generate. Every question comes from a real past paper." />
           )}
           {paper && <Paper paper={paper} subject={subject} open={open} setOpen={setOpen} />}
         </section>
@@ -106,25 +102,12 @@ function Paper({ paper, subject, open, setOpen }: any) {
     // k-rise: the agent takes 20-60s, then a whole paper would otherwise
     // teleport in. Fade + 6px rise, ease-out 220ms.
     <div className="flex flex-col gap-4 k-rise">
-      {paper.warnings?.length > 0 && (
-        <Banner>
-          <p className="font-medium mb-1">
-            {paper.warnings.length} constraint{paper.warnings.length === 1 ? "" : "s"} relaxed.
-          </p>
-          <ul className="list-disc ml-4 space-y-0.5 text-[12px] text-ink-2 max-h-36 overflow-y-auto">
-            {paper.warnings.map((w: string, i: number) => <li key={i}>{w}</li>)}
-          </ul>
-        </Banner>
-      )}
       <div className="flex items-center gap-3 flex-wrap no-print">
         <span className="font-mono text-[11px] uppercase tracking-widest text-ink-2">
           structure: {paper.basis}
         </span>
         <span className="font-mono text-[11px] text-ink-2">
           {paper.total_marks} answerable · {paper.printed_marks} printed · excluding since {paper.cutoff_year}
-        </span>
-        <span className="font-mono text-[11px] text-ink-2">
-          CO {paper.cos_covered.join(",") || "none"} of {paper.cos_required.join(",")}
         </span>
         <button onClick={() => window.print()}
           className="ml-auto border border-line rounded-md px-3 py-1.5 text-[13px] hover:bg-line-2">
@@ -154,7 +137,7 @@ function Paper({ paper, subject, open, setOpen }: any) {
           <section key={sec.label} className="mb-7">
             <div className="flex items-baseline justify-between border-b border-line pb-1 mb-1">
               <h3 className="font-semibold text-[14px] tracking-wide">{sec.label}</h3>
-              <span className="font-mono text-[10px] text-ink-2 uppercase tracking-wider">CO · PO · Marks</span>
+              <span className="font-mono text-[10px] text-ink-2 uppercase tracking-wider">Marks</span>
             </div>
             <p className="text-[12px] text-ink-2 mb-2 italic">{sec.note}</p>
             {sec.picks.map((p: any) => {
@@ -188,7 +171,7 @@ function Paper({ paper, subject, open, setOpen }: any) {
                     )}
                   </div>
                   <span className="font-mono text-[12px] text-ink-2 whitespace-nowrap pt-0.5">
-                    {p.q?.course_outcome ?? "—"} · {p.q?.program_outcome ?? "—"} · {p.marks}
+                    {p.marks}
                   </span>
                 </div>
               );

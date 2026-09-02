@@ -5,10 +5,7 @@ import CommandK from "./CommandK";
 
 const TABS = [
   { to: "/", label: "Home" },
-  { to: "/home", label: "Search" },
-  { to: "/ask", label: "Ask" },
-  { to: "/stats", label: "Stats" },
-  { to: "/download", label: "Download" },
+  { to: "/ask", label: "Study" },
   { to: "/faculty", label: "Intelligence" },
 ];
 

@@ -47,31 +47,25 @@ SELECT bloom_level, COUNT(*) AS questions, SUM(marks) AS marks
 FROM {C}.fact_question
 WHERE subject_key = :subject_key AND bloom_level IS NOT NULL
 GROUP BY bloom_level ORDER BY questions DESC"""
-
 COVERAGE_GAP = f"""
+-- Note coverage is aggregated to one row per topic BEFORE the join. Joining
+-- fact_note_coverage directly fans each question row out by its number of note
+-- rows, which multiplied every mark total on this screen: "Storage as a
+-- Service" read 1,190 marks from 175 questions when the truth is far lower and
+-- it is not even in the top three.
+WITH notes AS (
+  SELECT topic_id, SUM(depth_score) AS notes_pages
+  FROM {C}.fact_note_coverage GROUP BY topic_id
+)
 SELECT t.topic_name, t.unit_no, SUM(q.marks) AS marks_examined,
        COUNT(DISTINCT q.exam_year) AS years_appeared, COUNT(*) AS questions,
-       COALESCE(SUM(n.depth_score), 0) AS notes_pages
+       COALESCE(MAX(n.notes_pages), 0) AS notes_pages
 FROM {C}.fact_question q
 JOIN {C}.dim_topic t ON t.topic_id = q.topic_id
-LEFT JOIN {C}.fact_note_coverage n ON n.topic_id = t.topic_id
+LEFT JOIN notes n ON n.topic_id = t.topic_id
 WHERE q.subject_key = :subject_key AND q.marks IS NOT NULL
-GROUP BY t.topic_name, t.unit_no ORDER BY marks_examined DESC"""
-
-CO_ATTAINMENT = f"""
-SELECT course_outcome, COUNT(*) AS questions, SUM(marks) AS total_marks,
-       ROUND(100.0 * SUM(marks) / SUM(SUM(marks)) OVER (), 1) AS pct_of_paper
-FROM {C}.fact_question
-WHERE subject_key = :subject_key AND sitting = 'Main'
-  AND course_outcome IS NOT NULL AND marks IS NOT NULL
-GROUP BY course_outcome ORDER BY course_outcome"""
-
-PO_ATTAINMENT = f"""
-SELECT program_outcome, COUNT(*) AS questions, SUM(marks) AS total_marks
-FROM {C}.fact_question
-WHERE subject_key = :subject_key AND sitting = 'Main'
-  AND program_outcome IS NOT NULL AND marks IS NOT NULL
-GROUP BY program_outcome ORDER BY program_outcome"""
+GROUP BY t.topic_name, t.unit_no
+ORDER BY marks_examined DESC"""
 
 REPETITION = f"""
 SELECT repeat_cluster_id, COUNT(*) AS times_asked,
@@ -101,12 +95,6 @@ FROM {C}.fact_question
 WHERE subject_key = :subject_key AND sitting = 'Main'
   AND marks IS NOT NULL AND unit_no IS NOT NULL
 GROUP BY unit_no, marks ORDER BY unit_no, marks"""
-
-DISTINCT_COS = f"""
-SELECT DISTINCT course_outcome FROM {C}.fact_question
-WHERE subject_key = :subject_key AND course_outcome IS NOT NULL
-ORDER BY course_outcome"""
-
 CANDIDATES = f"""
 WITH recent_clusters AS (
   SELECT DISTINCT repeat_cluster_id FROM {C}.fact_question
@@ -185,25 +173,27 @@ WHERE q.subject_key = :subject_key AND q.sitting = 'Main'
   AND q.marks IS NOT NULL AND q.unit_no IS NOT NULL
 GROUP BY q.unit_no, q.marks
 ORDER BY q.unit_no, q.marks"""
-
-# Which cognitive level each outcome is actually tested at. A CO assessed only
-# by recall is a real finding for an accreditation review.
-BLOOM_BY_CO = f"""
-SELECT course_outcome, bloom_level, COUNT(*) AS questions, SUM(marks) AS marks
-FROM {C}.fact_question
-WHERE subject_key = :subject_key AND sitting = 'Main'
-  AND course_outcome IS NOT NULL AND bloom_level IS NOT NULL
-GROUP BY course_outcome, bloom_level
-ORDER BY course_outcome, bloom_level"""
+# Questions a practice set can be built from. Short-answer questions make poor
+# MCQ stems, so the floor on marks keeps only ones with enough substance to
+# carry distractors.
+PRACTICE_POOL = f"""
+SELECT q.question_id, q.question_text, q.marks, q.unit_no, q.bloom_level,
+       q.exam_year, q.source_file, q.topic_id, t.topic_name
+FROM {C}.fact_question q
+LEFT JOIN {C}.dim_topic t ON t.topic_id = q.topic_id
+WHERE q.subject_key = :subject_key
+  AND q.marks IS NOT NULL AND q.marks >= 4
+  AND LENGTH(q.question_text) BETWEEN 40 AND 400
+ORDER BY q.exam_year DESC
+LIMIT 400"""
 
 
 REGISTRY = {
     "subjects": SUBJECTS, "overview": OVERVIEW, "marksByUnit": MARKS_BY_UNIT,
     "unitDrift": UNIT_DRIFT, "bloom": BLOOM, "coverageGap": COVERAGE_GAP,
-    "coAttainment": CO_ATTAINMENT, "poAttainment": PO_ATTAINMENT,
     "repetition": REPETITION, "freshness": FRESHNESS, "blueprint": BLUEPRINT,
-    "markSlots": MARK_SLOTS, "distinctCos": DISTINCT_COS,
-    "availability": AVAILABILITY, "bloomByCo": BLOOM_BY_CO,
+    "markSlots": MARK_SLOTS,
+    "availability": AVAILABILITY, "practicePool": PRACTICE_POOL,
 }
 ALLOWED_PARAMS = {"subject_key", "exam_type", "unit_no", "marks",
                   "target_bloom", "cutoff_year", "probe", "topic_id"}

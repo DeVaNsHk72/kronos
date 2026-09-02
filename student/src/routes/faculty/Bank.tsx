@@ -8,7 +8,7 @@ const SITTINGS = ["Main", "Supplementary", "Makeup", "Reappear", "Grade Improvem
 const LIMIT = 50;
 
 type Filters = {
-  unit?: string; marks?: string; co?: string;
+  unit?: string; marks?: string;
   bloom?: string; year?: string; sitting?: string;
 };
 
@@ -32,7 +32,6 @@ export default function Bank() {
         subject_key: key, q: q || null,
         unit: f.unit ? Number(f.unit) : null,
         marks: f.marks ? Number(f.marks) : null,
-        co: f.co ? Number(f.co) : null,
         year: f.year ? Number(f.year) : null,
         bloom: f.bloom ?? null, sitting: f.sitting ?? null,
         limit: LIMIT, offset: page * LIMIT,
@@ -47,8 +46,8 @@ export default function Bank() {
   const total = data?.total ?? 0;
 
   function exportCsv() {
-    const cols = ["question_id", "question_text", "marks", "unit_no", "course_outcome",
-                  "program_outcome", "bloom_level", "exam_year", "exam_session", "source_file"];
+    const cols = ["question_id", "question_text", "marks", "unit_no",
+                  "bloom_level", "exam_year", "exam_session", "source_file"];
     const esc = (v: unknown) => `"${String(v ?? "").replace(/"/g, '""')}"`;
     const csv = [cols.join(","), ...rows.map((r) => cols.map((c) => esc(r[c])).join(","))].join("\n");
     const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
@@ -70,8 +69,6 @@ export default function Bank() {
              options={["1","2","3","4","5","6","7"]} />
         <Sel label="Marks" value={f.marks} onChange={(v) => setF({ ...f, marks: v })}
              options={["2","4","5","6","7","8","10","12","15","20"]} />
-        <Sel label="CO" value={f.co} onChange={(v) => setF({ ...f, co: v })}
-             options={["1","2","3","4","5","6"]} />
         <Sel label="Bloom" value={f.bloom} onChange={(v) => setF({ ...f, bloom: v })} options={BLOOMS} />
         <Sel label="Year" value={f.year} onChange={(v) => setF({ ...f, year: v })}
              options={Array.from({ length: 9 }, (_, i) => String(2024 - i))} />
@@ -99,7 +96,6 @@ export default function Bank() {
                 <th className="px-3 py-2 font-medium">Question</th>
                 <th className="px-3 py-2 font-medium">U</th>
                 <th className="px-3 py-2 font-medium text-right">Marks</th>
-                <th className="px-3 py-2 font-medium">CO</th>
                 <th className="px-3 py-2 font-medium">Bloom</th>
                 <th className="px-3 py-2 font-medium">Year</th>
                 <th className="px-3 py-2 font-medium">Source</th>
@@ -114,7 +110,6 @@ export default function Bank() {
                         <td className="px-3 py-2 serif max-w-[520px]">{r.question_text}</td>
                         <td className="px-3 py-2 font-mono text-ink-2">{r.unit_no ?? "—"}</td>
                         <td className="px-3 py-2 font-mono text-right">{r.marks ?? "—"}</td>
-                        <td className="px-3 py-2 font-mono text-ink-2">{r.course_outcome ?? "—"}</td>
                         <td className="px-3 py-2 text-ink-2 text-[12px]">{r.bloom_level ?? "—"}</td>
                         <td className="px-3 py-2 font-mono text-ink-2">{r.exam_year}</td>
                         <td className="px-3 py-2 font-mono text-[11px] text-ink-2 max-w-[170px] truncate"
@@ -122,7 +117,7 @@ export default function Bank() {
                       </tr>
                       {openRow === id && (
                         <tr key={id + "-d"} className="bg-paper">
-                          <td colSpan={7} className="px-3 py-3">
+                          <td colSpan={6} className="px-3 py-3">
                             <div className="font-mono text-[11px] text-ink-2 space-y-0.5">
                               <div>question_id: {r.question_id}</div>
                               <div>source_file: {r.source_file}</div>

@@ -1,0 +1,3840 @@
+[
+{
+"sha": "625578a47d3b0e2da0955ac0bfdfcc69c67b172f1638e6f0738f54c87c4eb845",
+"subject": "Analysis and Design of Algorithm",
+"file": "SEE.pdf",
+"asset": "exam_paper",
+"pages": 27,
+"size_mb": 1.95,
+"src": "ExNote/CSE/Sem 4/23CS4PCADA - Analysis and Design of Algorithm/Exam papers/SEE.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23CS4PCADA"
+},
+{
+"sha": "4a1b1e29fb220245437419d7ad324537607d612315aa1aae8b27da14da6f9fac",
+"subject": "Analysis and Design of Algorithm",
+"file": "UNIT 2.pdf",
+"asset": "notes",
+"pages": 61,
+"size_mb": 1.35,
+"src": "ExNote/CSE/Sem 4/23CS4PCADA - Analysis and Design of Algorithm/Notes/UNIT 2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23CS4PCADA"
+},
+{
+"sha": "fd7b3ea5342f6c2406785257ec70449a428105dca156a1ff02ff952c2a4dbe20",
+"subject": "Analysis and Design of Algorithm",
+"file": "UNIT 3.pdf",
+"asset": "notes",
+"pages": 78,
+"size_mb": 4.78,
+"src": "ExNote/CSE/Sem 4/23CS4PCADA - Analysis and Design of Algorithm/Notes/UNIT 3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23CS4PCADA"
+},
+{
+"sha": "29c7f14b1948d8652569d35b1eca742574b17b895fc833173d29d69854a81b73",
+"subject": "Analysis and Design of Algorithm",
+"file": "UNIT 4.pdf",
+"asset": "notes",
+"pages": 67,
+"size_mb": 2.29,
+"src": "ExNote/CSE/Sem 4/23CS4PCADA - Analysis and Design of Algorithm/Notes/UNIT 4.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23CS4PCADA"
+},
+{
+"sha": "6e542fb0908ccb84fdb4ddaa006efd45fe3907f8a35e0d6e1081c2c832a72d77",
+"subject": "Analysis and Design of Algorithm",
+"file": "UNIT 5.pdf",
+"asset": "notes",
+"pages": 76,
+"size_mb": 7.49,
+"src": "ExNote/CSE/Sem 4/23CS4PCADA - Analysis and Design of Algorithm/Notes/UNIT 5.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23CS4PCADA"
+},
+{
+"sha": "087a002894b15ae629f93b2ccf0b2590c1d161d9b5e6b61adf2dcb4488556c44",
+"subject": "Analysis and Design of Algorithm",
+"file": "UNIT1.pdf",
+"asset": "notes",
+"pages": 75,
+"size_mb": 9.0,
+"src": "ExNote/CSE/Sem 4/23CS4PCADA - Analysis and Design of Algorithm/Notes/UNIT1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23CS4PCADA"
+},
+{
+"sha": "11f29434563755cb33ecb33f3fb1a3f087db0b9de9daddd4f0e279008651602e",
+"subject": "Applied Physics",
+"file": "SEE.pdf",
+"asset": "exam_paper",
+"pages": 4,
+"size_mb": 0.44,
+"src": "ExNote/CSE/Sem 2/22PH2BSPCS - Applied Physics/Exam papers/SEE.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22PH2BSPCS"
+},
+{
+"sha": "b8b80f16c39b1d7acba145354fa2a366dad5e49e50efac90a773256cc5780405",
+"subject": "Applied Physics",
+"file": "Unit 1.pdf",
+"asset": "notes",
+"pages": 40,
+"size_mb": 1.4,
+"src": "ExNote/CSE/Sem 2/22PH2BSPCS - Applied Physics/Notes/Unit 1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22PH2BSPCS"
+},
+{
+"sha": "b301449664c838fbbf828db953214a728cbe7fb428cc3d5b08eaa47041efa310",
+"subject": "Applied Physics",
+"file": "Unit 2.pdf",
+"asset": "notes",
+"pages": 22,
+"size_mb": 1.38,
+"src": "ExNote/CSE/Sem 2/22PH2BSPCS - Applied Physics/Notes/Unit 2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22PH2BSPCS"
+},
+{
+"sha": "7f58b139c3794df956ef0b4537dae7f1773f477362c72fb9dd8c832bdf6bbd12",
+"subject": "Applied Physics",
+"file": "Unit 3.pdf",
+"asset": "notes",
+"pages": 8,
+"size_mb": 0.2,
+"src": "ExNote/CSE/Sem 2/22PH2BSPCS - Applied Physics/Notes/Unit 3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22PH2BSPCS"
+},
+{
+"sha": "b8c5e85506303f8b82bd7e14b590d44cd08431cb3f71787ef31734093edfdda6",
+"subject": "Applied Physics",
+"file": "Unit 4.pdf",
+"asset": "notes",
+"pages": 23,
+"size_mb": 3.02,
+"src": "ExNote/CSE/Sem 2/22PH2BSPCS - Applied Physics/Notes/Unit 4.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22PH2BSPCS"
+},
+{
+"sha": "7821ce7e638fb72e2388116eba2ab798c9de2708e522494cd5acb4959812bbc7",
+"subject": "Applied Physics",
+"file": "Unit 5.pdf",
+"asset": "notes",
+"pages": 16,
+"size_mb": 0.81,
+"src": "ExNote/CSE/Sem 2/22PH2BSPCS - Applied Physics/Notes/Unit 5.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22PH2BSPCS"
+},
+{
+"sha": "b18f6ba4e48a5141d982272fedf77726c18ca7db58e25f286c586d0999060f2b",
+"subject": "Artificial Intelligence",
+"file": "CIE1.pdf",
+"asset": "exam_paper",
+"pages": 6,
+"size_mb": 0.41,
+"src": "ExNote/CSE/Sem 5/23CS5PCAIN - Artificial Intelligence/Exam papers/CIE1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 5"
+],
+"code": "23CS5PCAIN"
+},
+{
+"sha": "d4c49f31a19ff46a5f6c4e920441d37da5c55c2ed6974c2a381df9fc799458e9",
+"subject": "Artificial Intelligence",
+"file": "CIE2.pdf",
+"asset": "exam_paper",
+"pages": 7,
+"size_mb": 0.74,
+"src": "ExNote/CSE/Sem 5/23CS5PCAIN - Artificial Intelligence/Exam papers/CIE2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 5"
+],
+"code": "23CS5PCAIN"
+},
+{
+"sha": "6ba7abcaac96e7e7b0e3b0f8244e9e55ef77df2279601d8d20f25c14e736ae5e",
+"subject": "Artificial Intelligence",
+"file": "CIE3.pdf",
+"asset": "exam_paper",
+"pages": 7,
+"size_mb": 0.45,
+"src": "ExNote/CSE/Sem 5/23CS5PCAIN - Artificial Intelligence/Exam papers/CIE3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 5"
+],
+"code": "23CS5PCAIN"
+},
+{
+"sha": "c81d08f7dab348a044764d15740e8ff06663df0d5203a40c3f09d87ee2c08712",
+"subject": "Artificial Intelligence",
+"file": "UNIT1.pdf",
+"asset": "notes",
+"pages": 205,
+"size_mb": 7.72,
+"src": "ExNote/CSE/Sem 5/23CS5PCAIN - Artificial Intelligence/Notes/UNIT1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 5"
+],
+"code": "23CS5PCAIN"
+},
+{
+"sha": "7ccff00957c810c7358a3b3f1727a70bf44202d4d72cc66e656d2b6b07b75565",
+"subject": "Artificial Intelligence",
+"file": "UNIT2.pdf",
+"asset": "notes",
+"pages": 214,
+"size_mb": 8.44,
+"src": "ExNote/CSE/Sem 5/23CS5PCAIN - Artificial Intelligence/Notes/UNIT2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 5"
+],
+"code": "23CS5PCAIN"
+},
+{
+"sha": "e338116ef4d2c62c0f46b5108fc70f91e053c7ba910a63c36f9b7eacd0948705",
+"subject": "Artificial Intelligence",
+"file": "UNIT3.pdf",
+"asset": "notes",
+"pages": 225,
+"size_mb": 6.48,
+"src": "ExNote/CSE/Sem 5/23CS5PCAIN - Artificial Intelligence/Notes/UNIT3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 5"
+],
+"code": "23CS5PCAIN"
+},
+{
+"sha": "8fc167c7bcd016337302ac59f7bc65737817640587e2d9903f5536ef414dfb4b",
+"subject": "Artificial Intelligence",
+"file": "UNIT4.pdf",
+"asset": "notes",
+"pages": 160,
+"size_mb": 6.47,
+"src": "ExNote/CSE/Sem 5/23CS5PCAIN - Artificial Intelligence/Notes/UNIT4.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 5"
+],
+"code": "23CS5PCAIN"
+},
+{
+"sha": "d96f7ceddd3bf5d2608c76da478e3af9f20674b296da0c1761b981550215be12",
+"subject": "Artificial Intelligence",
+"file": "UNIT5.pdf",
+"asset": "notes",
+"pages": 75,
+"size_mb": 4.24,
+"src": "ExNote/CSE/Sem 5/23CS5PCAIN - Artificial Intelligence/Notes/UNIT5.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 5"
+],
+"code": "23CS5PCAIN"
+},
+{
+"sha": "bb8d6fab43d32bde8b176eb9fa543238460bdf577a173163aae1171d744dec7d",
+"subject": "Cloud Computing",
+"file": "SEE.pdf",
+"asset": "exam_paper",
+"pages": 13,
+"size_mb": 0.57,
+"src": "ExNote/CSE/Sem 6/23CS6PCCCT - Cloud Computing/Exam papers/SEE.pdf",
+"branches": [
+"CSE",
+"ICB"
+],
+"sems": [
+"Sem 6"
+],
+"code": "23CS6PCCCT"
+},
+{
+"sha": "35ddd65a543123a8a620469746588154ab47b9e89325627f4cfafc9e0cee1fbe",
+"subject": "Cloud Computing",
+"file": "Unit 1.pdf",
+"asset": "notes",
+"pages": 159,
+"size_mb": 4.14,
+"src": "ExNote/CSE/Sem 6/23CS6PCCCT - Cloud Computing/Notes/Unit 1.pdf",
+"branches": [
+"CSE",
+"ICB"
+],
+"sems": [
+"Sem 6"
+],
+"code": "23CS6PCCCT"
+},
+{
+"sha": "cb6ae73080f6c5b4d4d1584dcbb3043f9991dd39b62205602f94df76b869212b",
+"subject": "Cloud Computing",
+"file": "Unit 2.pdf",
+"asset": "notes",
+"pages": 64,
+"size_mb": 1.09,
+"src": "ExNote/CSE/Sem 6/23CS6PCCCT - Cloud Computing/Notes/Unit 2.pdf",
+"branches": [
+"CSE",
+"ICB"
+],
+"sems": [
+"Sem 6"
+],
+"code": "23CS6PCCCT"
+},
+{
+"sha": "ea83a92e982d83a6e7b9f0bf8b1d35dfe6cda3996bad739047dacf3086a56b2a",
+"subject": "Cloud Computing",
+"file": "Unit 3.pdf",
+"asset": "notes",
+"pages": 55,
+"size_mb": 0.45,
+"src": "ExNote/CSE/Sem 6/23CS6PCCCT - Cloud Computing/Notes/Unit 3.pdf",
+"branches": [
+"CSE",
+"ICB"
+],
+"sems": [
+"Sem 6"
+],
+"code": "23CS6PCCCT"
+},
+{
+"sha": "3b0fa4d054d274673ea5041d585fd4ad9df61c96c6a7b63acab8e6e9e2a2e189",
+"subject": "Cloud Computing",
+"file": "Unit 4.pdf",
+"asset": "notes",
+"pages": 35,
+"size_mb": 0.61,
+"src": "ExNote/CSE/Sem 6/23CS6PCCCT - Cloud Computing/Notes/Unit 4.pdf",
+"branches": [
+"CSE",
+"ICB"
+],
+"sems": [
+"Sem 6"
+],
+"code": "23CS6PCCCT"
+},
+{
+"sha": "b3d56ce6fc14da34401b2efbd23ee23f19553166c0489a59c06cbb8af6df37a7",
+"subject": "Cloud Computing",
+"file": "Unit 5.pdf",
+"asset": "notes",
+"pages": 35,
+"size_mb": 3.03,
+"src": "ExNote/CSE/Sem 6/23CS6PCCCT - Cloud Computing/Notes/Unit 5.pdf",
+"branches": [
+"CSE",
+"ICB"
+],
+"sems": [
+"Sem 6"
+],
+"code": "23CS6PCCCT"
+},
+{
+"sha": "4c1e493db096f3261cbbae5fb5062236f9940dd6a9f800b2b50bec4f91396c93",
+"subject": "Computer Aided Engineering Design",
+"file": "CIE 1.pdf",
+"asset": "exam_paper",
+"pages": 5,
+"size_mb": 0.81,
+"src": "ExNote/CSE/Sem 1/22ME2ESCED - Computer Aided Engineering Design/Exam papers/CIE 1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22ME2ESCED"
+},
+{
+"sha": "d2c167687c97e55b41c0bf47f7f2ee831f4a93074abb6fb398b3de878e1deff8",
+"subject": "Computer Aided Engineering Design",
+"file": "SEE.pdf",
+"asset": "exam_paper",
+"pages": 23,
+"size_mb": 5.55,
+"src": "ExNote/CSE/Sem 1/22ME2ESCED - Computer Aided Engineering Design/Exam papers/SEE.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22ME2ESCED"
+},
+{
+"sha": "83c26df1f82ba555bb6f754fdc86ecc75af70524a4f3f4f3d91b63122483f43e",
+"subject": "Computer Aided Engineering Design",
+"file": "UNIT 1.pdf",
+"asset": "notes",
+"pages": 50,
+"size_mb": 12.13,
+"src": "ExNote/CSE/Sem 1/22ME2ESCED - Computer Aided Engineering Design/Notes/UNIT 1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22ME2ESCED"
+},
+{
+"sha": "760502a491006f4507ef79f1c5c2353c0602008e62b370c45bbb6bd96cb3e3e0",
+"subject": "Computer Aided Engineering Design",
+"file": "UNIT 2.pdf",
+"asset": "notes",
+"pages": 23,
+"size_mb": 6.07,
+"src": "ExNote/CSE/Sem 1/22ME2ESCED - Computer Aided Engineering Design/Notes/UNIT 2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22ME2ESCED"
+},
+{
+"sha": "eaa29b153eccad9c66aa0207eda088dcd81df8066f00a53b93fbbf45c9a69c07",
+"subject": "Computer Aided Engineering Design",
+"file": "UNIT 3.pdf",
+"asset": "notes",
+"pages": 59,
+"size_mb": 13.76,
+"src": "ExNote/CSE/Sem 1/22ME2ESCED - Computer Aided Engineering Design/Notes/UNIT 3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22ME2ESCED"
+},
+{
+"sha": "df43e1434fccbabaf15a12a566bb0a8d714086e288c039ca43d09b727f98210f",
+"subject": "Computer Aided Engineering Design",
+"file": "UNIT 4.pdf",
+"asset": "notes",
+"pages": 47,
+"size_mb": 3.96,
+"src": "ExNote/CSE/Sem 1/22ME2ESCED - Computer Aided Engineering Design/Notes/UNIT 4.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22ME2ESCED"
+},
+{
+"sha": "b82294d75e47b1d95dcb1523cb1e679f9af24b4b93821b9fcd22eeb0c5f5ee67",
+"subject": "Computer Network",
+"file": "CIE 1.pdf",
+"asset": "exam_paper",
+"pages": 6,
+"size_mb": 0.51,
+"src": "ExNote/AIDS/Sem 4/CN - Computer Network/Exam papers/CIE 1.pdf",
+"branches": [
+"AIDS",
+"CSE",
+"ICB"
+],
+"sems": [
+"Sem 4",
+"Sem 5"
+],
+"code": "CN"
+},
+{
+"sha": "4850ae97176bf3351c969f8012a86a8ea17bd7c4abff8424b011856b446861ee",
+"subject": "Computer Network",
+"file": "CIE 2.pdf",
+"asset": "exam_paper",
+"pages": 2,
+"size_mb": 0.13,
+"src": "ExNote/AIDS/Sem 4/CN - Computer Network/Exam papers/CIE 2.pdf",
+"branches": [
+"AIDS",
+"CSE",
+"ICB"
+],
+"sems": [
+"Sem 4",
+"Sem 5"
+],
+"code": "CN"
+},
+{
+"sha": "95296677920ea07cfd95029c39083523f1cdd5bc267d6b6e88e7074379923dab",
+"subject": "Computer Network",
+"file": "CIE3.pdf",
+"asset": "exam_paper",
+"pages": 15,
+"size_mb": 1.7,
+"src": "ExNote/CSE/Sem 5/25CS5PCCON - Computer Network/Exam papers/CIE3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 5"
+],
+"code": "25CS5PCCON"
+},
+{
+"sha": "179ee30a792ea6a51e271732a348433aab6a08a74315eadf946744194efb1fed",
+"subject": "Computer Network",
+"file": "SEE.pdf",
+"asset": "exam_paper",
+"pages": 9,
+"size_mb": 0.62,
+"src": "ExNote/AIDS/Sem 4/CN - Computer Network/Exam papers/SEE.pdf",
+"branches": [
+"AIDS",
+"CSE",
+"ICB"
+],
+"sems": [
+"Sem 4",
+"Sem 5"
+],
+"code": "CN"
+},
+{
+"sha": "94737dbe56730863314568bc34ee9782295e10bda798cc529bace0889c59f4fe",
+"subject": "Computer Network",
+"file": "UNIT 2.pdf",
+"asset": "notes",
+"pages": 212,
+"size_mb": 11.77,
+"src": "ExNote/AIDS/Sem 4/CN - Computer Network/Notes/UNIT 2.pdf",
+"branches": [
+"AIDS",
+"CSE",
+"ICB"
+],
+"sems": [
+"Sem 4",
+"Sem 5"
+],
+"code": "CN"
+},
+{
+"sha": "90472583885bcfa43a458a56856982cd90449b8d0dbdb49dfc0492db1b28e044",
+"subject": "Computer Network",
+"file": "UNIT 3.pdf",
+"asset": "notes",
+"pages": 128,
+"size_mb": 11.0,
+"src": "ExNote/AIDS/Sem 4/CN - Computer Network/Notes/UNIT 3.pdf",
+"branches": [
+"AIDS",
+"CSE",
+"ICB"
+],
+"sems": [
+"Sem 4",
+"Sem 5"
+],
+"code": "CN"
+},
+{
+"sha": "8dd5c97fffedfcdb2846db346ca49b152f0966c032302e25b8dbefd06e0c466b",
+"subject": "Computer Network",
+"file": "UNIT 4.pdf",
+"asset": "notes",
+"pages": 96,
+"size_mb": 8.78,
+"src": "ExNote/AIDS/Sem 4/CN - Computer Network/Notes/UNIT 4.pdf",
+"branches": [
+"AIDS",
+"CSE",
+"ICB"
+],
+"sems": [
+"Sem 4",
+"Sem 5"
+],
+"code": "CN"
+},
+{
+"sha": "447eb8d410f38c1c6fb3c6db6d9fad9c59d6deaa65701915128e808152db8d6b",
+"subject": "Computer Network",
+"file": "UNIT 5.pdf",
+"asset": "notes",
+"pages": 132,
+"size_mb": 8.09,
+"src": "ExNote/AIDS/Sem 4/CN - Computer Network/Notes/UNIT 5.pdf",
+"branches": [
+"AIDS",
+"CSE",
+"ICB"
+],
+"sems": [
+"Sem 4",
+"Sem 5"
+],
+"code": "CN"
+},
+{
+"sha": "283c18723bd2123c18f151a2f0ec297f6c58281da7612a13de8852437f354128",
+"subject": "Computer Network",
+"file": "UNIT1.pdf",
+"asset": "notes",
+"pages": 224,
+"size_mb": 11.7,
+"src": "ExNote/AIDS/Sem 4/CN - Computer Network/Notes/UNIT1.pdf",
+"branches": [
+"AIDS",
+"CSE",
+"ICB"
+],
+"sems": [
+"Sem 4",
+"Sem 5"
+],
+"code": "CN"
+},
+{
+"sha": "5c5d735eafd51de1088fa65f2e0e909702656950d2d286dd4d66bb598db3e79b",
+"subject": "Computer Organization and Architecture",
+"file": "SEE.pdf",
+"asset": "exam_paper",
+"pages": 8,
+"size_mb": 0.52,
+"src": "ExNote/CSE/Sem 3/23CS3ESCOA - Computer Organization and Architecture/Exam papers/SEE.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 3"
+],
+"code": "23CS3ESCOA"
+},
+{
+"sha": "79926626d8e201272c6f653bc1aff0fa8ee49272ae94488371c9167caab80cea",
+"subject": "Computer Organization and Architecture",
+"file": "UNIT 1.pdf",
+"asset": "notes",
+"pages": 172,
+"size_mb": 1.92,
+"src": "ExNote/CSE/Sem 3/23CS3ESCOA - Computer Organization and Architecture/Notes/UNIT 1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 3"
+],
+"code": "23CS3ESCOA"
+},
+{
+"sha": "933172099898aa2553bb06be7e0624fcbd677ae096755242b00bdb876b2666c7",
+"subject": "Computer Organization and Architecture",
+"file": "UNIT 2.pdf",
+"asset": "notes",
+"pages": 156,
+"size_mb": 4.16,
+"src": "ExNote/CSE/Sem 3/23CS3ESCOA - Computer Organization and Architecture/Notes/UNIT 2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 3"
+],
+"code": "23CS3ESCOA"
+},
+{
+"sha": "ee371ee03894b94537c9babf9d2615fdfd2b499a5338790904f395813735ce82",
+"subject": "Computer Organization and Architecture",
+"file": "UNIT 3.pdf",
+"asset": "notes",
+"pages": 209,
+"size_mb": 5.31,
+"src": "ExNote/CSE/Sem 3/23CS3ESCOA - Computer Organization and Architecture/Notes/UNIT 3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 3"
+],
+"code": "23CS3ESCOA"
+},
+{
+"sha": "d6778a895cf5bf3a2effc0229fd675b0a8cdb73a2ed8322a6b270b8a79ba15c9",
+"subject": "Computer Organization and Architecture",
+"file": "UNIT 4.pdf",
+"asset": "notes",
+"pages": 188,
+"size_mb": 7.23,
+"src": "ExNote/CSE/Sem 3/23CS3ESCOA - Computer Organization and Architecture/Notes/UNIT 4.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 3"
+],
+"code": "23CS3ESCOA"
+},
+{
+"sha": "68fb191867e86ee0704c706555463f9222c320ef7dc97af1b7d60bed1c7addae",
+"subject": "Computer Organization and Architecture",
+"file": "UNIT 5.pdf",
+"asset": "notes",
+"pages": 51,
+"size_mb": 1.12,
+"src": "ExNote/CSE/Sem 3/23CS3ESCOA - Computer Organization and Architecture/Notes/UNIT 5.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 3"
+],
+"code": "23CS3ESCOA"
+},
+{
+"sha": "e19f69460b8c21985008c361960ddc3f2bcdb6812a02293ffb152610996a68e8",
+"subject": "Cryptography",
+"file": "CIE 3.pdf",
+"asset": "exam_paper",
+"pages": 9,
+"size_mb": 0.28,
+"src": "ExNote/CSE/Sem 4/23CS4ESCRP - Cryptography/Exam papers/CIE 3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23CS4ESCRP"
+},
+{
+"sha": "b2ddc44a64918900b8462f155bf70802d802d47d9b51e0e5f32fa23b63f41b78",
+"subject": "Cryptography",
+"file": "SEE.pdf",
+"asset": "exam_paper",
+"pages": 2,
+"size_mb": 0.15,
+"src": "ExNote/CSE/Sem 4/23CS4ESCRP - Cryptography/Exam papers/SEE.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23CS4ESCRP"
+},
+{
+"sha": "e5a3177caa8d6e1aa7649f68cf2ba1ae7eed692399cb973f94a1096e0db6e972",
+"subject": "Cryptography",
+"file": "UNIT 2.pdf",
+"asset": "notes",
+"pages": 199,
+"size_mb": 12.7,
+"src": "ExNote/CSE/Sem 4/23CS4ESCRP - Cryptography/Notes/UNIT 2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23CS4ESCRP"
+},
+{
+"sha": "939eb3bfc211ed03ac70b27c7115274d06beeff065e1a6e655c924a26d95efc9",
+"subject": "Cryptography",
+"file": "UNIT 3.pdf",
+"asset": "notes",
+"pages": 84,
+"size_mb": 4.6,
+"src": "ExNote/CSE/Sem 4/23CS4ESCRP - Cryptography/Notes/UNIT 3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23CS4ESCRP"
+},
+{
+"sha": "4bf84ed7eb2148e75296002daad3f25db6b40b672dbc18d426b8e738da62a83f",
+"subject": "Cryptography",
+"file": "UNIT 4.pdf",
+"asset": "notes",
+"pages": 89,
+"size_mb": 5.32,
+"src": "ExNote/CSE/Sem 4/23CS4ESCRP - Cryptography/Notes/UNIT 4.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23CS4ESCRP"
+},
+{
+"sha": "f01f5939cfce7dc39457874ddf8795f28fb37aa7cd381c56b6e16fed2ca2ce5f",
+"subject": "Cryptography",
+"file": "UNIT 5.pdf",
+"asset": "notes",
+"pages": 82,
+"size_mb": 6.78,
+"src": "ExNote/CSE/Sem 4/23CS4ESCRP - Cryptography/Notes/UNIT 5.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23CS4ESCRP"
+},
+{
+"sha": "0bd6bf3a9dc12f5fbf3549ff72e1d1efdf6295da7e777eb893c3afe8556e1136",
+"subject": "Cryptography",
+"file": "UNIT1.pdf",
+"asset": "notes",
+"pages": 215,
+"size_mb": 13.99,
+"src": "ExNote/CSE/Sem 4/23CS4ESCRP - Cryptography/Notes/UNIT1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23CS4ESCRP"
+},
+{
+"sha": "26ec9d16c33afd561451d59c449d1f65ecb6d8338b2df60da167f013d9bbbeb7",
+"subject": "DBMS",
+"file": "CIE 1.pdf",
+"asset": "exam_paper",
+"pages": 3,
+"size_mb": 1.02,
+"src": "ExNote/CSE/Sem 3/23CS3PCDBM - DBMS/Exam papers/CIE 1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 3"
+],
+"code": "23CS3PCDBM"
+},
+{
+"sha": "4c593f82cbb9d62553cc5af227b9b00eed652e253df243f749592fc5bd396303",
+"subject": "DBMS",
+"file": "CIE 2.pdf",
+"asset": "exam_paper",
+"pages": 4,
+"size_mb": 2.24,
+"src": "ExNote/CSE/Sem 3/23CS3PCDBM - DBMS/Exam papers/CIE 2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 3"
+],
+"code": "23CS3PCDBM"
+},
+{
+"sha": "d7b7dd45f232c5690ca041516d739dab46c8b8b431f575884fc8dd598e828b79",
+"subject": "DBMS",
+"file": "CIE 3.pdf",
+"asset": "exam_paper",
+"pages": 3,
+"size_mb": 1.23,
+"src": "ExNote/CSE/Sem 3/23CS3PCDBM - DBMS/Exam papers/CIE 3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 3"
+],
+"code": "23CS3PCDBM"
+},
+{
+"sha": "b03275f7d74ae42d7ae7b6c0910b1312b41c2e84e4cda36f3c8adfe9aa54b5eb",
+"subject": "DBMS",
+"file": "SEE.pdf",
+"asset": "exam_paper",
+"pages": 14,
+"size_mb": 1.11,
+"src": "ExNote/CSE/Sem 3/23CS3PCDBM - DBMS/Exam papers/SEE.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 3"
+],
+"code": "23CS3PCDBM"
+},
+{
+"sha": "c30a5dbc24d5eb2c3babeb91306c1d45c20973b8e3d33b6084f11c1f16553cbd",
+"subject": "DBMS",
+"file": "UNIT 1.pdf",
+"asset": "notes",
+"pages": 274,
+"size_mb": 4.51,
+"src": "ExNote/CSE/Sem 3/23CS3PCDBM - DBMS/Notes/UNIT 1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 3"
+],
+"code": "23CS3PCDBM"
+},
+{
+"sha": "dde768dccde2bde4b8f279c0d4940379f54fd02594638b569ca3141a30c41534",
+"subject": "DBMS",
+"file": "UNIT 2.pdf",
+"asset": "notes",
+"pages": 199,
+"size_mb": 3.9,
+"src": "ExNote/CSE/Sem 3/23CS3PCDBM - DBMS/Notes/UNIT 2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 3"
+],
+"code": "23CS3PCDBM"
+},
+{
+"sha": "7d7b88a6617bb6da48b9cb6d4b02fee8c7b62223cb150db5647870c944f59c7b",
+"subject": "DBMS",
+"file": "UNIT 3.pdf",
+"asset": "notes",
+"pages": 163,
+"size_mb": 2.26,
+"src": "ExNote/CSE/Sem 3/23CS3PCDBM - DBMS/Notes/UNIT 3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 3"
+],
+"code": "23CS3PCDBM"
+},
+{
+"sha": "c7ab5254f69816c0991b5ef86ea82a6702c068e4dfa3193631d84f8487488203",
+"subject": "DBMS",
+"file": "UNIT 4.pdf",
+"asset": "notes",
+"pages": 100,
+"size_mb": 2.46,
+"src": "ExNote/CSE/Sem 3/23CS3PCDBM - DBMS/Notes/UNIT 4.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 3"
+],
+"code": "23CS3PCDBM"
+},
+{
+"sha": "79ae590f62ec6fd78651ab0ba19d7af56b40d5e9342aa8bfdd19d857d6d2cf72",
+"subject": "DBMS",
+"file": "UNIT 5.pdf",
+"asset": "notes",
+"pages": 299,
+"size_mb": 3.18,
+"src": "ExNote/CSE/Sem 3/23CS3PCDBM - DBMS/Notes/UNIT 5.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 3"
+],
+"code": "23CS3PCDBM"
+},
+{
+"sha": "d026b2d95d52da5101a4fe0f1f76bed16ac71bbeb25f97ffd1b9a786b596b7e8",
+"subject": "Data Structure",
+"file": "SEE.pdf",
+"asset": "exam_paper",
+"pages": 11,
+"size_mb": 0.66,
+"src": "ExNote/CSE/Sem 3/23CS3PCDST - Data Structure/Exam papers/SEE.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 3"
+],
+"code": "23CS3PCDST"
+},
+{
+"sha": "0bea8b6da0e288bc4827a47c300e4e80080789b9cd9e25efb40cfc9c210dcce3",
+"subject": "Data Structure",
+"file": "UNIT 1.pdf",
+"asset": "notes",
+"pages": 51,
+"size_mb": 1.14,
+"src": "ExNote/CSE/Sem 3/23CS3PCDST - Data Structure/Notes/UNIT 1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 3"
+],
+"code": "23CS3PCDST"
+},
+{
+"sha": "2d50b5cab05c561ca22f0af42e448905e64d6139be1ddc259769bdff87d6c7ef",
+"subject": "Data Structure",
+"file": "UNIT 2.pdf",
+"asset": "notes",
+"pages": 39,
+"size_mb": 0.93,
+"src": "ExNote/CSE/Sem 3/23CS3PCDST - Data Structure/Notes/UNIT 2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 3"
+],
+"code": "23CS3PCDST"
+},
+{
+"sha": "56186ff60142614b6a2058f8e0518158a8ce9098d73a51accf87c91c676712b4",
+"subject": "Data Structure",
+"file": "UNIT 3.pdf",
+"asset": "notes",
+"pages": 70,
+"size_mb": 1.77,
+"src": "ExNote/CSE/Sem 3/23CS3PCDST - Data Structure/Notes/UNIT 3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 3"
+],
+"code": "23CS3PCDST"
+},
+{
+"sha": "532dd51ca7fd4dd3e59257679b7c1943b83a3b43f520b591a5d57130180ee06a",
+"subject": "Data Structure",
+"file": "UNIT 4.pdf",
+"asset": "notes",
+"pages": 111,
+"size_mb": 1.97,
+"src": "ExNote/CSE/Sem 3/23CS3PCDST - Data Structure/Notes/UNIT 4.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 3"
+],
+"code": "23CS3PCDST"
+},
+{
+"sha": "b56960d02c6128a928053dde5d19db5aba125a53b5ab401b945343f7507f06a9",
+"subject": "Engineering Chemistry",
+"file": "CIE 1.pdf",
+"asset": "exam_paper",
+"pages": 1,
+"size_mb": 0.45,
+"src": "ExNote/CSE/Sem 1/22CY2BSCCS - Engineering Chemistry/Exam papers/CIE 1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22CY2BSCCS"
+},
+{
+"sha": "e245bd6a8aa976e2763fe9cececc4439cf19fd546adf29476d275baeb9cd9b8c",
+"subject": "Engineering Chemistry",
+"file": "CIE 2.pdf",
+"asset": "exam_paper",
+"pages": 1,
+"size_mb": 0.4,
+"src": "ExNote/CSE/Sem 1/22CY2BSCCS - Engineering Chemistry/Exam papers/CIE 2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22CY2BSCCS"
+},
+{
+"sha": "d8ee0ec67abc80e596966628ad60ef7042be300e402ae8cd46484fc2d2191cc4",
+"subject": "Engineering Chemistry",
+"file": "CIE 3.pdf",
+"asset": "exam_paper",
+"pages": 1,
+"size_mb": 0.08,
+"src": "ExNote/CSE/Sem 1/22CY2BSCCS - Engineering Chemistry/Exam papers/CIE 3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22CY2BSCCS"
+},
+{
+"sha": "9393c518a3cf77d07cf257b79be413096c4e49b7d30d50f2de1224aeeb949d3c",
+"subject": "Engineering Chemistry",
+"file": "SEE.pdf",
+"asset": "exam_paper",
+"pages": 2,
+"size_mb": 0.2,
+"src": "ExNote/CSE/Sem 1/22CY2BSCCS - Engineering Chemistry/Exam papers/SEE.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22CY2BSCCS"
+},
+{
+"sha": "ee35a3009f42338d01d3c47e527e58589d4aec11486819f530ea66efc5af2308",
+"subject": "Engineering Chemistry",
+"file": "UNIT 1.pdf",
+"asset": "notes",
+"pages": 26,
+"size_mb": 1.52,
+"src": "ExNote/CSE/Sem 1/22CY2BSCCS - Engineering Chemistry/Notes/UNIT 1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22CY2BSCCS"
+},
+{
+"sha": "880aa5d591a8e10992dec505147b2383bb18d04f116ab2cd952e0228d7ebb032",
+"subject": "Engineering Chemistry",
+"file": "UNIT 2.pdf",
+"asset": "notes",
+"pages": 24,
+"size_mb": 9.79,
+"src": "ExNote/CSE/Sem 1/22CY2BSCCS - Engineering Chemistry/Notes/UNIT 2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22CY2BSCCS"
+},
+{
+"sha": "ceb04ce1cf7fd64990b21fbe024b4b33192dddf251589485296d977684cc9a6b",
+"subject": "Engineering Chemistry",
+"file": "UNIT 3.pdf",
+"asset": "notes",
+"pages": 25,
+"size_mb": 1.79,
+"src": "ExNote/CSE/Sem 1/22CY2BSCCS - Engineering Chemistry/Notes/UNIT 3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22CY2BSCCS"
+},
+{
+"sha": "c29e53ea9f03750035f6e308db5908af9d0faafdfce7cdb2fb40079eb46cce65",
+"subject": "Engineering Chemistry",
+"file": "UNIT 4.pdf",
+"asset": "notes",
+"pages": 26,
+"size_mb": 4.99,
+"src": "ExNote/CSE/Sem 1/22CY2BSCCS - Engineering Chemistry/Notes/UNIT 4.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22CY2BSCCS"
+},
+{
+"sha": "d167e329b51cc36bd934b60ff62a6fc7b5da5c7e6f5c268f2605fd1de07e1970",
+"subject": "Engineering Mathematics I",
+"file": "CIE 1.pdf",
+"asset": "exam_paper",
+"pages": 1,
+"size_mb": 0.31,
+"src": "ExNote/CSE/Sem 1/23MA1BSMCS - Engineering Mathematics I/Exam papers/CIE 1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "23MA1BSMCS"
+},
+{
+"sha": "2bd89f942b8bd89734042a1b8bf9ab2fcb4e7f44e1c0d5410b2fdfd75f48a6aa",
+"subject": "Engineering Mathematics I",
+"file": "CIE 2.pdf",
+"asset": "exam_paper",
+"pages": 1,
+"size_mb": 0.35,
+"src": "ExNote/CSE/Sem 1/23MA1BSMCS - Engineering Mathematics I/Exam papers/CIE 2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "23MA1BSMCS"
+},
+{
+"sha": "e13c8effc1cd0409ca0851fe1abb8fab26ed1bcc9cf19832063bb609ea72feea",
+"subject": "Engineering Mathematics I",
+"file": "CIE 3.pdf",
+"asset": "exam_paper",
+"pages": 4,
+"size_mb": 0.73,
+"src": "ExNote/CSE/Sem 1/23MA1BSMCS - Engineering Mathematics I/Exam papers/CIE 3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "23MA1BSMCS"
+},
+{
+"sha": "71cfd5f8b79059b294c60819d3d63fed890aa3b61c14e572ade0e160b3451984",
+"subject": "Engineering Mathematics I",
+"file": "unit1.pdf",
+"asset": "notes",
+"pages": 7,
+"size_mb": 1.85,
+"src": "ExNote/CSE/Sem 1/23MA1BSMCS - Engineering Mathematics I/Notes/unit1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "23MA1BSMCS"
+},
+{
+"sha": "4d5cbb7e27b3eaa6e2c24a9ec3294f520bc9f20d01e26c80706b752bfca7d4cf",
+"subject": "Engineering Mathematics I",
+"file": "unit2.pdf",
+"asset": "notes",
+"pages": 9,
+"size_mb": 0.86,
+"src": "ExNote/CSE/Sem 1/23MA1BSMCS - Engineering Mathematics I/Notes/unit2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "23MA1BSMCS"
+},
+{
+"sha": "945ee90854fd153fb069c285ff8a19decec414d051928657ee70cced50361322",
+"subject": "Engineering Mathematics I",
+"file": "unit3.pdf",
+"asset": "notes",
+"pages": 5,
+"size_mb": 0.98,
+"src": "ExNote/CSE/Sem 1/23MA1BSMCS - Engineering Mathematics I/Notes/unit3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "23MA1BSMCS"
+},
+{
+"sha": "d7b49b9b4b8dc4e9b592a8f1c4ce3e6cabde5d4172fcd89257d6ef11c9072262",
+"subject": "Engineering Mathematics I",
+"file": "unit5.pdf",
+"asset": "notes",
+"pages": 9,
+"size_mb": 0.58,
+"src": "ExNote/CSE/Sem 1/23MA1BSMCS - Engineering Mathematics I/Notes/unit5.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "23MA1BSMCS"
+},
+{
+"sha": "30c52d06157e4e4fae4a7f5f03b07d76bb8ba3d7671d906e6973b8bac7d81a0b",
+"subject": "Engineering Mathematics II",
+"file": "CIE 1.pdf",
+"asset": "exam_paper",
+"pages": 1,
+"size_mb": 0.39,
+"src": "ExNote/CSE/Sem 2/23MA2BSMCS - Engineering Mathematics II/Exam papers/CIE 1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "23MA2BSMCS"
+},
+{
+"sha": "d081f2b1a95033d95aaef434af338d52e779f8f69299cd0906b90142c8babd4b",
+"subject": "Engineering Mathematics II",
+"file": "CIE 2.pdf",
+"asset": "exam_paper",
+"pages": 1,
+"size_mb": 0.5,
+"src": "ExNote/CSE/Sem 2/23MA2BSMCS - Engineering Mathematics II/Exam papers/CIE 2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "23MA2BSMCS"
+},
+{
+"sha": "706b176043e1f2eb09f553d43790c0e525627fa9feb43f72f1b932ba9c495ee5",
+"subject": "Engineering Mathematics II",
+"file": "SEE.pdf",
+"asset": "exam_paper",
+"pages": 19,
+"size_mb": 1.58,
+"src": "ExNote/CSE/Sem 2/23MA2BSMCS - Engineering Mathematics II/Exam papers/SEE.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "23MA2BSMCS"
+},
+{
+"sha": "860dc82ab1814ad2502cc8542985ef6de9b5b882991474ef32803744e171c757",
+"subject": "Engineering Mathematics II",
+"file": "UNIT 2.pdf",
+"asset": "notes",
+"pages": 5,
+"size_mb": 0.43,
+"src": "ExNote/CSE/Sem 2/23MA2BSMCS - Engineering Mathematics II/Notes/UNIT 2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "23MA2BSMCS"
+},
+{
+"sha": "aaa2c850773b1d027a9f884ae315a882e1be61f9e696aedd897087c8fc976906",
+"subject": "Engineering Mathematics II",
+"file": "UNIT 3.pdf",
+"asset": "notes",
+"pages": 57,
+"size_mb": 18.74,
+"src": "ExNote/CSE/Sem 2/23MA2BSMCS - Engineering Mathematics II/Notes/UNIT 3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "23MA2BSMCS"
+},
+{
+"sha": "14015ce4b425f4e1dd98700df26a2870da4058b51f9de3beed18e98c242a7252",
+"subject": "Engineering Mathematics II",
+"file": "UNIT1.pdf",
+"asset": "notes",
+"pages": 39,
+"size_mb": 2.17,
+"src": "ExNote/CSE/Sem 2/23MA2BSMCS - Engineering Mathematics II/Notes/UNIT1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "23MA2BSMCS"
+},
+{
+"sha": "3cc5ce9d84dc38f4c4627b5e95c7943f1d73498a09b15545909cfbaf9c8c2935",
+"subject": "Green Buildings",
+"file": "CIE 1.pdf",
+"asset": "exam_paper",
+"pages": 1,
+"size_mb": 0.18,
+"src": "ExNote/CSE/Sem 1/22CV2ESGBT - Green Buildings/Exam papers/CIE 1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22CV2ESGBT"
+},
+{
+"sha": "0eca4299800ed0439f2e57578bca019a4bc30028a503cc011dc8e435089ed598",
+"subject": "Green Buildings",
+"file": "CIE 2.pdf",
+"asset": "exam_paper",
+"pages": 6,
+"size_mb": 0.46,
+"src": "ExNote/CSE/Sem 1/22CV2ESGBT - Green Buildings/Exam papers/CIE 2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22CV2ESGBT"
+},
+{
+"sha": "74aee028de681db24daef5f0af8af671b4ba57e8a4c9f6177cab544e5026d57f",
+"subject": "Green Buildings",
+"file": "CIE 3.pdf",
+"asset": "exam_paper",
+"pages": 1,
+"size_mb": 0.11,
+"src": "ExNote/CSE/Sem 1/22CV2ESGBT - Green Buildings/Exam papers/CIE 3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22CV2ESGBT"
+},
+{
+"sha": "59455836434434e8afb0f0f992fbe427785dc4900e983f6c694589fb34537f5b",
+"subject": "Green Buildings",
+"file": "Unit 1.pdf",
+"asset": "notes",
+"pages": 9,
+"size_mb": 1.58,
+"src": "ExNote/CSE/Sem 1/22CV2ESGBT - Green Buildings/Notes/Unit 1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22CV2ESGBT"
+},
+{
+"sha": "aef8f75ab07222ef00eb6361755c674641180665563ab58780184127549eb18f",
+"subject": "Green Buildings",
+"file": "Unit 2.pdf",
+"asset": "notes",
+"pages": 26,
+"size_mb": 8.14,
+"src": "ExNote/CSE/Sem 1/22CV2ESGBT - Green Buildings/Notes/Unit 2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22CV2ESGBT"
+},
+{
+"sha": "4d8020b2e625eb827e2174d68f86b5c3683792a76ee8a284bae6fd4137b19010",
+"subject": "Green Buildings",
+"file": "Unit 3.pdf",
+"asset": "notes",
+"pages": 16,
+"size_mb": 2.77,
+"src": "ExNote/CSE/Sem 1/22CV2ESGBT - Green Buildings/Notes/Unit 3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22CV2ESGBT"
+},
+{
+"sha": "6cc7a137ac633aeb89efdfab9a98f8e6fb7c6bc9f1ab655c8a2149e42b179933",
+"subject": "Green Buildings",
+"file": "Unit 4.pdf",
+"asset": "notes",
+"pages": 20,
+"size_mb": 6.33,
+"src": "ExNote/CSE/Sem 1/22CV2ESGBT - Green Buildings/Notes/Unit 4.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22CV2ESGBT"
+},
+{
+"sha": "bb0cdb7adab3d5b45a431f0aefc0c5f4c2a477a76a6bd1984cc7face4a762761",
+"subject": "Green Buildings",
+"file": "Unit 5.pdf",
+"asset": "notes",
+"pages": 16,
+"size_mb": 5.37,
+"src": "ExNote/CSE/Sem 1/22CV2ESGBT - Green Buildings/Notes/Unit 5.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22CV2ESGBT"
+},
+{
+"sha": "d1cbb7e91313f79544cdf7ef139d9b8f951033fbef0ba8172bd0f5d59507575c",
+"subject": "Internet Of Things",
+"file": "CIE 1.pdf",
+"asset": "exam_paper",
+"pages": 7,
+"size_mb": 1.49,
+"src": "ExNote/ICB/Sem 4/23IC4PCIOT - Internet Of Things/Exam papers/CIE 1.pdf",
+"branches": [
+"ICB"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23IC4PCIOT"
+},
+{
+"sha": "27da481b4c74fbea48655f5f9295a8d699497965239e80d890804f9e228dc2b0",
+"subject": "Internet Of Things",
+"file": "CIE 3.pdf",
+"asset": "exam_paper",
+"pages": 1,
+"size_mb": 0.18,
+"src": "ExNote/ICB/Sem 4/23IC4PCIOT - Internet Of Things/Exam papers/CIE 3.pdf",
+"branches": [
+"ICB"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23IC4PCIOT"
+},
+{
+"sha": "d30af977fc8959b655e41a6536e6d5f45dd2bf25f3b16c31fd19982d7410c63b",
+"subject": "Internet Of Things",
+"file": "SEE.pdf",
+"asset": "exam_paper",
+"pages": 2,
+"size_mb": 0.09,
+"src": "ExNote/ICB/Sem 4/23IC4PCIOT - Internet Of Things/Exam papers/SEE.pdf",
+"branches": [
+"ICB"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23IC4PCIOT"
+},
+{
+"sha": "da45dfc4e50a874359351b0239c6632069fea7db1d1668c55c1a6b355dfb9576",
+"subject": "Internet Of Things",
+"file": "UNIT 1.pdf",
+"asset": "notes",
+"pages": 135,
+"size_mb": 2.9,
+"src": "ExNote/ICB/Sem 4/23IC4PCIOT - Internet Of Things/Notes/UNIT 1.pdf",
+"branches": [
+"ICB"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23IC4PCIOT"
+},
+{
+"sha": "1d1f30fc8c1756a4106803f8ecb112bf0e1df4de320f95c1da21597830d8a7d6",
+"subject": "Internet Of Things",
+"file": "UNIT 2.pdf",
+"asset": "notes",
+"pages": 12,
+"size_mb": 0.88,
+"src": "ExNote/ICB/Sem 4/23IC4PCIOT - Internet Of Things/Notes/UNIT 2.pdf",
+"branches": [
+"ICB"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23IC4PCIOT"
+},
+{
+"sha": "b585b9ef3265f52672c2ebf42477b7435a6f7ff962fe234d1ef303adc22b684f",
+"subject": "Internet Of Things",
+"file": "UNIT 3.pdf",
+"asset": "notes",
+"pages": 123,
+"size_mb": 2.53,
+"src": "ExNote/ICB/Sem 4/23IC4PCIOT - Internet Of Things/Notes/UNIT 3.pdf",
+"branches": [
+"ICB"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23IC4PCIOT"
+},
+{
+"sha": "1fb63045db8dcbe739efb4ae5528475a1135595ec4939751cf6724b3a4cf3d4d",
+"subject": "Internet Of Things",
+"file": "UNIT 4.pdf",
+"asset": "notes",
+"pages": 74,
+"size_mb": 60.62,
+"src": "ExNote/ICB/Sem 4/23IC4PCIOT - Internet Of Things/Notes/UNIT 4.pdf",
+"branches": [
+"ICB"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23IC4PCIOT"
+},
+{
+"sha": "6c1378caabda2b150389ef6cde3400d22808efb54d1e7976a0efb21fcd1eccfa",
+"subject": "Internet Of Things",
+"file": "UNIT 5.pdf",
+"asset": "notes",
+"pages": 10,
+"size_mb": 23.45,
+"src": "ExNote/ICB/Sem 4/23IC4PCIOT - Internet Of Things/Notes/UNIT 5.pdf",
+"branches": [
+"ICB"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23IC4PCIOT"
+},
+{
+"sha": "7376940fd5f52bf7b96aeac9362f8026a53127a8f80e0f1c9bdd960992af70d8",
+"subject": "Introduction to Civil Engineering",
+"file": "CIE 1.pdf",
+"asset": "exam_paper",
+"pages": 2,
+"size_mb": 0.31,
+"src": "ExNote/CSE/Sem 2/22CV2ESICV - Introduction to Civil Engineering/Exam papers/CIE 1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22CV2ESICV"
+},
+{
+"sha": "169f7af53a3f6c2efdfc560fd69ab622d24d45b19485b267f2396a79ee1e5c7d",
+"subject": "Introduction to Civil Engineering",
+"file": "CIE 2.pdf",
+"asset": "exam_paper",
+"pages": 8,
+"size_mb": 0.65,
+"src": "ExNote/CSE/Sem 2/22CV2ESICV - Introduction to Civil Engineering/Exam papers/CIE 2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22CV2ESICV"
+},
+{
+"sha": "b33ea618626c8389ce00a4fb5ab2e7ec83f482d36d0a23eeae57ce45d96f1afb",
+"subject": "Introduction to Civil Engineering",
+"file": "CIE 3.pdf",
+"asset": "exam_paper",
+"pages": 2,
+"size_mb": 0.16,
+"src": "ExNote/CSE/Sem 2/22CV2ESICV - Introduction to Civil Engineering/Exam papers/CIE 3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22CV2ESICV"
+},
+{
+"sha": "e4037409560cf8e6488f3733957c6b6119811c3faf487a71dcd070d821b95ffc",
+"subject": "Introduction to Civil Engineering",
+"file": "Unit 1.pdf",
+"asset": "notes",
+"pages": 11,
+"size_mb": 2.63,
+"src": "ExNote/CSE/Sem 2/22CV2ESICV - Introduction to Civil Engineering/Notes/Unit 1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22CV2ESICV"
+},
+{
+"sha": "3985c3dfdc95a5a00c7e9a81a5ac0cb88f270173f6e853592e14bdd889ee9e50",
+"subject": "Introduction to Civil Engineering",
+"file": "Unit 2.pdf",
+"asset": "notes",
+"pages": 31,
+"size_mb": 4.52,
+"src": "ExNote/CSE/Sem 2/22CV2ESICV - Introduction to Civil Engineering/Notes/Unit 2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22CV2ESICV"
+},
+{
+"sha": "496246c9e87c2719a0001d7586ed8f07d05b658ff9ea90335c0ce29c4c077d23",
+"subject": "Introduction to Civil Engineering",
+"file": "Unit 3.pdf",
+"asset": "notes",
+"pages": 43,
+"size_mb": 2.15,
+"src": "ExNote/CSE/Sem 2/22CV2ESICV - Introduction to Civil Engineering/Notes/Unit 3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22CV2ESICV"
+},
+{
+"sha": "b65854c4287912fb59eff910f78fe8b465271d81462335a9fba828af9135c335",
+"subject": "Introduction to Civil Engineering",
+"file": "Unit 4.pdf",
+"asset": "notes",
+"pages": 16,
+"size_mb": 0.93,
+"src": "ExNote/CSE/Sem 2/22CV2ESICV - Introduction to Civil Engineering/Notes/Unit 4.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22CV2ESICV"
+},
+{
+"sha": "5a8540ea15a3a7adaab42df6164b4174995c4b12ae7df2d4b063991c318c2935",
+"subject": "Introduction to Civil Engineering",
+"file": "Unit 5.pdf",
+"asset": "notes",
+"pages": 23,
+"size_mb": 2.01,
+"src": "ExNote/CSE/Sem 2/22CV2ESICV - Introduction to Civil Engineering/Notes/Unit 5.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22CV2ESICV"
+},
+{
+"sha": "363b717ba603ad2a0447d290e7e36db9656cac6453ba92cc2ca34494955cff34",
+"subject": "Introduction to Electrical Engineering",
+"file": "CIE 1.pdf",
+"asset": "exam_paper",
+"pages": 2,
+"size_mb": 0.48,
+"src": "ExNote/CSE/Sem 2/22EE2ESIEE - Introduction to Electrical Engineering/Exam papers/CIE 1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22EE2ESIEE"
+},
+{
+"sha": "5e594e76ad205e2694873e580aa69a8be3f366f4b283995ae333496626f65fd8",
+"subject": "Introduction to Electrical Engineering",
+"file": "CIE 2.pdf",
+"asset": "exam_paper",
+"pages": 2,
+"size_mb": 0.52,
+"src": "ExNote/CSE/Sem 2/22EE2ESIEE - Introduction to Electrical Engineering/Exam papers/CIE 2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22EE2ESIEE"
+},
+{
+"sha": "6a93b0530c827ece0bf7d1dc1f99abcf72bd0a89ed6fa982d0a8e49c1d31937f",
+"subject": "Introduction to Electrical Engineering",
+"file": "CIE 3.pdf",
+"asset": "exam_paper",
+"pages": 3,
+"size_mb": 0.17,
+"src": "ExNote/CSE/Sem 2/22EE2ESIEE - Introduction to Electrical Engineering/Exam papers/CIE 3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22EE2ESIEE"
+},
+{
+"sha": "517e5e119674ee7d9f3ca1878d3d7400355379f0eb884d010d8a9e8ec85c68a6",
+"subject": "Introduction to Electrical Engineering",
+"file": "Unit 1.pdf",
+"asset": "notes",
+"pages": 49,
+"size_mb": 3.11,
+"src": "ExNote/CSE/Sem 2/22EE2ESIEE - Introduction to Electrical Engineering/Notes/Unit 1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22EE2ESIEE"
+},
+{
+"sha": "55294c0a82e9b3135d1b1f4fcafd368d1a34be6c277767763f9e3422eabe8026",
+"subject": "Introduction to Electrical Engineering",
+"file": "Unit 2.pdf",
+"asset": "notes",
+"pages": 8,
+"size_mb": 1.0,
+"src": "ExNote/CSE/Sem 2/22EE2ESIEE - Introduction to Electrical Engineering/Notes/Unit 2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22EE2ESIEE"
+},
+{
+"sha": "3600af199bec4b4f3f79e2d64d6d74a09ed17c5851fd560b22b6bd6eee4441e6",
+"subject": "Introduction to Electrical Engineering",
+"file": "Unit 3.pdf",
+"asset": "notes",
+"pages": 9,
+"size_mb": 8.61,
+"src": "ExNote/CSE/Sem 2/22EE2ESIEE - Introduction to Electrical Engineering/Notes/Unit 3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22EE2ESIEE"
+},
+{
+"sha": "1c5c517ef36e59173d11cf6176361625c537f919ff283e4bf802e275367896d3",
+"subject": "Introduction to Electrical Engineering",
+"file": "Unit 4.pdf",
+"asset": "notes",
+"pages": 20,
+"size_mb": 1.29,
+"src": "ExNote/CSE/Sem 2/22EE2ESIEE - Introduction to Electrical Engineering/Notes/Unit 4.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22EE2ESIEE"
+},
+{
+"sha": "9379dd1b94b5d0ad987aff052adfa5103036deed1a19cee834f60b77ab773872",
+"subject": "Introduction to Electrical Engineering",
+"file": "Unit 5.pdf",
+"asset": "notes",
+"pages": 22,
+"size_mb": 5.71,
+"src": "ExNote/CSE/Sem 2/22EE2ESIEE - Introduction to Electrical Engineering/Notes/Unit 5.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22EE2ESIEE"
+},
+{
+"sha": "f3caae430c5855d0b7f9175bdf411d18839d9989b5beb42b16d33cff1fd05a78",
+"subject": "Introduction to Electronics Engineering",
+"file": "CIE 1.pdf",
+"asset": "exam_paper",
+"pages": 1,
+"size_mb": 0.11,
+"src": "ExNote/CSE/Sem 2/22EC2ESIEL - Introduction to Electronics Engineering/Exam papers/CIE 1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22EC2ESIEL"
+},
+{
+"sha": "3b983cf8494f887f33537bede89162878f58f66784986ac804850735afe29f84",
+"subject": "Introduction to Electronics Engineering",
+"file": "CIE 2.pdf",
+"asset": "exam_paper",
+"pages": 1,
+"size_mb": 0.12,
+"src": "ExNote/CSE/Sem 2/22EC2ESIEL - Introduction to Electronics Engineering/Exam papers/CIE 2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22EC2ESIEL"
+},
+{
+"sha": "b12d3a5ecfd80be78a8f5013209dde50b2f44cf711e0efa6a5eb723e1c437a93",
+"subject": "Introduction to Electronics Engineering",
+"file": "CIE 3.pdf",
+"asset": "exam_paper",
+"pages": 1,
+"size_mb": 0.16,
+"src": "ExNote/CSE/Sem 2/22EC2ESIEL - Introduction to Electronics Engineering/Exam papers/CIE 3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22EC2ESIEL"
+},
+{
+"sha": "02804a7f860ebe4dbc11f33e2b549520bf84220f44be818c614df1f04b02d8cd",
+"subject": "Introduction to Electronics Engineering",
+"file": "SEE.pdf",
+"asset": "exam_paper",
+"pages": 4,
+"size_mb": 0.41,
+"src": "ExNote/CSE/Sem 2/22EC2ESIEL - Introduction to Electronics Engineering/Exam papers/SEE.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22EC2ESIEL"
+},
+{
+"sha": "f62ef05844cea09229054672f5b7adef64bb664c5723ef7ca3b666b3c35c2b7a",
+"subject": "Introduction to Electronics Engineering",
+"file": "UNIT 1.pdf",
+"asset": "notes",
+"pages": 85,
+"size_mb": 4.35,
+"src": "ExNote/CSE/Sem 2/22EC2ESIEL - Introduction to Electronics Engineering/Notes/UNIT 1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22EC2ESIEL"
+},
+{
+"sha": "763c09dd0802f103c365fafe313fa38745baf8905aa51b0e9e5de1e55c885f4d",
+"subject": "Introduction to Electronics Engineering",
+"file": "UNIT 2.pdf",
+"asset": "notes",
+"pages": 39,
+"size_mb": 1.84,
+"src": "ExNote/CSE/Sem 2/22EC2ESIEL - Introduction to Electronics Engineering/Notes/UNIT 2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22EC2ESIEL"
+},
+{
+"sha": "753500ea9fc1f18de481a227b88daaa6962d5d59073ff190a3603c47de336a55",
+"subject": "Introduction to Electronics Engineering",
+"file": "UNIT 3.pdf",
+"asset": "notes",
+"pages": 38,
+"size_mb": 3.96,
+"src": "ExNote/CSE/Sem 2/22EC2ESIEL - Introduction to Electronics Engineering/Notes/UNIT 3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22EC2ESIEL"
+},
+{
+"sha": "e3d936c074030d863b89b6ad4c3862f2a387e5e068fc69d717ce07ce86dd1ee1",
+"subject": "Introduction to Electronics Engineering",
+"file": "UNIT 4.pdf",
+"asset": "notes",
+"pages": 40,
+"size_mb": 1.05,
+"src": "ExNote/CSE/Sem 2/22EC2ESIEL - Introduction to Electronics Engineering/Notes/UNIT 4.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22EC2ESIEL"
+},
+{
+"sha": "ea5084191325adbd1c3e6638b07e822e4636cfdd50f5eae3c381e8f2fa3ebb06",
+"subject": "Introduction to Electronics Engineering",
+"file": "UNIT 5.pdf",
+"asset": "notes",
+"pages": 48,
+"size_mb": 1.9,
+"src": "ExNote/CSE/Sem 2/22EC2ESIEL - Introduction to Electronics Engineering/Notes/UNIT 5.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22EC2ESIEL"
+},
+{
+"sha": "de3b3226c0cfd28d7267406771dbe474421646736a5e36303658f517b7caca79",
+"subject": "Introduction to Python Programming",
+"file": "CIE 1.pdf",
+"asset": "exam_paper",
+"pages": 2,
+"size_mb": 0.49,
+"src": "ExNote/CSE/Sem 2/22CS2ESPYP - Introduction to Python Programming/Exam papers/CIE 1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22CS2ESPYP"
+},
+{
+"sha": "e952dc3ee4b66ddca6dbf7ed2d9eb95a0e439382d8ddc96bf6e09caf568addb4",
+"subject": "Introduction to Python Programming",
+"file": "CIE 2.pdf",
+"asset": "exam_paper",
+"pages": 1,
+"size_mb": 0.15,
+"src": "ExNote/CSE/Sem 2/22CS2ESPYP - Introduction to Python Programming/Exam papers/CIE 2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22CS2ESPYP"
+},
+{
+"sha": "f6a1127b0424f6c692e6597d590cad9906e4a7b84e2eeef11c72a39e8995c78a",
+"subject": "Introduction to Python Programming",
+"file": "CIE 3.pdf",
+"asset": "exam_paper",
+"pages": 1,
+"size_mb": 0.13,
+"src": "ExNote/CSE/Sem 2/22CS2ESPYP - Introduction to Python Programming/Exam papers/CIE 3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22CS2ESPYP"
+},
+{
+"sha": "9d667e09f19893e4322168ae5b7b0745aa2e75f422b7850ce570728ad7f1a2ef",
+"subject": "Introduction to Python Programming",
+"file": "SEE.pdf",
+"asset": "exam_paper",
+"pages": 6,
+"size_mb": 0.51,
+"src": "ExNote/CSE/Sem 2/22CS2ESPYP - Introduction to Python Programming/Exam papers/SEE.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22CS2ESPYP"
+},
+{
+"sha": "8838e43856f98f9bf1b2aa3d93ad5891c48ca5f7b472f2a0c32fff64136a8950",
+"subject": "Introduction to Python Programming",
+"file": "Unit 1.pdf",
+"asset": "notes",
+"pages": 73,
+"size_mb": 1.88,
+"src": "ExNote/CSE/Sem 2/22CS2ESPYP - Introduction to Python Programming/Notes/Unit 1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22CS2ESPYP"
+},
+{
+"sha": "14b0cbd1df59a73fd0625e0ea71c1f59de170f294eef65f84195e0264abecb3a",
+"subject": "Introduction to Python Programming",
+"file": "Unit 2.pdf",
+"asset": "notes",
+"pages": 102,
+"size_mb": 2.39,
+"src": "ExNote/CSE/Sem 2/22CS2ESPYP - Introduction to Python Programming/Notes/Unit 2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22CS2ESPYP"
+},
+{
+"sha": "02138577d3af4d33d102b05bb2315dfea897304d8e8a7d76945d72893a01601e",
+"subject": "Introduction to Python Programming",
+"file": "Unit 3.pdf",
+"asset": "notes",
+"pages": 122,
+"size_mb": 2.57,
+"src": "ExNote/CSE/Sem 2/22CS2ESPYP - Introduction to Python Programming/Notes/Unit 3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22CS2ESPYP"
+},
+{
+"sha": "b7f29599a8fa704e69e5a52517e5a82beb403c6b285c73003f10d7114054388d",
+"subject": "Introduction to Python Programming",
+"file": "Unit 4.pdf",
+"asset": "notes",
+"pages": 45,
+"size_mb": 0.67,
+"src": "ExNote/CSE/Sem 2/22CS2ESPYP - Introduction to Python Programming/Notes/Unit 4.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22CS2ESPYP"
+},
+{
+"sha": "75ac435a8d0dc926f439c8219283d92fd1cdd1bd28122bb53be9e3d495634c28",
+"subject": "Introduction to Python Programming",
+"file": "Unit 5.pdf",
+"asset": "notes",
+"pages": 33,
+"size_mb": 0.29,
+"src": "ExNote/CSE/Sem 2/22CS2ESPYP - Introduction to Python Programming/Notes/Unit 5.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22CS2ESPYP"
+},
+{
+"sha": "ac4603b4530933ce1db8e8a54e49c9d9b9be624f042937be3f907c1ea9ee5b5f",
+"subject": "Introduction to Sustainable Engineering",
+"file": "CIE 2.pdf",
+"asset": "exam_paper",
+"pages": 1,
+"size_mb": 0.21,
+"src": "ExNote/CSE/Sem 1/22ME2ETISE - Introduction to Sustainable Engineering/Exam papers/CIE 2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22ME2ETISE"
+},
+{
+"sha": "55866c48d6d152fe16696ffb71c585a8b8b77f954b144af529ac2622135b2445",
+"subject": "Introduction to Sustainable Engineering",
+"file": "CIE 3.pdf",
+"asset": "exam_paper",
+"pages": 2,
+"size_mb": 0.33,
+"src": "ExNote/CSE/Sem 1/22ME2ETISE - Introduction to Sustainable Engineering/Exam papers/CIE 3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22ME2ETISE"
+},
+{
+"sha": "0fd88504deda5e20804d7b1564d5146ad9fde5b331aff0cacbc49e5abcf7b996",
+"subject": "Introduction to Sustainable Engineering",
+"file": "SEE.pdf",
+"asset": "exam_paper",
+"pages": 1,
+"size_mb": 0.36,
+"src": "ExNote/CSE/Sem 1/22ME2ETISE - Introduction to Sustainable Engineering/Exam papers/SEE.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22ME2ETISE"
+},
+{
+"sha": "e43858dc9e3d7001e1bf31e3bf5ca2611495d9e2c9eaec67e3c06856ce6e4477",
+"subject": "Introduction to Sustainable Engineering",
+"file": "Unit 1.pdf",
+"asset": "notes",
+"pages": 79,
+"size_mb": 5.53,
+"src": "ExNote/CSE/Sem 1/22ME2ETISE - Introduction to Sustainable Engineering/Notes/Unit 1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22ME2ETISE"
+},
+{
+"sha": "aa055523f1027d0dd16b6d2a80534f66f8b2e814a7ef2fd3c0e3848a8fa16ffd",
+"subject": "Introduction to Sustainable Engineering",
+"file": "Unit 2.pdf",
+"asset": "notes",
+"pages": 26,
+"size_mb": 1.11,
+"src": "ExNote/CSE/Sem 1/22ME2ETISE - Introduction to Sustainable Engineering/Notes/Unit 2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22ME2ETISE"
+},
+{
+"sha": "e2e3005e178d1b49f473364ebbbb06773ec19f58f1a51dc300ebd14949cac2ba",
+"subject": "Introduction to Sustainable Engineering",
+"file": "Unit 3.pdf",
+"asset": "notes",
+"pages": 67,
+"size_mb": 3.8,
+"src": "ExNote/CSE/Sem 1/22ME2ETISE - Introduction to Sustainable Engineering/Notes/Unit 3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22ME2ETISE"
+},
+{
+"sha": "b905b7173678eb2497b5d35504ec1f373a87e423346d2de18852ed70560b3ab9",
+"subject": "Introduction to Sustainable Engineering",
+"file": "Unit 4.pdf",
+"asset": "notes",
+"pages": 44,
+"size_mb": 1.34,
+"src": "ExNote/CSE/Sem 1/22ME2ETISE - Introduction to Sustainable Engineering/Notes/Unit 4.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22ME2ETISE"
+},
+{
+"sha": "70ad16af1dc6526afa8bcfb6a957e6565521fc63329c566be3234b42e699107a",
+"subject": "Introduction to Sustainable Engineering",
+"file": "Unit 5.pdf",
+"asset": "notes",
+"pages": 29,
+"size_mb": 1.55,
+"src": "ExNote/CSE/Sem 1/22ME2ETISE - Introduction to Sustainable Engineering/Notes/Unit 5.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22ME2ETISE"
+},
+{
+"sha": "026533fac6b60875bc681d6ed766499a050187afb59849d76f0eb4590861f778",
+"subject": "Linear Algebra and Optimization",
+"file": "Unit 1 (by Niharika Rao K).pdf",
+"asset": "notes",
+"pages": 42,
+"size_mb": 15.54,
+"src": "ExNote/CSE/Sem 4/23MA4BSLAO - Linear Algebra and Optimization/Notes/Unit 1 (by Niharika Rao K).pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23MA4BSLAO"
+},
+{
+"sha": "8b12ba752b4eb7a3cd7e150e7a90c347e222cd41fd7d2e80f8e8cf750d3a747c",
+"subject": "Linear Algebra and Optimization",
+"file": "Unit 2 (by Niharika Rao K).pdf",
+"asset": "notes",
+"pages": 35,
+"size_mb": 48.3,
+"src": "ExNote/CSE/Sem 4/23MA4BSLAO - Linear Algebra and Optimization/Notes/Unit 2 (by Niharika Rao K).pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23MA4BSLAO"
+},
+{
+"sha": "8b2a9e2c089ed6c16601db1580f4d2d48745b2c6e7239af40631ab5dd044202f",
+"subject": "Linear Algebra and Optimization",
+"file": "Unit 3 (by Niharika Rao K).pdf",
+"asset": "notes",
+"pages": 54,
+"size_mb": 19.11,
+"src": "ExNote/CSE/Sem 4/23MA4BSLAO - Linear Algebra and Optimization/Notes/Unit 3 (by Niharika Rao K).pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23MA4BSLAO"
+},
+{
+"sha": "37c0cbe0a5f8e45106de8cd70af714e01b784c3de3453040701a125eaddefb44",
+"subject": "Linear Algebra and Optimization",
+"file": "Unit 4 (by Niharika Rao K).pdf",
+"asset": "notes",
+"pages": 50,
+"size_mb": 17.33,
+"src": "ExNote/CSE/Sem 4/23MA4BSLAO - Linear Algebra and Optimization/Notes/Unit 4 (by Niharika Rao K).pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23MA4BSLAO"
+},
+{
+"sha": "090cccba986e8279c1c18b3ca7da04ab0c4032e4323f86dd761fa0a21cbcd88e",
+"subject": "Linear Algebra and Optimization",
+"file": "Unit 5 (by Niharika Rao K).pdf",
+"asset": "notes",
+"pages": 40,
+"size_mb": 20.04,
+"src": "ExNote/CSE/Sem 4/23MA4BSLAO - Linear Algebra and Optimization/Notes/Unit 5 (by Niharika Rao K).pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23MA4BSLAO"
+},
+{
+"sha": "16791de37847cbf01c28c6965084dfd62522ed3701e31d61b3b7ff05b21b6453",
+"subject": "Logic Design",
+"file": "UNIT 1.pdf",
+"asset": "notes",
+"pages": 15,
+"size_mb": 2.79,
+"src": "ExNote/CSE/Sem 3/23CS3PCLOD - Logic Design/Notes/UNIT 1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 3"
+],
+"code": "23CS3PCLOD"
+},
+{
+"sha": "473ee67c62cc135ebe9e2b1668f57ffe3defc7ca7cd3cb027d46900539095294",
+"subject": "Logic Design",
+"file": "UNIT 2.pdf",
+"asset": "notes",
+"pages": 21,
+"size_mb": 3.57,
+"src": "ExNote/CSE/Sem 3/23CS3PCLOD - Logic Design/Notes/UNIT 2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 3"
+],
+"code": "23CS3PCLOD"
+},
+{
+"sha": "1d2259ddb7712009447860f391285a8de5d6c9c316d4be7f71f6f7642692528a",
+"subject": "Logic Design",
+"file": "UNIT 3.pdf",
+"asset": "notes",
+"pages": 36,
+"size_mb": 4.55,
+"src": "ExNote/CSE/Sem 3/23CS3PCLOD - Logic Design/Notes/UNIT 3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 3"
+],
+"code": "23CS3PCLOD"
+},
+{
+"sha": "8edd7e2a2e90b83d0e483f5a722bddc3dfeee3faec9f99c031e4281bedf9658f",
+"subject": "Logic Design",
+"file": "UNIT 4.pdf",
+"asset": "notes",
+"pages": 10,
+"size_mb": 1.39,
+"src": "ExNote/CSE/Sem 3/23CS3PCLOD - Logic Design/Notes/UNIT 4.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 3"
+],
+"code": "23CS3PCLOD"
+},
+{
+"sha": "85c53d331b62dcdfe83bb4bb58f5dbb8d4fe0e559dd446fd9850e733e8beb932",
+"subject": "Logic Design",
+"file": "UNIT 5.pdf",
+"asset": "notes",
+"pages": 6,
+"size_mb": 0.53,
+"src": "ExNote/CSE/Sem 3/23CS3PCLOD - Logic Design/Notes/UNIT 5.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 3"
+],
+"code": "23CS3PCLOD"
+},
+{
+"sha": "5a8f7c1bffbbe63ec50bf747fbb2cd470819d2389b8cb4cb0c114e9402cab5a9",
+"subject": "Machine Learning",
+"file": "CIE 1.pdf",
+"asset": "exam_paper",
+"pages": 6,
+"size_mb": 0.35,
+"src": "ExNote/AIDS/Sem 4/23AI4PCMLG - Machine Learning/Exam papers/CIE 1.pdf",
+"branches": [
+"AIDS",
+"ICB"
+],
+"sems": [
+"Sem 4",
+"Sem 5"
+],
+"code": "23AI4PCMLG"
+},
+{
+"sha": "4a9a1509be6099e0a05b097e5e97dcd2bcbf1578c1366bec42973a2e2e12c6e5",
+"subject": "Machine Learning",
+"file": "CIE 2.pdf",
+"asset": "exam_paper",
+"pages": 5,
+"size_mb": 0.4,
+"src": "ExNote/AIDS/Sem 4/23AI4PCMLG - Machine Learning/Exam papers/CIE 2.pdf",
+"branches": [
+"AIDS",
+"ICB"
+],
+"sems": [
+"Sem 4",
+"Sem 5"
+],
+"code": "23AI4PCMLG"
+},
+{
+"sha": "c90afdaeaf09577f6e4217cc00ac0fa134df9ce30ba96c3a0ac12711a9947950",
+"subject": "Machine Learning",
+"file": "CIE 2.pdf",
+"asset": "exam_paper",
+"pages": 6,
+"size_mb": 4.02,
+"src": "ExNote/CSE/Sem 6/23CS6PCMAL - Machine Learning/Exam papers/CIE 2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 6"
+],
+"code": "23CS6PCMAL"
+},
+{
+"sha": "ae44b2d9fbadadd32d9c2a780fb4c29b9d54299f608956b4adb2506a09880a45",
+"subject": "Machine Learning",
+"file": "CIE 3.pdf",
+"asset": "exam_paper",
+"pages": 8,
+"size_mb": 4.41,
+"src": "ExNote/AIDS/Sem 4/23AI4PCMLG - Machine Learning/Exam papers/CIE 3.pdf",
+"branches": [
+"AIDS",
+"ICB"
+],
+"sems": [
+"Sem 4",
+"Sem 5"
+],
+"code": "23AI4PCMLG"
+},
+{
+"sha": "b0f22ffefa7826ffee7928c6566c9f971054a5dac6ba4e42222aeae0087d1aa9",
+"subject": "Machine Learning",
+"file": "CIE 3.pdf",
+"asset": "exam_paper",
+"pages": 21,
+"size_mb": 2.69,
+"src": "ExNote/CSE/Sem 6/23CS6PCMAL - Machine Learning/Exam papers/CIE 3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 6"
+],
+"code": "23CS6PCMAL"
+},
+{
+"sha": "d4d7cce76704f1d11ded597aaed02a3c95c8302729e1fe3669b9ea0a8276366c",
+"subject": "Machine Learning",
+"file": "Ensemble Learning and Random Forests-.pdf",
+"asset": "notes",
+"pages": 53,
+"size_mb": 2.09,
+"src": "ExNote/AIDS/Sem 4/23AI4PCMLG - Machine Learning/Notes/Ensemble Learning and Random Forests-.pdf",
+"branches": [
+"AIDS",
+"ICB"
+],
+"sems": [
+"Sem 4",
+"Sem 5"
+],
+"code": "23AI4PCMLG"
+},
+{
+"sha": "19ce6657bd69865f4601e7457120cee6d123529d7a937b6d1301592ab53da572",
+"subject": "Machine Learning",
+"file": "Machine Learning Landscape-.pdf",
+"asset": "notes",
+"pages": 111,
+"size_mb": 3.07,
+"src": "ExNote/AIDS/Sem 4/23AI4PCMLG - Machine Learning/Notes/Machine Learning Landscape-.pdf",
+"branches": [
+"AIDS",
+"ICB"
+],
+"sems": [
+"Sem 4",
+"Sem 5"
+],
+"code": "23AI4PCMLG"
+},
+{
+"sha": "1f845989712881dc9a8842a4503a44e8335165ada7bc127d5c8ce0a04ede92ab",
+"subject": "Machine Learning",
+"file": "Probabilistic Learning.pdf",
+"asset": "notes",
+"pages": 33,
+"size_mb": 0.76,
+"src": "ExNote/AIDS/Sem 4/23AI4PCMLG - Machine Learning/Notes/Probabilistic Learning.pdf",
+"branches": [
+"AIDS",
+"ICB"
+],
+"sems": [
+"Sem 4",
+"Sem 5"
+],
+"code": "23AI4PCMLG"
+},
+{
+"sha": "ae55fc7d9a3b93182bfa4c8b0797be3c0d779b7c2347a176fe2b945d500cceb3",
+"subject": "Machine Learning",
+"file": "SEE.pdf",
+"asset": "exam_paper",
+"pages": 7,
+"size_mb": 0.46,
+"src": "ExNote/CSE/Sem 6/23CS6PCMAL - Machine Learning/Exam papers/SEE.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 6"
+],
+"code": "23CS6PCMAL"
+},
+{
+"sha": "92fac59aa348339920968510bf05074a6daf671674750046a2938379daf8a7f2",
+"subject": "Machine Learning",
+"file": "Support Vector Machines-.pdf",
+"asset": "notes",
+"pages": 39,
+"size_mb": 1.44,
+"src": "ExNote/AIDS/Sem 4/23AI4PCMLG - Machine Learning/Notes/Support Vector Machines-.pdf",
+"branches": [
+"AIDS",
+"ICB"
+],
+"sems": [
+"Sem 4",
+"Sem 5"
+],
+"code": "23AI4PCMLG"
+},
+{
+"sha": "302527cfafcf620092adc413589f2c32970d90b7dcc44da3b05d860e76407646",
+"subject": "Machine Learning",
+"file": "Unit 1.pdf",
+"asset": "notes",
+"pages": 142,
+"size_mb": 2.92,
+"src": "ExNote/CSE/Sem 6/23CS6PCMAL - Machine Learning/Notes/Unit 1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 6"
+],
+"code": "23CS6PCMAL"
+},
+{
+"sha": "dcb0d5321196402c4ed3f7e30fc858af2a6e4bc8147bb907b04dea46b5dc9c35",
+"subject": "Machine Learning",
+"file": "Unit 2.pdf",
+"asset": "notes",
+"pages": 308,
+"size_mb": 12.18,
+"src": "ExNote/CSE/Sem 6/23CS6PCMAL - Machine Learning/Notes/Unit 2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 6"
+],
+"code": "23CS6PCMAL"
+},
+{
+"sha": "adf81d6c9258752b523ed11e3b18956f0271a8563024dc20866c18721a506e97",
+"subject": "Machine Learning",
+"file": "Unit 3.pdf",
+"asset": "notes",
+"pages": 121,
+"size_mb": 3.1,
+"src": "ExNote/CSE/Sem 6/23CS6PCMAL - Machine Learning/Notes/Unit 3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 6"
+],
+"code": "23CS6PCMAL"
+},
+{
+"sha": "b6b3fc579c9e0513360d6287ef997618957b8ef1af4177ab0dacb3e5a7401e12",
+"subject": "Machine Learning",
+"file": "Unit 4.pdf",
+"asset": "notes",
+"pages": 143,
+"size_mb": 5.18,
+"src": "ExNote/CSE/Sem 6/23CS6PCMAL - Machine Learning/Notes/Unit 4.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 6"
+],
+"code": "23CS6PCMAL"
+},
+{
+"sha": "6d00762fa82abed5ea69ee29415098ec0ed00392e834c0e357566bdc8b127dc9",
+"subject": "Machine Learning",
+"file": "Unit 5.pdf",
+"asset": "notes",
+"pages": 154,
+"size_mb": 5.61,
+"src": "ExNote/CSE/Sem 6/23CS6PCMAL - Machine Learning/Notes/Unit 5.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 6"
+],
+"code": "23CS6PCMAL"
+},
+{
+"sha": "02ad000fe547df47ed80ea89a98b301fe80f1f17fe18016900c4b8fd60520612",
+"subject": "Machine Learning",
+"file": "Unsupervised Learning Techniques.pdf",
+"asset": "notes",
+"pages": 88,
+"size_mb": 2.53,
+"src": "ExNote/AIDS/Sem 4/23AI4PCMLG - Machine Learning/Notes/Unsupervised Learning Techniques.pdf",
+"branches": [
+"AIDS",
+"ICB"
+],
+"sems": [
+"Sem 4",
+"Sem 5"
+],
+"code": "23AI4PCMLG"
+},
+{
+"sha": "710602e4c653a3151f3d45f31bf9255322cfc10fd728b4d4d7f5c6d535fc3188",
+"subject": "Object Oriented Programming",
+"file": "CIE1.pdf",
+"asset": "exam_paper",
+"pages": 2,
+"size_mb": 0.13,
+"src": "ExNote/CSE/Sem 3/23CS3PCOOJ - Object Oriented Programming/Exam papers/CIE1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 3"
+],
+"code": "23CS3PCOOJ"
+},
+{
+"sha": "753d5431e330cf24599dff7003f8d5ca809c87f43d527393da325de5cfc615e2",
+"subject": "Object Oriented Programming",
+"file": "CIE2.pdf",
+"asset": "exam_paper",
+"pages": 6,
+"size_mb": 0.25,
+"src": "ExNote/CSE/Sem 3/23CS3PCOOJ - Object Oriented Programming/Exam papers/CIE2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 3"
+],
+"code": "23CS3PCOOJ"
+},
+{
+"sha": "8a04e534ad847c92b1d1b08c0bf7b795b615d1cec839d3def820b4904db44562",
+"subject": "Object Oriented Programming",
+"file": "Unit1.pdf",
+"asset": "notes",
+"pages": 112,
+"size_mb": 4.22,
+"src": "ExNote/CSE/Sem 3/23CS3PCOOJ - Object Oriented Programming/Notes/Unit1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 3"
+],
+"code": "23CS3PCOOJ"
+},
+{
+"sha": "d4f88ae94c22e231d7093bbdaeda74c0f0e791400a002f6096949b68d4e4d9ea",
+"subject": "Object Oriented Programming",
+"file": "Unit2.pdf",
+"asset": "notes",
+"pages": 69,
+"size_mb": 0.49,
+"src": "ExNote/CSE/Sem 3/23CS3PCOOJ - Object Oriented Programming/Notes/Unit2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 3"
+],
+"code": "23CS3PCOOJ"
+},
+{
+"sha": "caefeed094aa2ff409a50862270840a9a1aa846cad734934d0e9307e92b986e9",
+"subject": "Object Oriented Programming",
+"file": "Unit3.pdf",
+"asset": "notes",
+"pages": 62,
+"size_mb": 0.41,
+"src": "ExNote/CSE/Sem 3/23CS3PCOOJ - Object Oriented Programming/Notes/Unit3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 3"
+],
+"code": "23CS3PCOOJ"
+},
+{
+"sha": "85d8c61f7a6ef79c25ebc6cb27b107a8a21911f8458c097c017eb104a88f1ad2",
+"subject": "Object Oriented Programming",
+"file": "Unit4.pdf",
+"asset": "notes",
+"pages": 98,
+"size_mb": 0.62,
+"src": "ExNote/CSE/Sem 3/23CS3PCOOJ - Object Oriented Programming/Notes/Unit4.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 3"
+],
+"code": "23CS3PCOOJ"
+},
+{
+"sha": "6e24b019f63f9c2c378cee15477e4e6b7ff4eedfb2b6e6619887467c25e5e95a",
+"subject": "Object Oriented Programming",
+"file": "Unit5.pdf",
+"asset": "notes",
+"pages": 129,
+"size_mb": 1.46,
+"src": "ExNote/CSE/Sem 3/23CS3PCOOJ - Object Oriented Programming/Notes/Unit5.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 3"
+],
+"code": "23CS3PCOOJ"
+},
+{
+"sha": "0d9920ea878ecc03ce534fc10d5cc9ac4291df167c550ffc0fec5017a9c8242d",
+"subject": "Operating System",
+"file": "CIE 1.pdf",
+"asset": "exam_paper",
+"pages": 7,
+"size_mb": 0.29,
+"src": "ExNote/CSE/Sem 4/23CS4PCOPS - Operating System/Exam papers/CIE 1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23CS4PCOPS"
+},
+{
+"sha": "10b33dd3d5fe037f08637569590d9b86452b856f980bbf748defbdb59cd5a998",
+"subject": "Operating System",
+"file": "SEE.pdf",
+"asset": "exam_paper",
+"pages": 22,
+"size_mb": 1.38,
+"src": "ExNote/CSE/Sem 4/23CS4PCOPS - Operating System/Exam papers/SEE.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23CS4PCOPS"
+},
+{
+"sha": "eb3a35a565449eae1d134c04b175bc12998000792a0ff0f44fd103bffe5191a0",
+"subject": "Operating System",
+"file": "unit 1.pdf",
+"asset": "notes",
+"pages": 176,
+"size_mb": 4.43,
+"src": "ExNote/CSE/Sem 4/23CS4PCOPS - Operating System/Notes/unit 1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23CS4PCOPS"
+},
+{
+"sha": "118d251beca03bb35e9fd1e4b48f2a0dbae9b617c224f78acb7a25e5da5345d3",
+"subject": "Operating System",
+"file": "unit 2.pdf",
+"asset": "notes",
+"pages": 114,
+"size_mb": 2.89,
+"src": "ExNote/CSE/Sem 4/23CS4PCOPS - Operating System/Notes/unit 2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23CS4PCOPS"
+},
+{
+"sha": "30b00724fff98183301c0e98f931ae592d3083359dd07a335861e1970fa192b3",
+"subject": "Operating System",
+"file": "unit 3.pdf",
+"asset": "notes",
+"pages": 111,
+"size_mb": 2.15,
+"src": "ExNote/CSE/Sem 4/23CS4PCOPS - Operating System/Notes/unit 3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23CS4PCOPS"
+},
+{
+"sha": "28c60062a0d933bf8f21d1ba3facdbc253407963c32227c2fd9e0c8c7bdad32c",
+"subject": "Operating System",
+"file": "unit 4.pdf",
+"asset": "notes",
+"pages": 149,
+"size_mb": 3.35,
+"src": "ExNote/CSE/Sem 4/23CS4PCOPS - Operating System/Notes/unit 4.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23CS4PCOPS"
+},
+{
+"sha": "5c5c433a9e06cfdd9e34853b97672a066cf71d0f63d5290ab0ea38f367aae3da",
+"subject": "Operating System",
+"file": "unit 5.pdf",
+"asset": "notes",
+"pages": 183,
+"size_mb": 5.3,
+"src": "ExNote/CSE/Sem 4/23CS4PCOPS - Operating System/Notes/unit 5.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23CS4PCOPS"
+},
+{
+"sha": "9a637c533858f273736f0bd9906d333f779ba732be46f8a6665fad43532a0575",
+"subject": "Principles of Programming in C",
+"file": "CIE 1.pdf",
+"asset": "exam_paper",
+"pages": 1,
+"size_mb": 0.08,
+"src": "ExNote/CSE/Sem 2/22CS2ESPOP - Principles of Programming in C/Exam papers/CIE 1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22CS2ESPOP"
+},
+{
+"sha": "c436407ac1eb1548d1d8c8caccb93156fd816b1672e25293a3fd372665332155",
+"subject": "Principles of Programming in C",
+"file": "CIE 2.pdf",
+"asset": "exam_paper",
+"pages": 1,
+"size_mb": 0.08,
+"src": "ExNote/CSE/Sem 2/22CS2ESPOP - Principles of Programming in C/Exam papers/CIE 2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22CS2ESPOP"
+},
+{
+"sha": "e02df81d28b62753a57fcd515bae00f9d66e7dfb959646cf41f1abdcd1bdd2c4",
+"subject": "Principles of Programming in C",
+"file": "CIE 3.pdf",
+"asset": "exam_paper",
+"pages": 1,
+"size_mb": 0.08,
+"src": "ExNote/CSE/Sem 2/22CS2ESPOP - Principles of Programming in C/Exam papers/CIE 3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22CS2ESPOP"
+},
+{
+"sha": "6381c7faea7c30b985dbd9220017a27e3c74a4b46110f0504fa8f31655c33492",
+"subject": "Principles of Programming in C",
+"file": "SEE.pdf",
+"asset": "exam_paper",
+"pages": 11,
+"size_mb": 8.25,
+"src": "ExNote/CSE/Sem 2/22CS2ESPOP - Principles of Programming in C/Exam papers/SEE.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22CS2ESPOP"
+},
+{
+"sha": "f1aaf324a3d5dc296e62601370ea893c13825a42531bfcba3cc90487caa08a2a",
+"subject": "Principles of Programming in C",
+"file": "Unit 1.pdf",
+"asset": "notes",
+"pages": 104,
+"size_mb": 2.06,
+"src": "ExNote/CSE/Sem 2/22CS2ESPOP - Principles of Programming in C/Notes/Unit 1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22CS2ESPOP"
+},
+{
+"sha": "7b6b123c5945569859decd0274c41f66410fd24e5402366cd0e101d162371b10",
+"subject": "Principles of Programming in C",
+"file": "Unit 2.pdf",
+"asset": "notes",
+"pages": 135,
+"size_mb": 1.7,
+"src": "ExNote/CSE/Sem 2/22CS2ESPOP - Principles of Programming in C/Notes/Unit 2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22CS2ESPOP"
+},
+{
+"sha": "342918b8e7cc3fd61cedfae1d7976f34a6c343d2aaf9b031ee02a2412c39cd46",
+"subject": "Principles of Programming in C",
+"file": "Unit 3.pdf",
+"asset": "notes",
+"pages": 81,
+"size_mb": 2.48,
+"src": "ExNote/CSE/Sem 2/22CS2ESPOP - Principles of Programming in C/Notes/Unit 3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22CS2ESPOP"
+},
+{
+"sha": "25e279d1b4bb30096fa3f49031f9ad4cb5b33e5fc136b1133e846fc5cc917d53",
+"subject": "Principles of Programming in C",
+"file": "Unit 4.pdf",
+"asset": "notes",
+"pages": 82,
+"size_mb": 1.17,
+"src": "ExNote/CSE/Sem 2/22CS2ESPOP - Principles of Programming in C/Notes/Unit 4.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22CS2ESPOP"
+},
+{
+"sha": "139a43e7b1d23509a2727270e12a70eb2c3475ad7c9ef318247cc3887db496ef",
+"subject": "Principles of Programming in C",
+"file": "Unit 5.pdf",
+"asset": "notes",
+"pages": 75,
+"size_mb": 0.83,
+"src": "ExNote/CSE/Sem 2/22CS2ESPOP - Principles of Programming in C/Notes/Unit 5.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 2"
+],
+"code": "22CS2ESPOP"
+},
+{
+"sha": "24487921101d857ed394259014f96bf28e500454b512dd886305360b34e2b84e",
+"subject": "Renewable Energy Sources",
+"file": "CIE 1.pdf",
+"asset": "exam_paper",
+"pages": 1,
+"size_mb": 0.08,
+"src": "ExNote/CSE/Sem 1/22EE2ESRES - Renewable Energy Sources/Exam papers/CIE 1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22EE2ESRES"
+},
+{
+"sha": "9eada3f69a793f642fe72a8b8b140c346312fd1998200665d6404497eb2132ce",
+"subject": "Renewable Energy Sources",
+"file": "CIE 2.pdf",
+"asset": "exam_paper",
+"pages": 1,
+"size_mb": 0.16,
+"src": "ExNote/CSE/Sem 1/22EE2ESRES - Renewable Energy Sources/Exam papers/CIE 2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22EE2ESRES"
+},
+{
+"sha": "971a66983e5ddf1c9eff1e4cf0f583ceb3daabba938035ff6a6f24e16e0afb44",
+"subject": "Renewable Energy Sources",
+"file": "CIE 3.pdf",
+"asset": "exam_paper",
+"pages": 1,
+"size_mb": 0.13,
+"src": "ExNote/CSE/Sem 1/22EE2ESRES - Renewable Energy Sources/Exam papers/CIE 3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22EE2ESRES"
+},
+{
+"sha": "a81457f24f50bbb96bd50b57ac7fdc55adfdb28ba0b0bfd4d836093fead2a076",
+"subject": "Renewable Energy Sources",
+"file": "SEE.pdf",
+"asset": "exam_paper",
+"pages": 4,
+"size_mb": 0.35,
+"src": "ExNote/CSE/Sem 1/22EE2ESRES - Renewable Energy Sources/Exam papers/SEE.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22EE2ESRES"
+},
+{
+"sha": "6f697776dfb56d4fa763965acbf2ddd75c073128e29a20baf2af558a70f19101",
+"subject": "Renewable Energy Sources",
+"file": "Unit 1.pdf",
+"asset": "notes",
+"pages": 9,
+"size_mb": 0.77,
+"src": "ExNote/CSE/Sem 1/22EE2ESRES - Renewable Energy Sources/Notes/Unit 1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22EE2ESRES"
+},
+{
+"sha": "b2db11db060c858535bc2faddeb3d95fcf95fd361d7fb4dfa657cd813039b666",
+"subject": "Renewable Energy Sources",
+"file": "Unit 2.pdf",
+"asset": "notes",
+"pages": 30,
+"size_mb": 5.21,
+"src": "ExNote/CSE/Sem 1/22EE2ESRES - Renewable Energy Sources/Notes/Unit 2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22EE2ESRES"
+},
+{
+"sha": "dd8da6691c6b60934c6f86e5d4dc42aec3e75436203f74393a6db4f970fdf088",
+"subject": "Renewable Energy Sources",
+"file": "Unit 3.pdf",
+"asset": "notes",
+"pages": 32,
+"size_mb": 4.99,
+"src": "ExNote/CSE/Sem 1/22EE2ESRES - Renewable Energy Sources/Notes/Unit 3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22EE2ESRES"
+},
+{
+"sha": "3befda6297ce48cf4552d865fa6c5dc4b9c2c4fa1a11b048194c80392e38fded",
+"subject": "Renewable Energy Sources",
+"file": "Unit 4.pdf",
+"asset": "notes",
+"pages": 16,
+"size_mb": 2.82,
+"src": "ExNote/CSE/Sem 1/22EE2ESRES - Renewable Energy Sources/Notes/Unit 4.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22EE2ESRES"
+},
+{
+"sha": "f2925871c8a54801fb0e57b5d96fbcdf50f9b98c0314a9feba8d937082a3d9e8",
+"subject": "Renewable Energy Sources",
+"file": "Unit 5.pdf",
+"asset": "notes",
+"pages": 18,
+"size_mb": 12.21,
+"src": "ExNote/CSE/Sem 1/22EE2ESRES - Renewable Energy Sources/Notes/Unit 5.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22EE2ESRES"
+},
+{
+"sha": "928b98204dfe17016b97001c9de8bf1e3dd3a054cb903a2382e1b06c10597aa3",
+"subject": "Scientific Foundations for Health",
+"file": "CIE 1.pdf",
+"asset": "exam_paper",
+"pages": 3,
+"size_mb": 0.15,
+"src": "ExNote/CSE/Sem 1/22BT2AESFH - Scientific Foundations for Health/Exam papers/CIE 1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22BT2AESFH"
+},
+{
+"sha": "60bf752a84762cbdc2a38394e8e0303f7661a3d4c17cbfcdb9c605f5972c8550",
+"subject": "Scientific Foundations for Health",
+"file": "CIE 2.pdf",
+"asset": "exam_paper",
+"pages": 11,
+"size_mb": 0.23,
+"src": "ExNote/CSE/Sem 1/22BT2AESFH - Scientific Foundations for Health/Exam papers/CIE 2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22BT2AESFH"
+},
+{
+"sha": "754f18583f4c4a4bf48c617d80b8cf4077a9a904b1f77d70744343d34ebe899b",
+"subject": "Scientific Foundations for Health",
+"file": "SEE.pdf",
+"asset": "exam_paper",
+"pages": 25,
+"size_mb": 26.03,
+"src": "ExNote/CSE/Sem 1/22BT2AESFH - Scientific Foundations for Health/Exam papers/SEE.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22BT2AESFH"
+},
+{
+"sha": "a12d51c54f360a77e60010a1d85477e9a753083091df6f9ed4972583560b7289",
+"subject": "Scientific Foundations for Health",
+"file": "Unit 1.pdf",
+"asset": "notes",
+"pages": 25,
+"size_mb": 1.6,
+"src": "ExNote/CSE/Sem 1/22BT2AESFH - Scientific Foundations for Health/Notes/Unit 1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22BT2AESFH"
+},
+{
+"sha": "0b86e326916e5c24af6277a949daf10fb49209af66af293b738e55446bfa2748",
+"subject": "Scientific Foundations for Health",
+"file": "Unit 2.pdf",
+"asset": "notes",
+"pages": 16,
+"size_mb": 0.97,
+"src": "ExNote/CSE/Sem 1/22BT2AESFH - Scientific Foundations for Health/Notes/Unit 2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22BT2AESFH"
+},
+{
+"sha": "3b29a09f53e7740ecdacf0130ad7aeee107dc4ea7c8cdebd4ea53059ae8a253e",
+"subject": "Scientific Foundations for Health",
+"file": "Unit 3.pdf",
+"asset": "notes",
+"pages": 6,
+"size_mb": 0.58,
+"src": "ExNote/CSE/Sem 1/22BT2AESFH - Scientific Foundations for Health/Notes/Unit 3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22BT2AESFH"
+},
+{
+"sha": "189990e5cf036042dea0a8467d9053fcc915b3bf42f836b8be2a7eb3162f4ee7",
+"subject": "Scientific Foundations for Health",
+"file": "Unit 4.pdf",
+"asset": "notes",
+"pages": 7,
+"size_mb": 0.38,
+"src": "ExNote/CSE/Sem 1/22BT2AESFH - Scientific Foundations for Health/Notes/Unit 4.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22BT2AESFH"
+},
+{
+"sha": "72341c904bd9f525b357b44d824773f27b55270e3fe54e3a618bebbce3095c72",
+"subject": "Scientific Foundations for Health",
+"file": "Unit 5.pdf",
+"asset": "notes",
+"pages": 15,
+"size_mb": 0.44,
+"src": "ExNote/CSE/Sem 1/22BT2AESFH - Scientific Foundations for Health/Notes/Unit 5.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22BT2AESFH"
+},
+{
+"sha": "e12660a6005ad4984e380204f8dd944bdc338294a4080eaf43f58872dc74588e",
+"subject": "Software Engineering",
+"file": "CIE 1.pdf",
+"asset": "exam_paper",
+"pages": 29,
+"size_mb": 3.28,
+"src": "ExNote/CSE/Sem 4/23CS4PCSED - Software Engineering/Exam papers/CIE 1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23CS4PCSED"
+},
+{
+"sha": "1fe22d3f42d381a8cbe8e6c6606050071585f2cf3184514a3cfd1b2015e090d8",
+"subject": "Software Engineering",
+"file": "CIE 2.pdf",
+"asset": "exam_paper",
+"pages": 15,
+"size_mb": 0.6,
+"src": "ExNote/CSE/Sem 4/23CS4PCSED - Software Engineering/Exam papers/CIE 2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23CS4PCSED"
+},
+{
+"sha": "3b228c82fa20e6998a8d746e78f22b3a4c553f1a27204c75517f709e5e8cdf03",
+"subject": "Software Engineering",
+"file": "CIE 3.pdf",
+"asset": "exam_paper",
+"pages": 12,
+"size_mb": 0.59,
+"src": "ExNote/CSE/Sem 4/23CS4PCSED - Software Engineering/Exam papers/CIE 3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23CS4PCSED"
+},
+{
+"sha": "788ddc1cd3c20674bb9af8e1c31484d63f329d1eb33fb9a35d6b45d912572126",
+"subject": "Software Engineering",
+"file": "SEE.pdf",
+"asset": "exam_paper",
+"pages": 12,
+"size_mb": 0.86,
+"src": "ExNote/CSE/Sem 4/23CS4PCSED - Software Engineering/Exam papers/SEE.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23CS4PCSED"
+},
+{
+"sha": "ae8f60a6c345f19d7d1a497748996ba6149faa232b3a737f4cdd1dc8c91db8f8",
+"subject": "Software Engineering",
+"file": "UNIT-1.pdf",
+"asset": "notes",
+"pages": 131,
+"size_mb": 2.55,
+"src": "ExNote/CSE/Sem 4/23CS4PCSED - Software Engineering/Notes/UNIT-1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23CS4PCSED"
+},
+{
+"sha": "7ad022644e37a2e44c0fd916371ffefa0da71807b6c087f62de0e3896538255d",
+"subject": "Software Engineering",
+"file": "UNIT-2.pdf",
+"asset": "notes",
+"pages": 103,
+"size_mb": 1.69,
+"src": "ExNote/CSE/Sem 4/23CS4PCSED - Software Engineering/Notes/UNIT-2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23CS4PCSED"
+},
+{
+"sha": "0dffd586ee5792ae227f51d20faa49df26404eb3aefc648756c130a51e14bba4",
+"subject": "Software Engineering",
+"file": "UNIT-3.pdf",
+"asset": "notes",
+"pages": 106,
+"size_mb": 0.75,
+"src": "ExNote/CSE/Sem 4/23CS4PCSED - Software Engineering/Notes/UNIT-3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23CS4PCSED"
+},
+{
+"sha": "b70ebbd66c9761b3a786c5c715171a63d601b4fc65cf61fc91e7eafdc7f36c16",
+"subject": "Software Engineering",
+"file": "UNIT-4.pdf",
+"asset": "notes",
+"pages": 123,
+"size_mb": 1.33,
+"src": "ExNote/CSE/Sem 4/23CS4PCSED - Software Engineering/Notes/UNIT-4.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23CS4PCSED"
+},
+{
+"sha": "d77004a95248a59ed68b27f491dac074285a948d5ea8eac106634335d1cce97a",
+"subject": "Software Engineering",
+"file": "UNIT-5.pdf",
+"asset": "notes",
+"pages": 160,
+"size_mb": 2.61,
+"src": "ExNote/CSE/Sem 4/23CS4PCSED - Software Engineering/Notes/UNIT-5.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23CS4PCSED"
+},
+{
+"sha": "83bac9534f9074ed1b50b69f35927dee09c00fb927585bd22a586a67091e475f",
+"subject": "Theoretical Foundation of Computer Science",
+"file": "CIE 1.pdf",
+"asset": "exam_paper",
+"pages": 6,
+"size_mb": 0.72,
+"src": "ExNote/CSE/Sem 4/23CS4PCTFC - Theoretical Foundation of Computer Science/Exam papers/CIE 1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23CS4PCTFC"
+},
+{
+"sha": "09f2118376ea5cac02aa389eaa65a8426b938ef91cad417b61687f2dce563ea4",
+"subject": "Theoretical Foundation of Computer Science",
+"file": "CIE 3.pdf",
+"asset": "exam_paper",
+"pages": 5,
+"size_mb": 0.23,
+"src": "ExNote/CSE/Sem 4/23CS4PCTFC - Theoretical Foundation of Computer Science/Exam papers/CIE 3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23CS4PCTFC"
+},
+{
+"sha": "acc5fdaac226567c66bb34d20997900f2db6ae850485410f9d776c2c5ccd37c2",
+"subject": "Theoretical Foundation of Computer Science",
+"file": "SEE.pdf",
+"asset": "exam_paper",
+"pages": 3,
+"size_mb": 0.22,
+"src": "ExNote/CSE/Sem 4/23CS4PCTFC - Theoretical Foundation of Computer Science/Exam papers/SEE.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23CS4PCTFC"
+},
+{
+"sha": "6f5dd9ebc2d56de1103403047d3622602a3129dab86051794f5e00463ed29b74",
+"subject": "Theoretical Foundation of Computer Science",
+"file": "unit 1.pdf",
+"asset": "notes",
+"pages": 190,
+"size_mb": 3.73,
+"src": "ExNote/CSE/Sem 4/23CS4PCTFC - Theoretical Foundation of Computer Science/Notes/unit 1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23CS4PCTFC"
+},
+{
+"sha": "3dd94a228894ce6ef0f167e40a3786a3a232945f5b3a1875a7d933e795ca0c4e",
+"subject": "Theoretical Foundation of Computer Science",
+"file": "unit 2.pdf",
+"asset": "notes",
+"pages": 249,
+"size_mb": 11.03,
+"src": "ExNote/CSE/Sem 4/23CS4PCTFC - Theoretical Foundation of Computer Science/Notes/unit 2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23CS4PCTFC"
+},
+{
+"sha": "3a34204cf82349882f6b4693384dc82c51dea828bfd86d1af3b8f975824dd028",
+"subject": "Theoretical Foundation of Computer Science",
+"file": "unit 3.pdf",
+"asset": "notes",
+"pages": 219,
+"size_mb": 11.53,
+"src": "ExNote/CSE/Sem 4/23CS4PCTFC - Theoretical Foundation of Computer Science/Notes/unit 3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23CS4PCTFC"
+},
+{
+"sha": "e3ea58d6e9fd50a8dc58455bb5ff0ac4abb165e2b7c4253c9d14a6344eda8f3d",
+"subject": "Theoretical Foundation of Computer Science",
+"file": "unit 4.pdf",
+"asset": "notes",
+"pages": 150,
+"size_mb": 2.39,
+"src": "ExNote/CSE/Sem 4/23CS4PCTFC - Theoretical Foundation of Computer Science/Notes/unit 4.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23CS4PCTFC"
+},
+{
+"sha": "f4036b034f12f310ab30003f3a5c2f13eb500fab40dd39fc8fc169dc2c4a6f2b",
+"subject": "Theoretical Foundation of Computer Science",
+"file": "unit 5.pdf",
+"asset": "notes",
+"pages": 88,
+"size_mb": 1.59,
+"src": "ExNote/CSE/Sem 4/23CS4PCTFC - Theoretical Foundation of Computer Science/Notes/unit 5.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 4"
+],
+"code": "23CS4PCTFC"
+},
+{
+"sha": "e146ad53f494400e6a8ae58706acdb9ece720464df2bcec2458e92df70f599a4",
+"subject": "Waste Management",
+"file": "CIE 1.pdf",
+"asset": "exam_paper",
+"pages": 1,
+"size_mb": 0.49,
+"src": "ExNote/CSE/Sem 1/22CV2ESWMT - Waste Management/Exam papers/CIE 1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22CV2ESWMT"
+},
+{
+"sha": "a5d6acf65180872da9b89e38edf5a4feb2c261467203f36ca7067d2bb69c05cf",
+"subject": "Waste Management",
+"file": "CIE 2.pdf",
+"asset": "exam_paper",
+"pages": 6,
+"size_mb": 0.3,
+"src": "ExNote/CSE/Sem 1/22CV2ESWMT - Waste Management/Exam papers/CIE 2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22CV2ESWMT"
+},
+{
+"sha": "8cd7b20766fac619cd57b66c62bcebc29169d8489d4e0e6b17853034195ba6eb",
+"subject": "Waste Management",
+"file": "Unit 1.pdf",
+"asset": "notes",
+"pages": 19,
+"size_mb": 8.32,
+"src": "ExNote/CSE/Sem 1/22CV2ESWMT - Waste Management/Notes/Unit 1.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22CV2ESWMT"
+},
+{
+"sha": "313b1012de38755eea6d706b9288c881886cdefbb620e416b190e91b9d1c56d6",
+"subject": "Waste Management",
+"file": "Unit 2.pdf",
+"asset": "notes",
+"pages": 23,
+"size_mb": 7.48,
+"src": "ExNote/CSE/Sem 1/22CV2ESWMT - Waste Management/Notes/Unit 2.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22CV2ESWMT"
+},
+{
+"sha": "5526f95dd81ccf18bbcb527b9e31d067a6f38d2e95bc457a33914f652f8549df",
+"subject": "Waste Management",
+"file": "Unit 3.pdf",
+"asset": "notes",
+"pages": 39,
+"size_mb": 18.03,
+"src": "ExNote/CSE/Sem 1/22CV2ESWMT - Waste Management/Notes/Unit 3.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22CV2ESWMT"
+},
+{
+"sha": "d7c8961755066c8eeb16a3f361bb0334ad0c77a704403e8e0d5d373d7d215b19",
+"subject": "Waste Management",
+"file": "Unit 4.pdf",
+"asset": "notes",
+"pages": 18,
+"size_mb": 9.1,
+"src": "ExNote/CSE/Sem 1/22CV2ESWMT - Waste Management/Notes/Unit 4.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22CV2ESWMT"
+},
+{
+"sha": "2a028af7474a4bed96ebab6ce64be407c459d152b8447d63caf7a624f228a5cc",
+"subject": "Waste Management",
+"file": "Unit 5.pdf",
+"asset": "notes",
+"pages": 28,
+"size_mb": 5.96,
+"src": "ExNote/CSE/Sem 1/22CV2ESWMT - Waste Management/Notes/Unit 5.pdf",
+"branches": [
+"CSE"
+],
+"sems": [
+"Sem 1"
+],
+"code": "22CV2ESWMT"
+}
+]

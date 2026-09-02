@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
+import { CaretDown } from "@phosphor-icons/react";
 import { runQuery, type Subject } from "../../facultyApi";
 import { cn } from "../../lib/utils";
 
@@ -93,28 +94,55 @@ export function Empty({ title, hint }: { title: string; hint?: string }) {
 
 const FACULTY_TABS = [
   { to: "/faculty", label: "Overview", end: true },
-  { to: "/faculty/generate", label: "Generate" },
-  { to: "/faculty/blueprint", label: "Blueprint" },
+  { to: "/faculty/generate", label: "Generate a paper" },
+  { to: "/faculty/practice", label: "Practice sets" },
   { to: "/faculty/coverage", label: "Coverage" },
-  { to: "/faculty/outcomes", label: "Outcomes" },
-  { to: "/faculty/attainment", label: "CO / PO" },
-  { to: "/faculty/bank", label: "Bank" },
+  { to: "/faculty/bank", label: "Question bank" },
   { to: "/faculty/similar", label: "Asked before?" },
 ];
 
+/** A menu rather than a tab strip: six destinations do not fit a row on a
+ *  laptop, and a wrapping strip reads as clutter above every screen. */
 export function FacultyNav() {
+  const [open, setOpen] = useState(false);
+  const loc = useLocation();
+  const here = FACULTY_TABS.find((t) => t.end ? loc.pathname === t.to : loc.pathname === t.to)
+    ?? FACULTY_TABS[0];
+  useEffect(() => setOpen(false), [loc.pathname]);
+
   return (
-    <nav className="flex gap-1 flex-wrap mb-6 border-b border-line pb-2 no-print">
-      {FACULTY_TABS.map((t) => (
-        <NavLink key={t.to} to={t.to} end={t.end}
-          className={({ isActive }) => cn(
-            "px-3 py-1.5 text-[13px] rounded-md transition-colors",
-            isActive ? "bg-line-2 text-ink font-medium"
-                     : "text-ink-2 hover:text-ink hover:bg-line-2/60")}>
-          {t.label}
-        </NavLink>
-      ))}
-    </nav>
+    <div className="relative mb-6 no-print">
+      <button onClick={() => setOpen(!open)} aria-expanded={open} aria-haspopup="menu"
+        className="inline-flex items-center gap-2 border border-line rounded-lg bg-paper-2
+                   px-3 py-2 text-[13px] text-ink hover:border-ink-2
+                   transition-[border-color] duration-150 ease-out">
+        <span className="font-mono text-[10px] uppercase tracking-widest text-ink-2">
+          Intelligence
+        </span>
+        <span className="font-medium">{here.label}</span>
+        <CaretDown size={13} weight="bold"
+          className={`text-ink-2 transition-transform duration-150 ease-out ${open ? "rotate-180" : ""}`} />
+      </button>
+
+      {open && (
+        <>
+          <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} aria-hidden="true" />
+          <div role="menu"
+            className="absolute z-20 mt-1 min-w-[220px] border border-line rounded-lg
+                       bg-paper-2 shadow-lg overflow-hidden">
+            {FACULTY_TABS.map((t) => (
+              <NavLink key={t.to} to={t.to} end={t.end} role="menuitem"
+                className={({ isActive }) => cn(
+                  "block px-3 py-2 text-[13px] transition-colors duration-150",
+                  isActive ? "bg-line-2 text-ink font-medium"
+                           : "text-ink-2 hover:bg-line-2/60 hover:text-ink")}>
+                {t.label}
+              </NavLink>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
   );
 }
 

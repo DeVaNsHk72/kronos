@@ -78,9 +78,6 @@ ASKS = {
         "For subject_key '{s}' where sitting = 'Main' and marks is not null and "
         "unit_no is not null: per unit_no and marks return columns unit_no, "
         "marks, n (count). Order by unit_no, marks."),
-    "distinctCos": (
-        "List the distinct non-null course_outcome values for subject_key '{s}'. "
-        "Return one column named course_outcome, ordered ascending."),
     "overview": (
         "For subject_key '{s}': how many questions in total, how many distinct "
         "exam years, how many distinct source files, how many have a non-null "
@@ -102,12 +99,6 @@ ASKS = {
         "(count of distinct exam_year), questions (count), and notes_pages "
         "(sum of depth_score, 0 if none). Only rows where marks is not null. "
         "Order by marks_examined descending."),
-    "coAttainment": (
-        "For subject_key '{s}', where sitting = 'Main' and course_outcome is not "
-        "null and marks is not null: per course_outcome return columns "
-        "course_outcome, questions (count), total_marks (sum of marks), and "
-        "pct_of_paper (that outcome's marks as a percentage of all marks, one "
-        "decimal). Order by course_outcome."),
     "repetition": (
         "For subject_key '{s}', group rows with a non-null repeat_cluster_id and "
         "return columns repeat_cluster_id, times_asked (count), first_asked (min "
@@ -119,11 +110,6 @@ ASKS = {
         "per unit_no return columns unit_no, last_asked (max exam_year), "
         "questions (count), marks (sum), years (count of distinct exam_year). "
         "Order by unit_no."),
-    "bloomByCo": (
-        "For subject_key '{s}' where sitting = 'Main' and course_outcome and "
-        "bloom_level are both not null: per course_outcome and bloom_level "
-        "return columns course_outcome, bloom_level, questions (count), "
-        "marks (sum). Order by course_outcome."),
 }
 
 
@@ -270,9 +256,7 @@ class GenerateReq(BaseModel):
     subject_key: str
     exam_type: str = "CIE"
     exclude_years: int = 3
-    require_co: bool = True
     bloom_mix: dict = {}
-    locked: dict = {}
     # A blueprint supplied by the department beats anything inferred. When this
     # is set it is authoritative and nothing is scaled; without it only the
     # declared CIE format is available, because averaging real papers gives unit
@@ -353,7 +337,6 @@ def generate(r: GenerateReq):
     cutoff = date.today().year - r.exclude_years
     used_ids: set[str] = set()
     used_clusters: set[str] = set()
-    cos_seen: set[int] = set()
 
     def _rows(name: str, **fmt):
         """Ask Genie; fall back to the equivalent statement if it cannot answer.
@@ -383,10 +366,6 @@ def generate(r: GenerateReq):
             params["cutoff_year"] = cutoff
         return dbx.query(sql, params)["rows"], "sql-fallback"
 
-    co_rows, co_engine = _rows("distinctCos")
-    all_cos = [int(x["course_outcome"]) for x in co_rows
-               if x.get("course_outcome") is not None]
-
     # One call for the whole eligible pool, then select locally. Asking Genie
     # per slot would be ~15 round trips at ~20s each and the wording would vary
     # between them, so two runs of the same constraints could differ.
@@ -397,7 +376,7 @@ def generate(r: GenerateReq):
 
     bloom_order = [k for k, v in sorted(r.bloom_mix.items(), key=lambda kv: -kv[1]) if v > 0]
 
-    def pick(unit, marks, bloom, want_co):
+    def pick(unit, marks, bloom):
         rows = [c for c in pool_rows
                 if int(c.get("unit_no") or -1) == unit
                 and int(c.get("marks") or -1) == marks]
@@ -406,8 +385,9 @@ def generate(r: GenerateReq):
         if not pool:
             return None
         def score(c):
-            return ((0 if want_co is not None and c.get("course_outcome") == want_co else 100)
-                    + (0 if bloom and c.get("bloom_level") == bloom else 10)
+            # Requested Bloom level first, then oldest — an older question reads
+            # as fresher to a student who has seen recent papers.
+            return ((0 if bloom and c.get("bloom_level") == bloom else 10)
                     + (int(c.get("exam_year") or 2000) - 2000) * 0.01)
         return sorted(pool, key=score)[0]
 
@@ -420,16 +400,15 @@ def generate(r: GenerateReq):
             bloom = bloom_order[i % len(bloom_order)] if bloom_order else ""
             sec_units = [u for u in (sec.get("units") or units) if u in units] or units
             unit = sec_units[(n - 1) % len(sec_units)]
-            want_co = next((c for c in all_cos if c not in cos_seen), None) if r.require_co else None
 
-            q = pick(unit, sec["marks"], bloom, want_co)
+            q = pick(unit, sec["marks"], bloom)
             if not q:
                 # The format fixes the marks, so relaxing the unit is the honest
                 # trade — and it is reported.
                 for u in sec_units:
                     if u == unit:
                         continue
-                    q = pick(u, sec["marks"], bloom, want_co)
+                    q = pick(u, sec["marks"], bloom)
                     if q:
                         warnings.append(
                             f"{sec['label']} Q{n}: no unused {sec['marks']}-mark question left "
@@ -444,20 +423,12 @@ def generate(r: GenerateReq):
             used_ids.add(q["question_id"])
             if q.get("repeat_cluster_id"):
                 used_clusters.add(q["repeat_cluster_id"])
-            if q.get("course_outcome") is not None:
-                cos_seen.add(int(q["course_outcome"]))
             picks.append({"n": n, "marks": sec["marks"], "q": q})
         sections.append({**sec, "picks": picks})
 
     answerable = sum(s["answer"] * s["marks"] for s in fmt["sections"])
     printed = sum(s["slots"] * s["marks"] for s in fmt["sections"])
     empty = sum(1 for s in sections for p in s["picks"] if not p["q"])
-    if r.require_co:
-        missing = [c for c in all_cos if c not in cos_seen]
-        if missing:
-            warnings.append(
-                f"CO coverage incomplete: CO {', '.join(map(str, missing))} could not be placed "
-                f"in this format's {sum(s['slots'] for s in fmt['sections'])} slots.")
 
     achieved: dict = {}
     for s in sections:
@@ -469,8 +440,86 @@ def generate(r: GenerateReq):
     return {"subject_key": r.subject_key, "exam_type": r.exam_type, "basis": "declared",
             "format": fmt["name"], "instructions": fmt["instructions"], "sections": sections,
             "total_marks": answerable, "target_marks": answerable, "printed_marks": printed,
-            "cos_required": all_cos, "cos_covered": sorted(cos_seen),
             "bloom_requested": r.bloom_mix, "bloom_achieved": achieved,
             "empty_slots": empty, "cutoff_year": cutoff, "warnings": warnings,
             "engine": pool_engine, "pool_size": len(pool_rows),
             "sql_used": Q.CANDIDATES}
+
+
+# ---------------------------------------------------------------- practice --
+class PracticeReq(BaseModel):
+    subject_key: str
+    scope: str = "subject"        # subject | unit | topic
+    unit_no: int | None = None
+    topic_id: str | None = None
+    count: int = 10
+
+
+@router.post("/practice")
+def practice(r: PracticeReq):
+    """Build an MCQ practice set from real past questions.
+
+    The stem is always a question that was actually asked, carrying its year and
+    source paper. Only the distractors are written, and they are written from
+    OTHER real questions in the same subject — so a wrong option is a real thing
+    someone was asked, not an invented plausible-sounding string. Nothing here
+    fabricates course content.
+    """
+    import random
+
+    rows = dbx.query(Q.PRACTICE_POOL, {"subject_key": r.subject_key})["rows"]
+    if r.scope == "unit" and r.unit_no is not None:
+        rows = [x for x in rows if x.get("unit_no") == r.unit_no]
+    elif r.scope == "topic" and r.topic_id:
+        rows = [x for x in rows if x.get("topic_id") == r.topic_id]
+    if len(rows) < 4:
+        raise HTTPException(422, "Not enough questions in this scope to build a set. "
+                                 "Widen to the whole unit or subject.")
+
+    by_topic: dict[str, list[dict]] = {}
+    for x in rows:
+        by_topic.setdefault(x.get("topic_name") or "—", []).append(x)
+
+    n = max(1, min(r.count, 25))
+    picked = random.sample(rows, min(n, len(rows)))
+    items = []
+    for q in picked:
+        right = q.get("topic_name") or "—"
+        # Distractors are other real topics from the same subject: a plausible
+        # wrong answer here is one a student could genuinely confuse it with.
+        others = [t for t in by_topic if t != right and t != "—"]
+        random.shuffle(others)
+        options = [right] + others[:3]
+        if len(options) < 2:
+            continue
+        random.shuffle(options)
+        items.append({
+            "question_id": q["question_id"],
+            "stem": q["question_text"],
+            "prompt": "Which topic is this question testing?",
+            "options": options,
+            "answer": right,
+            "marks": q.get("marks"),
+            "unit_no": q.get("unit_no"),
+            "bloom_level": q.get("bloom_level"),
+            "exam_year": q.get("exam_year"),
+            "source_file": q.get("source_file"),
+        })
+    return {"subject_key": r.subject_key, "scope": r.scope,
+            "count": len(items), "pool_size": len(rows), "items": items}
+
+
+@router.get("/units")
+def units(subject_key: str):
+    """Units and topics available for scoping a practice set."""
+    C = dbx.CATALOG
+    rows = dbx.query(
+        f"SELECT DISTINCT unit_no FROM {C}.fact_question "
+        "WHERE subject_key = :subject_key AND unit_no IS NOT NULL ORDER BY unit_no",
+        {"subject_key": subject_key})["rows"]
+    topics = dbx.query(
+        f"SELECT topic_id, topic_name, unit_no FROM {C}.dim_topic "
+        "WHERE subject_key = :subject_key ORDER BY unit_no, topic_name",
+        {"subject_key": subject_key})["rows"]
+    return {"units": [int(x["unit_no"]) for x in rows if x.get("unit_no") is not None],
+            "topics": topics}

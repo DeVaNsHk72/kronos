@@ -69,7 +69,6 @@ export default function Similar() {
                 <p className="serif text-[14px] leading-snug">{r.question_text}</p>
                 <p className="font-mono text-[11px] text-ink-2 mt-1.5">
                   {r.exam_year} · {r.exam_session} · {r.marks ?? "—"} marks · unit {r.unit_no ?? "—"}
-                  {r.course_outcome ? ` · CO${r.course_outcome}` : ""}
                   {r.repeat_cluster_id ? " · in a repeat cluster" : ""}
                 </p>
                 <p className="font-mono text-[10px] text-ink-2 mt-1">shared: {r.shared_terms}</p>
