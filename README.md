@@ -7,507 +7,357 @@ one place as governed tables. Kronos is the agent that thinks over that memory
 and shows its working.
 
 ```
-15,888 questions · 30 subjects · 9 years · 12,698 pages of notes read
+15,888 questions · 30 subjects · 9 years · 237 documents · 11,224 pages read
 ```
 
-Not a search box. The papers, notes and syllabus are the memory; a Databricks
-Multi-Agent Supervisor calling Genie is what reasons over it. Ask in plain words
-and the SQL it wrote is one click away, because an agent that cannot show its
-working cannot be trusted with an exam.
+Not a search box. The papers and notes are the memory; a Databricks Multi-Agent
+Supervisor calling Genie is what reasons over it. Ask in plain words and the SQL
+it wrote is one click away — an agent that cannot show its working cannot be
+trusted with an exam.
 
-**Two sides, one brain.**
+---
 
-| | |
+## Contents
+
+1. [The problem](#the-problem)
+2. [The two doors](#the-two-doors)
+3. [Studying](#studying)
+4. [Intelligence](#intelligence-teaching)
+5. [How the agent works](#how-the-agent-works)
+6. [The data underneath](#the-data-underneath)
+7. [Architecture](#architecture)
+8. [Running it](#running-it)
+9. [What is real and what is not](#what-is-real-and-what-is-not)
+10. [Further reading](#further-reading)
+
+---
+
+## The problem
+
+Two people need the same archive and neither can use it.
+
+**A student, three days from an exam** has nine years of past papers and no way
+to know which topics matter. Sorting 56 PDFs by hand is not revision.
+
+**A lecturer setting the next paper** works from memory — no view of what has
+already been asked to death, no sense of which topics are examined heavily but
+taught thinly, and no evidence trail when the exam committee asks why a question
+was chosen.
+
+Both questions are answerable from the same rows. Neither is answerable from PDFs.
+
+---
+
+## The two doors
+
+The homepage asks who you are and nothing else. A student and a lecturer want
+opposite things from identical data, so the question is asked before anything is
+shown rather than guessed at.
+
+| Door | Goes to |
 |---|---|
-| **Studying** | What to revise, and the evidence for it — marks over nine years, what repeats, which pages of notes cover it |
-| **Intelligence** (teaching) | Set the next paper from questions actually asked, and see what the exam has been over- and under-examining |
+| **I'm studying** | `/ask` — the study hub |
+| **I teach here** | `/faculty` — Intelligence |
 
 ---
 
-## One app, two audiences
+## Studying
 
-Students and faculty share a build, a router and a design system — they are the
-same product seen from two sides, not two products. `/home`, `/ask`, `/stats`,
-`/download` for students; `/faculty/*` for lecturers.
+One hub at `/ask`, four ways into the same corpus.
 
-**The Databricks token lives in the backend, never the bundle.** A static SPA has
-no secrets, so the console names a query (`POST /api/faculty/query`) and the
-server holds the credentials and the SQL. This is why the faculty screens need
-the API running, where a server-rendered version would not.
+### Ask
 
-## Faculty console
+The agent, in plain words. *"What repeats in operating systems deadlock
+questions?"* returns a real answer with the questions behind it, the years they
+were set, and the paper each came from.
 
-Reads the gold star schema in Unity Catalog. Its governing rule: **SQL selects,
-the model only phrases.** A generated paper is assembled by constraint
-satisfaction over real past questions — every line traces to a `question_id`,
-its source PDF and the year it was last asked. No language model invents a
-question. Where a constraint cannot be met it is stated on the paper rather than
-quietly dropped.
-
-Screens: dashboard · paper generator · coverage gaps · CO/PO attainment ·
-question bank · "has this been asked?" · syllabus gaps · Genie ask panel.
-
-```bash
-cp .env.example .env          # Databricks host / token / warehouse / genie space
-uvicorn backend.app.main:app --reload
-cd student && pnpm install && pnpm dev
-```
-
-`DATABRICKS_CATALOG` must match the catalog the Genie space is configured
-against — otherwise the ask panel answers from a different dataset than every
-other screen, which is very hard to notice.
-
-## Student app
-
-```bash
-cd student && pnpm install && pnpm dev
-```
-
----
-
-## What Kronos does
-
-Four pages, four jobs:
-
-### `/home` — Every exam question, searchable
-
-- Full-text keyword search + BGE semantic search (toggleable).
-- Filters: course, branch, semester, year range, exam type, programme, "with figures".
-- Question cards show text, marks, topic, unit, course, and a link to the original PDF.
-- Figures are extracted and rendered inline (with a zoom-in lightbox).
-
-### `/ask` — Grounded chatbot ("Ask the archive")
-
-- Every answer is retrieved from real questions; every claim carries a `[n]` citation that jumps to the source card.
-- The model never _composes_ new questions — it only _summarises what the archive says_.
-- Shows an "Understood" panel (parsed course/branch/year/etc.) so a wrong filter is legible instead of silent.
-- Follow-up chips: "Only Main exams", "Last 2 years only", "Open statistics", "Download these papers" — all deep-link to the other three routes.
-
-### `/stats` — What to study
-
-- Pick a course, see: topic-frequency bars, year-strips (which topics have gone quiet), marks distribution, and — the killer feature — **verbatim repeats** (same question text appearing across multiple years).
-- Recently-viewed courses persist in localStorage.
-
-### `/download` — Bulk PDF export
-
-- Multi-course + year-range picker.
-- Checkbox-per-row for selective zip, filter by exam type, sort by newest / largest.
-- Zips are `ZIP_STORED` (PDFs are already compressed — no gain from DEFLATE, huge speed win).
-
-## Architecture at a glance
-
-```
-                                              ┌──────────────────────────────┐
-                                              │  browser (React 19 + Vite)   │
-                                              │                              │
-                                              │  /home  /ask  /stats  /down  │
-                                              └──────────────┬───────────────┘
-                                                             │
-                                              axios ──── /api/* ──── vite proxy
-                                                             │
-                        ┌────────────────────────────────────▼────────────────────────────┐
-                        │  FastAPI (uvicorn, single process)                              │
-                        │                                                                 │
-                        │   routers/                                                      │
-                        │     ├── search      /api/search       (keyword + filters)       │
-                        │     │               /api/search/semantic (BGE cosine)           │
-                        │     ├── meta        /api/facets, /api/filters, /api/courses,    │
-                        │     │               /api/topics, /api/stats, /api/stats/course  │
-                        │     ├── questions   /api/question/{id}                          │
-                        │     ├── files       /api/download/{sha}, /api/figures/{sha}/*   │
-                        │     ├── chat        /api/chat            (grounded RAG)         │
-                        │     └── papers      /api/papers, /api/papers/zip                │
-                        │                                                                 │
-                        │   shared modules                                                │
-                        │     ├── db.py       read-only SQLite (mmap_size = 0)            │
-                        │     ├── semantic.py numpy cosine over embeddings.npy            │
-                        │     ├── chat.py     parse-intent → retrieve → compose           │
-                        │     ├── filters.py  shared WHERE-clause builder                 │
-                        │     ├── shape.py    row → dict + images join                    │
-                        │     └── llm.py      lazy OpenAI client (gpt-4o-mini)            │
-                        └────┬───────────────────────────────┬───────────────────┬────────┘
-                             │                               │                   │
-                    ┌────────▼─────────┐         ┌──────────▼──────────┐   ┌─────▼─────┐
-                    │ questions_v2.db  │         │ embeddings.npy      │   │ figures/  │
-                    │  ATTACH p AS     │         │  188,701 × 384 f16  │   │ <sha>/... │
-                    │ papers_v2.db     │         │ + emb_keys.json     │   │           │
-                    │  166 MB          │         │  139 MB             │   │           │
-                    └──────────────────┘         └─────────────────────┘   └───────────┘
-                             ▲                                              ▲
-                             │                                              │
-                    ┌────────┴──────────────────────────────────────────────┴────────────┐
-                    │  scripts/ (offline pipeline, not on the request path)              │
-                    │                                                                    │
-                    │   PDFs → OCR (marker/olmocr, GPU) → extracted text                 │
-                    │        ↓                                                           │
-                    │   parse questions (rules + LLM fallback) → questions_v2.db         │
-                    │        ↓                                                           │
-                    │   embed_questions.py (bge-small)  →  embeddings.npy                │
-                    │        ↓                                                           │
-                    │   cluster_questions.py + label_topics.py (gpt-4o-mini)             │
-                    │        ↓                                                           │
-                    │   apply_topics.py  →  questions.topic + subtopic populated         │
-                    └────────────────────────────────────────────────────────────────────┘
-```
-
-## Production deployment
-
-Everything runs on free tiers. No servers to babysit, no card required beyond what each platform mandates.
-
-```
-pyqheaven.in ──▶ Cloudflare Worker (static SPA, frontend/dist)
-                        │
-                        │  fetch /api/*
-                        ▼
-              Google Cloud Run (FastAPI, 2 GiB, scale-to-zero)
-                        │
-          ┌─────────────┼──────────────────┬───────────────────┐
-          ▼             ▼                  ▼                    ▼
-  questions_v2.db  embeddings.npy   figures/ (bundled     PDFs — GitHub
-  papers_v2.db     (baked into      into the Docker       Releases, sharded
-  (baked into      the image)       image)                pdfs-0 … pdfs-f
-  the image)                                               (GitHub caps
-                                                             1000 assets/
-                                                             release; sha's
-                                                             first hex
-                                                             nibble picks
-                                                             the shard)
-          │
-          ▼
-  Groq (Llama / gpt-oss-120b) for /api/chat — OpenAI-
-  compatible endpoint, swapped in via LLM_BASE_URL so
-  chat costs $0 instead of burning an OpenAI budget
-```
-
-- **Frontend** — `frontend/dist` deployed as a Cloudflare Worker with static assets (`wrangler.jsonc`, `not_found_handling: "single-page-application"` so client-side routes survive a hard refresh). Build command: `npm install && npm run build`; deploy command: `npx wrangler deploy`.
-- **Backend** — a single Docker image (`Dockerfile`) built with `gcloud builds submit` and deployed to Cloud Run. The two SQLite DBs, `embeddings.npy`, `emb_keys.json`, and `figures/` are all `COPY`'d into the image at build time — no volume mounts, no GCS bucket. Image lives in Artifact Registry (`us-central1-docker.pkg.dev/…/paperbank/paperbank-api`).
-- **PDFs** — the ~8 GB corpus is too large for the Cloud Run image (and too many files for a single Hugging Face dataset directory, which caps at 10,000/folder, or a single GitHub Release, which caps at 1,000 assets). Sharded across **16 GitHub Releases** (`pdfs-0` … `pdfs-f`) keyed by the first hex character of each paper's SHA. `PDF_BASE_URL` + that shard math live in `backend/app/config.py` and every URL-building spot (`shape.py`, `routers/papers.py`, `routers/files.py`).
-- **Bulk zip in production** — `/api/papers/zip` streams each selected PDF from GitHub Releases via `requests.get()` and writes it straight into the in-memory zip (no local disk to read from, unlike dev). Still capped at 300 files / 750 MB.
-- **Chat LLM** — defaults to OpenAI, but production points `LLM_BASE_URL` at Groq's OpenAI-compatible endpoint (`https://api.groq.com/openai/v1`) with `CHAT_MODEL=openai/gpt-oss-120b`. Same `llm.py` code path, just a different `base_url` + key.
-- **Rate limiting** — `/api/chat` is capped at 10 requests/minute per IP (`backend/app/ratelimit.py`, in-memory sliding window). Client IP is read from `X-Forwarded-For` because Cloud Run's own proxy IP is what `request.client.host` would otherwise report.
-- **CORS** — locked to `https://pyqheaven.in` via the `CORS_ORIGINS` env var (comma-separated list, defaults to `*` for local dev).
-- **Analytics** — Google Analytics (`gtag.js`) + Umami, both loaded as static `<script>` tags in `frontend/index.html`. Not env-driven — the IDs are public and don't change per environment.
-- **SEO** — Open Graph + Twitter Card meta, JSON-LD `WebSite` schema with a `SearchAction`, `robots.txt`, `sitemap.xml`, all in `frontend/index.html` / `frontend/public/`.
-
-Redeploying after a code change:
-
-```bash
-# frontend — Cloudflare auto-builds on push to main
-
-# backend
-gcloud builds submit . --tag us-central1-docker.pkg.dev/bmsce-503918/paperbank/paperbank-api
-gcloud run services update paperbank-api --region us-central1 \
-  --image us-central1-docker.pkg.dev/bmsce-503918/paperbank/paperbank-api
-```
-
-## The data pipeline
-
-**Nothing on this page runs at request time.** It's the offline path that produced the two SQLite files and one embedding matrix the backend serves from.
-
-### 1. Scraping (Node.js, historical)
-
-The original scrape lived at `bmsce-paper-ripper` (not in this repo) and pulled 10,606 PDFs from BMSCE's paper archive. That work is done — Paperbank starts from the PDFs.
-
-### 2. OCR (`scripts/run_all.sh`, `run_ocr_all.{sh,ps1}`, `OCR_RUNBOOK.md`)
-
-Ran on a WSL2 + GPU box using `marker` (and later `olmocr` for pages marker couldn't handle). Output: per-paper markdown + extracted images under `DERIVED_DATA/extracted_text_v2/`. **~6–8 hours for the full corpus.** Only re-run if new PDFs arrive.
-
-### 3. Question extraction (rules + LLM fallback)
-
-- **Rules parser** — a hand-written parser recognises the common BMSCE question-paper layouts (`Q1. …`, `1.a) …`, `Q6(a) [7]`, etc.). ~85% coverage.
-- **LLM fallback** — the remaining 15% (weird layouts, ancient scans, single-column tables) go through `gpt-4o-mini` with a strict schema prompt.
-- Output: `questions_v2.db` — one row per question, denormalised (course/branch/year/etc. all on the row).
-
-Both parsers set `parser` and `confidence` columns so downstream steps can weight them.
-
-### 4. Embeddings (`scripts/embed_questions.py`)
-
-- **Model:** `BAAI/bge-small-en-v1.5` via sentence-transformers.
-- Passes `passage: <question text>` for the corpus and `query: <user query>` at search time (the model was trained with those prefixes).
-- Output: `embeddings.npy` (float16, L2-normalised, 188,701 × 384, ~139 MB) + `emb_keys.json` mapping row index → `text_hash`.
-- **~2 hours** on CPU, <30 minutes on a modest GPU. Rerun only when questions change.
-
-### 5. Topic clustering (`scripts/cluster_questions.py`)
-
-Groups semantically-similar questions per course into ~10–30 clusters (HDBSCAN over the embeddings). Purely an intermediate step — output feeds the labeller.
-
-### 6. Topic labelling (`scripts/label_topics.py`)
-
-- Sends each cluster to `gpt-4o-mini` with a strict prompt: _"Give one topic (2–4 words) + one subtopic (3–6 words). JSON only. No prose."_
-- Total cost for the full corpus: **$0.51** at time of writing.
-- Handles both index-keyed and name-keyed LLM responses (the model sometimes ignores the "return keys as `0`, `1`, …" instruction).
-
-### 7. Apply topics (`scripts/apply_topics.py`)
-
-Denormalises the labels back onto every question row (30,464 distinct `topic` values, 10,025 fully-labelled courses, zero unlabelled rows).
-
-### 8. Keyword fallback (`scripts/keyword_label.py`)
-
-For courses the LLM couldn't cluster meaningfully (too few questions, too diverse), assigns topics via a small keyword taxonomy. Fills in ~2% of rows.
-
-**Rebuilding is idempotent** — every script writes to a new SQLite file, atomically swaps it in, then the backend reads the new file on next request (`mmap_size = 0` guards against the running server segfaulting on a mid-read rewrite).
-
-## Backend
-
-Python 3.11 + FastAPI + uvicorn. Single process, no queue, no worker fleet. Everything under `backend/app/`:
-
-### Layout
-
-```
-backend/app/
-├── main.py           FastAPI app assembly; CORS; background semantic warmup on startup
-├── config.py         Env loader (.env), paths, model IDs, page sizes, CORS origins
-├── db.py             SQLite RO connection with papers_v2 attached; per-request context manager
-├── shape.py          Row → dict; joins in question_images; the canonical SELECT column list
-├── filters.py        Shared WHERE-clause builder; folds `Common`/`Elective` branches and
-│                     `Kannada`/`Mathematics` programmes into every branch/programme filter
-├── semantic.py       Loads embeddings.npy once; numpy cosine matmul; `search_rows()` shared
-│                     between /api/search/semantic and /api/chat so both paths rank identically
-├── chat.py           Grounded RAG: parse_intent() → retrieve → compose_answer()
-├── llm.py            Lazy OpenAI-SDK client — works against OpenAI or any OpenAI-compatible
-│                     endpoint (prod points it at Groq via LLM_BASE_URL). Degrades to a passive
-│                     "no key configured" response if no key is set.
-├── ratelimit.py      In-memory per-IP sliding-window limiter (used on /api/chat)
-└── routers/
-    ├── search.py     /api/search (keyword + filters), /api/search/semantic (BGE)
-    ├── meta.py       /api/filters, /api/facets, /api/courses, /api/topics, /api/stats, /api/stats/course
-    ├── questions.py  /api/question/{id}
-    ├── files.py      /api/download/{sha} (PDF), /api/figures/{sha}/{filename}
-    ├── chat.py       /api/chat (POST; grounded, cited, deep-linkable; rate-limited 10/min/IP)
-    └── papers.py     /api/papers (list with sizes), /api/papers/zip (bulk zip)
-```
-
-### Key architectural choices
-
-- **Two DBs attached, not one.** `questions_v2.db` is the row-store; `papers_v2.db` is the paper-level metadata (SHA, `paper_courses` join table, `original_paths`). Kept separate because they rebuild on different cadences.
-- **Read-only + per-request connections.** `sqlite3.connect(..., uri=True, "?mode=ro")` + `PRAGMA query_only = ON`. Scales fine for our load; simplifies deploys.
-- **`PRAGMA mmap_size = 0`.** The rebuild scripts rewrite the DB files while the server is running. With mmap, a page invalidated mid-read causes SIGSEGV. Reading through the pager costs almost nothing at our query shapes and fails cleanly.
-- **Semantic search is a `numpy` matrix multiply.** No FAISS, no pgvector, no HNSW. 188k × 384 float16 fits in ~139 MB RAM; a matmul + top-800 argpartition runs in ~40ms on CPU. When you outgrow this it'll be obvious.
-- **Chat = intent parse → retrieve → compose.** All three are model calls (`gpt-4o-mini`) but retrieval uses the same `semantic.search_rows` the UI does. If a user searches "laplace" and asks "laplace" they get the same rows in the same order.
-- **`Filters` folds shared subjects.** BMSCE `Common` branch + `Kannada`/`Mathematics` programmes contain subjects taught to _every_ branch. `Filters.where()` transparently adds them to any branch/programme filter, so picking `CSE` also returns the shared subjects.
-
-## Frontend
-
-React 19 + Vite 8 + Tailwind v4 + React Router 7. Single-page app; ~4K lines of code (`src/` sans generated).
-
-### Layout
-
-```
-frontend/src/
-├── main.tsx                  React root
-├── App.tsx                   Router shell (5 routes → 4 pages + catch-all redirect)
-├── api.ts                    axios client + all TS response types
-├── index.css                 @theme tokens + custom utility classes (~329 lines)
-│
-├── routes/
-│   ├── Home.tsx              Landing hero + search page + filters + results
-│   ├── Ask.tsx               Chat thread + input bar + follow-up chips
-│   ├── Stats.tsx             Course picker + topic bars + verbatim repeats
-│   └── Download.tsx          Multi-course picker + paper list + selective zip
-│
-└── components/
-    ├── Masthead.tsx          Floating pill nav (fixed top)
-    ├── QuestionCard.tsx      The question row; used everywhere questions appear
-    ├── FilterBar.tsx         The full filter row for /home
-    ├── ActiveFilters.tsx     Applied-filter chips (removable)
-    ├── Pagination.tsx        Numeric page controls
-    ├── Popover.tsx           Origin-anchored dropdown (with mount animation)
-    ├── ChatAnswer.tsx        Grounded assistant answer + [n] citation buttons
-    ├── ChatIntentPanel.tsx   "Understood" — parsed intent breakdown
-    └── ChatOverview.tsx      Stat overview + topics-covered + also-asked-in
-```
-
-## Running locally
-
-### Prereqs
-
-- Python 3.11+
-- Node 18+
-- The three data files present at `DERIVED_DATA/` (either shipped alongside the code or built via `scripts/`)
-- OpenAI API key **only** if you want `/ask` chat to work — search/stats/download work without it
-
-### One-time setup
-
-```bash
-# Backend deps
-python -m venv .venv
-.venv\Scripts\activate         # or `source .venv/bin/activate` on macOS/Linux
-pip install -r requirements.txt
-
-# Frontend deps
-cd frontend
-npm install
-cd ..
-
-# Environment (see next section)
-cp .env.example .env
-# edit .env
-```
-
-### Run
-
-Two terminals:
-
-```bash
-# terminal 1 — backend on :8000
-python -m uvicorn backend.app.main:app --port 8000
-
-# terminal 2 — frontend dev server on :5173 (proxies /api → :8000)
-cd frontend
-npm run dev
-```
-
-Open `http://localhost:5173`. First `/api/search/semantic` or `/api/chat` request triggers the model load (~10s CPU, once per process).
-
-### Build for production
-
-```bash
-cd frontend
-npm run build              # outputs to frontend/dist/
-```
-
-Serve `frontend/dist/` behind any static host (nginx, Caddy, Cloudflare Pages). Point `/api/*` to the FastAPI process.
-
-## Environment variables
-
-Set in `.env` at repo root. Loaded by `backend/app/config.py` before any other config resolution.
-
-| Var                                            | Required                              | Default                | Purpose                                                                                                                                     |
-| ----------------------------------------------- | -------------------------------------- | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `PAPERS_ROOT`                                  | local dev, for `/api/download/{sha}`   | repo root               | Path to the tree of source PDFs. Ignored when `PDF_BASE_URL` is set (production).                                                          |
-| `DERIVED_DATA_DIR`                             | no                                     | `<repo>/DERIVED_DATA`   | Where `questions_v2.db`, `papers_v2.db`, `embeddings.npy`, `emb_keys.json`, `figures/` live.                                               |
-| `PDF_BASE_URL`                                 | production only                        | — (serves from disk)    | Base URL for sharded PDF hosting, e.g. `https://github.com/<user>/<repo>/releases/download`. Switches downloads/zips to fetch remotely.    |
-| `API_BASE_URL`                                 | production only                        | — (relative URLs)       | This API's own public URL. Prefixed onto `/api/figures/...` links so the frontend hits the backend directly.                              |
-| `OPEN_AI_API_KEY` / `OPENAIR` / `LLM_API_KEY`  | for `/ask`                             | —                        | Chat model key. `LLM_API_KEY` wins if set (paired with `LLM_BASE_URL` for Groq); otherwise falls back to the OpenAI vars.                   |
-| `LLM_BASE_URL`                                 | no                                     | OpenAI's default         | OpenAI-compatible base URL. Production sets `https://api.groq.com/openai/v1`.                                                              |
-| `CHAT_MODEL`                                   | no                                     | `gpt-4o-mini`            | Chat completion model ID. Production uses `openai/gpt-oss-120b` (Groq).                                                                     |
-| `CORS_ORIGINS`                                 | no                                     | `*`                      | Comma-separated allowed origins. Production sets `https://pyqheaven.in`.                                                                    |
-
-The `.env` file is `.gitignore`d. `.env.example` documents the shape.
-
-## Directory map
-
-```
-paperbank/
-│
-├── README.md                  ← this file
-├── requirements.txt           Python dependencies (top-level, single source)
-├── .env.example               Environment template
-├── .gitignore
-│
-├── Dockerfile                 Cloud Run image: deps, backend code, DERIVED_DATA baked in
-├── .dockerignore, .gcloudignore
-│
-├── backend/                   FastAPI application
-│   └── app/
-│       ├── main.py
-│       ├── config.py, db.py, shape.py, filters.py, semantic.py, chat.py, llm.py, ratelimit.py
-│       └── routers/
-│           └── search.py, meta.py, questions.py, files.py, chat.py, papers.py
-│
-├── frontend/                  React + Vite SPA, deployed as a Cloudflare Worker
-│   ├── package.json, tsconfig.json, vite.config.ts
-│   ├── wrangler.jsonc         Cloudflare Worker config — static assets, SPA fallback routing
-│   ├── index.html             Google Fonts, favicon, SEO meta (OG/Twitter/JSON-LD), analytics
-│   ├── public/
-│   │   ├── herosection.jpg    Landing hero background / OG share image
-│   │   ├── ending.jpg         (available for section backgrounds)
-│   │   ├── favicon.svg
-│   │   ├── robots.txt, sitemap.xml
-│   │   └── BMS_College_of_Engineering.svg
-│   └── src/
-│       ├── main.tsx, App.tsx, index.css, api.ts
-│       ├── routes/            Home / Ask / Stats / Download
-│       └── components/        See "Frontend layout" above
-│
-├── scripts/                   Offline data pipeline (not on the request path)
-│   ├── OCR_RUNBOOK.md         How to re-OCR the corpus
-│   ├── run_all.sh             End-to-end OCR pipeline entrypoint (WSL2 + GPU)
-│   ├── run_ocr_all.{sh,ps1}
-│   ├── embed_questions.py     Build embeddings.npy + emb_keys.json
-│   ├── cluster_questions.py   HDBSCAN over embeddings, per course
-│   ├── label_topics.py        gpt-4o-mini → topic + subtopic per cluster
-│   ├── apply_topics.py        Denormalise labels onto question rows
-│   └── keyword_label.py       Keyword-based fallback for unclusterable courses
-│
-├── plans/                     Executed refactor plans (design + animation)
-│   ├── README.md
-│   ├── 001-popover-panel-entry.md              DONE
-│   └── 002-editorial-refresh-rollout.md        DONE
-│
-└── DERIVED_DATA/              Data artifacts (large — usually gitignored)
-    ├── questions_v2.db        ~166 MB — one row per question, denormalised
-    ├── papers_v2.db           ~8 MB   — paper-level metadata + join tables
-    ├── embeddings.npy         ~139 MB — float16 [N × 384], L2-normalised
-    ├── emb_keys.json          Row index → text_hash mapping
-    └── figures/               Extracted figure PNGs, keyed by <sha>/<filename>
-```
-
-## API reference
-
-All endpoints return JSON unless noted. Prefix: `/api`.
+Powered by the Multi-Agent Supervisor, which calls Genie as a tool. The reply
+carries the tool calls as well as the prose.
 
 ### Search
 
-| Method | Path               | Purpose                                                                    |
-| ------ | ------------------ | -------------------------------------------------------------------------- |
-| GET    | `/search`          | Keyword + filters. `?q=` + any `FilterState` field. Paginated.             |
-| GET    | `/search/semantic` | Cosine over BGE embeddings, then filters applied. Same shape as `/search`. |
+Every question in the archive, filtered by branch, year, exam type, unit and
+marks — plus **semantic search** over 384-dimension embeddings, which finds by
+meaning rather than keyword.
 
-### Metadata (drives the UI)
+### Practice
 
-| Method | Path                                                   | Purpose                                                                                 |
-| ------ | ------------------------------------------------------ | --------------------------------------------------------------------------------------- |
-| GET    | `/filters`                                             | Static option lists per dimension (branches, programmes, exam types, years, semesters). |
-| GET    | `/facets`                                              | Value → count per dimension **given current filters** — for showing option counts.      |
-| GET    | `/courses?q=<query>`                                   | Course autocomplete (code or name substring).                                           |
-| GET    | `/topics?course_code=<code>`                           | Topics + subtopics for a course.                                                        |
-| GET    | `/stats`                                               | Corpus totals: questions, papers, courses, branches, topics, year range.                |
-| GET    | `/stats/course?course_code=<code>&year_min=&year_max=` | Per-course breakdown: topics, by-year counts, marks distribution, verbatim repeats.     |
+**MCQ sets built from real past questions.** Scope to a whole subject or a single
+unit, choose 5–20 questions, answer, then check.
 
-### Questions
+The stem is always a question that was actually set, carrying its year, marks and
+source paper. The distractors are **other real topics from the same subject** —
+so a wrong option is something a student could genuinely confuse it with, not an
+invented plausible-sounding string. Nothing here writes course content.
 
-| Method | Path             | Purpose                                                                      |
-| ------ | ---------------- | ---------------------------------------------------------------------------- |
-| GET    | `/question/{id}` | Full question detail + source paper + sibling questions from the same paper. |
+### Notes & papers
 
-### Files
+The documents themselves — 31 subjects of lecture notes and past papers, opened
+or downloaded as PDFs.
 
-| Method | Path                        | Purpose                                                                      |
-| ------ | --------------------------- | ---------------------------------------------------------------------------- |
-| GET    | `/download/{sha}`           | Original PDF (FileResponse).                                                 |
-| GET    | `/figures/{sha}/{filename}` | Extracted figure PNG. Path is safely constrained under `FIGURES_DIR/<sha>/`. |
+A document is listed **only if it was actually read into the archive**, so what
+you open is what the agent answers from. Grouped by subject, filterable to notes
+or papers.
 
-### Chat
+Also available: `/stats` (what to study) and `/download` (bulk PDF export).
 
-| Method | Path    | Purpose                                                                                                                                                                       |
-| ------ | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| POST   | `/chat` | Body: `{message, history?}`. Returns `{intent, answer, citations, results}`. Grounded — every claim in `answer` uses `[n]` markers that map to `citations[]` and `results[]`. |
+---
 
-### Papers (bulk)
+## Intelligence (teaching)
 
-| Method | Path          | Purpose                                                                                                         |
-| ------ | ------------- | --------------------------------------------------------------------------------------------------------------- |
-| GET    | `/papers`     | Multi-course + year range → paper list with sizes + total.                                                      |
-| GET    | `/papers/zip` | Same params + optional `sha[]` for selective download. Returns `application/zip`. Capped at 300 files / 750 MB. |
+Six screens behind a menu at `/faculty`.
 
-## Deliberately simple
+### Overview
 
-Things that could be more sophisticated but aren't, on purpose:
+What this subject has actually been examining — marks by unit, and unit emphasis
+across nine years as a stacked area. A unit thinning out year on year is usually
+being quietly dropped, and that shows here before anyone notices in a meeting.
 
-- **No vector DB.** In-process numpy matmul. Rebuild `embeddings.npy` when you change questions; the backend picks it up on next process start.
-- **No cache layer.** SQLite is fast enough for our load; adding Redis would be a bet on a bottleneck that doesn't exist.
-- **No client state manager.** React state + effects + URL params. Grew large without ever needing Zustand.
-- **No auth.** Public read-only archive. `/api/chat` is rate-limited (10/min/IP) instead of gated behind login — enough to stop one visitor burning the shared quota without adding accounts to a paper archive.
-- **No test harness.** Every downstream artefact is a `.db` or `.npy` file you can verify by inspection; behaviour is verified end-to-end in the browser during development. Not defending this, just noting it.
-- **No queue / worker fleet.** OCR is offline (WSL2 + GPU, hours), everything else is per-request and returns in under a second.
-- **No feature flags.** Ship changes; roll back with git if wrong.
+Coverage tiles are honest: the marks-coverage tile reports what fraction of
+questions state their marks, because 19% do not.
 
-## Credits
+### Generate a paper
 
-- Original scraper + PDF corpus: [`shaansubbaiah/bmsce-paper-ripper`](https://github.com/shaansubbaiah/bmsce-paper-ripper).
-- OCR: [marker](https://github.com/VikParuchuri/marker) + [olmocr](https://github.com/allenai/olmocr) as a fallback.
-- Embeddings: [BGE-small-en-v1.5](https://huggingface.co/BAAI/bge-small-en-v1.5).
-- LLM: OpenAI `gpt-4o-mini` for the offline pipeline (parsing, labelling); production chat runs on Groq (`openai/gpt-oss-120b`) through the same OpenAI-compatible client.
-- Hosting: [Cloudflare Workers](https://developers.cloudflare.com/workers/) (frontend), [Google Cloud Run](https://cloud.google.com/run) (backend), [GitHub Releases](https://docs.github.com/en/repositories/releasing-projects-on-github) (PDF storage, sharded).
-- UI: React 19, Tailwind v4, Phosphor Icons, NumberFlow, Source Serif 4 + Instrument Serif via Google Fonts.
+The headline feature, and the one with the strictest rule:
+
+> **SQL selects, the model only phrases.**
+
+A paper is assembled by constraint satisfaction over real past questions. Every
+line traces to a `question_id`, its source PDF, and the year it was last asked —
+which is what makes it defensible to an exam committee. **No language model
+invents a question.**
+
+Two declared formats, both taken from papers the college actually sets:
+
+| | Structure | Marks |
+|---|---|---|
+| **SEE** | 5 units × 20 marks, 10 marks per question, internal choice | 100 |
+| **CIE** | Part A 1×5 · Part B 3×5 · Part C 2 of 3 ×10 | 40 |
+
+Controls, and what each really does:
+
+- **Exclude asked in last N years** — real. Drops every question in a repeat
+  cluster set since the cutoff.
+- **Difficulty preference** — a preference *order*, not a ratio. Slots prefer the
+  highest-weighted level first; a level at zero is never preferred.
+
+Print gives the paper alone — chrome, controls and provenance panels are working
+aids, not part of the document.
+
+### Practice sets
+
+The same MCQ builder as the student side, for setting revision.
+
+### Coverage
+
+**Where teaching and examining diverge.** A scatter of note depth against marks
+examined, with the problem quadrant labelled rather than left to inference:
+heavily examined, thinly taught.
+
+Beneath it, **asked to death** — near-identical questions set three or more
+times, with the span of years. Faculty use this to *avoid* them.
+
+### Question bank
+
+Every question, filtered by unit, marks, Bloom level, year and sitting, with full
+text search. Every row expands to its source file, sitting, topic and repeat
+cluster. Exports to CSV.
+
+### Asked before?
+
+Paste a question you are drafting, get ranked matches from nine years.
+
+Scoring is **IDF-weighted term overlap computed in SQL** — rare words carry the
+signal, so "virtualization" counts and "explain" barely does. A verbatim repeat
+scores 100%, a rephrasing 92%, a loose variant 70%.
+
+---
+
+## How the agent works
+
+```
+question ─► Multi-Agent Supervisor ─► Genie (tool) ─► Unity Catalog ─► rows
+                    │                    │
+              reasoning, tool          the SQL
+              calls returned          returned
+```
+
+**One agent, one entry point.** The supervisor reasons about the question and
+calls Genie as a tool, so a reply carries the tool calls, the SQL and the rows —
+not just prose.
+
+Every analytical screen routes through it: overview, marks by unit, unit drift,
+coverage, repetition, freshness. Each panel offers **"show the sql Genie wrote"**
+with the timing and which engine answered.
+
+**Fallback chain:** supervisor → Genie → the equivalent hand-written statement.
+A screen degrades to working-but-not-agentic rather than to blank, and says which
+path answered.
+
+### Where the agent is deliberately not used
+
+| | Why |
+|---|---|
+| **Paper assembly** | Genie answers questions; it does not select under constraints. A paper defended line by line cannot have its selection rephrased between runs. |
+| **Similarity scoring** | Must be reproducible to be actionable. |
+| **Subject picker** | Drives every other screen; a 20-second call to fill a dropdown is wrong. |
+
+The characteristic text-to-SQL failure is not a crash — it is confidently
+answering a *subtly different* question. Filtering to the wrong exam type,
+pooling re-exam sittings into "what is normally asked", dropping NULL marks.
+The prose reads fine in every case. **The SQL is the only place it shows**, which
+is why it is always one click away.
+
+---
+
+## The data underneath
+
+Seven gold tables in Unity Catalog. Seven, not seventeen — text-to-SQL accuracy
+is driven mostly by how narrow the surface is.
+
+| Table | Rows | Its job |
+|---|---|---|
+| `fact_question` | 15,888 | One row per question ever asked. The core. |
+| `dim_topic` | 757 | The vocabulary. Without it, 15,888 unrelated sentences. |
+| `dim_subject` | 30 | Identity across time — a subject has run under many codes. |
+| `dim_exam_pattern` | 168 | The shape of a paper, per unit. |
+| `fact_note_coverage` | 921 | Which pages of notes cover which topic. |
+| `fact_attempt` | 0 | Empty by design — no quiz data exists. |
+| `fact_engagement` | 0 | Empty by design — no telemetry exists. |
+
+`bronze_page` (2,691 pages of note text) sits **outside** the Genie space
+deliberately: a wide table of raw markdown cannot answer a question and dilutes
+the schema that makes the rest work.
+
+Three design decisions worth knowing:
+
+1. **Natural keys, not surrogate integers.** `subject_key` is `cloud_computing`;
+   every join is readable in a raw query result, which matters when the agent's
+   SQL is shown to someone judging whether it answered the right question.
+2. **Subjects are identified by name, never by code.** Codes change every scheme —
+   DBMS has run under seven. Keying on code would fragment nine years into seven
+   unrelated courses.
+3. **`topic_id` is keyed on name, not unit.** The same topic sits in different
+   units across schemes; a unit-keyed id fragmented 63 real topics into 127.
+
+Full column-level reference, including every trap, in **[SCHEMA.md](SCHEMA.md)**.
+
+---
+
+## Architecture
+
+```
+kronos/
+├── student/          Vite + React 19 — ONE app, both audiences
+│   └── src/routes/
+│       ├── Landing.tsx        two doors
+│       ├── Ask.tsx  Home.tsx  Notes.tsx      student hub
+│       └── faculty/           Intelligence — 6 screens
+├── backend/          FastAPI
+│   └── app/
+│       ├── mas_client.py      Multi-Agent Supervisor (the agent)
+│       ├── genie_client.py    Genie, structured
+│       ├── databricks.py      SQL Statement Execution (holds the token)
+│       ├── faculty_sql.py     every statement, in one place
+│       └── routers/           faculty · notes · chat · search · papers · voice · telegram
+├── design/           shared tokens — neither side owns the palette
+├── scripts/          corpus pipeline: OCR, extraction, embeddings, clustering
+└── backend/data/     notes index (which documents exist and where)
+```
+
+**The Databricks token lives in the backend, never the bundle.** A static SPA has
+no secrets, so the browser names a query (`POST /api/faculty/query`) and the
+server holds the credentials and the SQL.
+
+### API
+
+| Endpoint | |
+|---|---|
+| `POST /api/faculty/ask` | the agent |
+| `POST /api/faculty/genie-query` | a named analytical question, answered by Genie |
+| `POST /api/faculty/query` | a named statement, run directly |
+| `POST /api/faculty/generate` | assemble a paper |
+| `POST /api/faculty/practice` | build an MCQ set |
+| `POST /api/faculty/similar` | has this been asked? |
+| `POST /api/faculty/bank` | filtered question search |
+| `GET /api/notes` · `/subjects` · `/file/{sha}` | documents, and the PDFs themselves |
+| `POST /api/chat` | student chat, same agent |
+
+### Design
+
+Cream paper, one bookish red, an editorial serif for content and a retro mono for
+anything numeric. Red means *a mark, a citation, or something that failed* —
+never decoration. Tokens live once in `design/` and both build systems map them.
+
+Motion is gated on frequency and purpose: the ⌘K palette has none (a keyboard
+action fired hundreds of times a day is a disqualifier), charts do not animate
+(data being read before an exam is set should not move for style), and the paper
+reveal exists because a 60-second wait ending in a teleport is jarring.
+
+---
+
+## Running it
+
+```bash
+# backend
+pip install -r requirements.txt
+cp .env.example .env          # Databricks host, token, warehouse, Genie space, agent endpoint
+uvicorn backend.app.main:app --reload
+
+# frontend
+cd student && pnpm install && pnpm dev
+```
+
+Two environment variables are easy to get wrong and fail quietly:
+
+- **`DATABRICKS_CATALOG`** must name the catalog the Genie space queries. When
+  they diverge, the ask panel answers about a different dataset than every other
+  screen, with nothing on screen to reveal it.
+- **`GENIE_SPACE_ID` and `DATABRICKS_GENIE_SPACE_ID`** must both be set. Two
+  clients read different names; setting one leaves the other silently
+  unavailable, which surfaces as a null answer rather than an error.
+- **`EXNOTE_ROOT`** points at the PDFs, which live outside the repo.
+
+### Rebuilding the tables
+
+```bash
+python ocr_mps/build_all_subjects.py     # → parquet for every qualifying subject
+```
+
+A subject is included only if it has **both** notes and ≥100 parsed questions.
+Notes without papers give topics with no evidence to rank; papers without notes
+give a ranking with nowhere to send the reader.
+
+After loading, **re-apply column comments** — `CREATE TABLE AS SELECT` drops
+them, and Genie reads them.
+
+---
+
+## What is real and what is not
+
+A system built on provenance should be honest about its own.
+
+**Real** — 15,888 questions from 696 papers over nine years, every one traceable
+to a PDF. 2,364 repeat clusters from actual embedding similarity. Zero
+referential orphans on any join. The agent answering live, SQL visible.
+
+**Not:**
+
+| | |
+|---|---|
+| `fact_attempt` / `fact_engagement` | Empty. No quiz, no telemetry. Personalisation is schema-ready, unproven. |
+| `dim_exam_pattern.basis = 'observed'` | Averaged from real papers, not a published blueprint. The two declared formats (SEE, CIE) are taken from real papers and do not need it. |
+| `source_page` | 100% NULL. Citation is document-level, not page-level. |
+| Bloom levels | 54% `unclassified` — the verb was not in the map. Any difficulty preference works from the other 46%. |
+| Sittings | Only half the corpus is `Main`. Every query that means "what is normally asked" filters on it; pooling re-exams roughly doubles apparent repetition. |
+| Note extraction | 853 coverage rows from Marker/Surya, 68 from `gpt-4.1-mini` at ~96 DPI. On the one file both processed, the model won — but one file is not a verification. |
+
+---
+
+## Further reading
+
+| | |
+|---|---|
+| **[PROJECT.md](PROJECT.md)** | Full explanation — problem, gold schema design, the pipeline, the skills involved |
+| **[SCHEMA.md](SCHEMA.md)** | Every column, every coverage gap, and the traps that produce plausible wrong answers |
+| **[AGENTS.md](AGENTS.md)** | The agent, and what grounds it |
