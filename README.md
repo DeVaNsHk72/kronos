@@ -29,6 +29,9 @@ and had begun to drift.
 | Data | FastAPI → SQLite + embeddings | Databricks SQL (Unity Catalog) |
 | Deploy | Cloudflare Pages | any Node host |
 
+See **[AGENTS.md](AGENTS.md)** for how each AI component is grounded — the part
+that decides whether an answer can be trusted.
+
 ## Faculty console
 
 Reads the gold star schema in Unity Catalog. Its governing rule: **SQL selects,
