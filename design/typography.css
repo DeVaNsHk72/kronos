@@ -1,0 +1,44 @@
+/**
+ * Shared type treatments. Both apps import these so a heading in the faculty
+ * console and one in the student app are the same object, not two that happen
+ * to look alike.
+ */
+.wordmark {
+  font-family: var(--k-font-editorial);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+/* Content that reads as content — question text, topic names. Newsreader has
+   variable optical sizing, which browsers apply from font-size automatically. */
+.serif {
+  font-family: var(--k-font-serif);
+  font-weight: 400;
+  letter-spacing: -0.005em;
+}
+
+/* Fraunces with SOFT and WONK dialled up: softened terminals and swashy
+   alternates, so it reads as a specific face rather than "an editorial serif".
+   One moment per screen — it stops working the moment it is repeated. */
+.serif-display {
+  font-family: var(--k-font-editorial);
+  font-weight: 500;
+  font-style: italic;
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+  letter-spacing: -0.025em;
+  line-height: 0.95;
+}
+
+.serif-label {
+  font-family: var(--k-font-serif);
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* Anything numeric: marks, years, counts, ids. Tabular figures so columns of
+   numbers line up instead of shimmering. */
+.mono {
+  font-family: var(--k-font-mono);
+  font-variant-numeric: tabular-nums;
+}

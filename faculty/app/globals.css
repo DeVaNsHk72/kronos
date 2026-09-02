@@ -1,0 +1,56 @@
+/* Palette and type come from the shared design system so both apps stay in
+   step; only the Tailwind bridge below is app-specific. */
+@import "../../design/tokens.css";
+@import "../../design/typography.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --paper: var(--k-paper);
+  --paper-2: var(--k-paper-2);
+  --line: var(--k-line);
+  --line-2: var(--k-line-2);
+  --ink: var(--k-ink);
+  --ink-2: var(--k-ink-2);
+  --mark: var(--k-mark);
+  --ok: var(--k-ok);
+  --warn: var(--k-warn);
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "General Sans", ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+* { border-color: var(--line); }
+
+
+
+
+
+
+/* Loading skeletons, not spinners — Databricks warehouses cold-start in seconds
+   and a spinner gives no sense of what is arriving. */
+@keyframes pulse-soft { 0%,100% { opacity: .45 } 50% { opacity: .8 } }
+.skeleton { background: var(--line-2); animation: pulse-soft 1.6s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .skeleton { animation: none } }
+
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+table.dense th { position: sticky; top: 0; background: var(--paper-2); z-index: 1; }
+
+/* ---- print: the generated paper, and nothing else ------------------------
+   A lecturer prints this to hand to the exam section. Chrome, controls and
+   provenance buttons are working aids, not part of the document. */
+@media print {
+  header, aside, nav, .no-print { display: none !important; }
+  main { max-width: none !important; padding: 0 !important; }
+  body { background: #fff !important; color: #000 !important; }
+  article { border: none !important; padding: 0 !important; background: #fff !important; }
+  .paper-sheet { font-size: 11pt; }
+  .paper-sheet section { break-inside: avoid; }
+  a[href]::after { content: ""; }
+  @page { margin: 18mm 16mm; size: A4; }
+}

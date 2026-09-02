@@ -1,34 +1,62 @@
-# Pyqheaven
+# Kronos
 
-> A searchable, sorted, cite-able archive of ten years of BMSCE exam questions. 208,746 questions, 10,606 PDFs, one grounded AI assistant.
->
-> **Live at [pyqheaven.in](https://pyqheaven.in)** — free, no login, no ads.
+A college's own exam archive, turned into something two different people can use.
 
-Pyqheaven (formerly "Paperbank") turns a decade of BMS College of Engineering question papers into something you can actually _use_ while revising. Every question is extracted, topic-labelled, embeddable, and citable. A grounded chatbot answers "what repeats in operating-system deadlock questions?" from real papers only — no hallucinated exam questions, ever.
+**Students** ask what to study and get a ranked answer with citations.
+**Faculty** set the next paper from questions that were actually asked, and see
+what the exam has been over- and under-examining.
 
-**Live corpus:**
+```
+kronos/
+├── student/    Vite + React 19 — the student-facing archive (search, ask, stats, bulk export)
+├── faculty/    Next.js 15 — the faculty console (paper generator, coverage, CO/PO, Genie)
+├── backend/    FastAPI — serves the student app from SQLite + embeddings
+├── design/     Shared design tokens. Both apps import these; neither owns a palette.
+└── scripts/    Corpus pipeline: OCR, extraction, embeddings, topic clustering
+```
 
-- **208,746** questions
-- **10,606** PDF papers
-- **3,296** courses
-- **22** branches, **6** programmes (B.E. / M.Tech / MBA / MCA / Kannada / Mathematics)
-- **30,464** distinct topics (LLM-labelled, one per question)
-- **2016 – 2025** year coverage
-- **188,701** semantic embeddings (bge-small-en-v1.5, 384-dim, float16, ~139 MB)
+## The two apps, and why they are separate
 
-## Table of contents
+They answer different questions and are deployed independently, but they are one
+product visually: `design/tokens.css` and `design/typography.css` hold the palette
+and type, and each app maps them into its own build system's theme layer. Changing
+the accent in one file changes both. Previously the palette was duplicated per app
+and had begun to drift.
 
-- [What Pyqheaven does](#what-pyqheaven-does)
-- [Architecture at a glance](#architecture-at-a-glance)
-- [Production deployment](#production-deployment)
-- [The data pipeline](#the-data-pipeline)
-- [Backend](#backend)
-- [Frontend](#frontend)
-- [Running locally](#running-locally)
-- [Environment variables](#environment-variables)
-- [Directory map](#directory-map)
-- [API reference](#api-reference)
-- [Deliberately simple](#deliberately-simple)
+| | student | faculty |
+|---|---|---|
+| Stack | Vite + React Router + Tailwind v4 | Next.js App Router + Tailwind v3 |
+| Data | FastAPI → SQLite + embeddings | Databricks SQL (Unity Catalog) |
+| Deploy | Cloudflare Pages | any Node host |
+
+## Faculty console
+
+Reads the gold star schema in Unity Catalog. Its governing rule: **SQL selects,
+the model only phrases.** A generated paper is assembled by constraint
+satisfaction over real past questions — every line traces to a `question_id`,
+its source PDF and the year it was last asked. No language model invents a
+question. Where a constraint cannot be met it is stated on the paper rather than
+quietly dropped.
+
+Screens: dashboard · paper generator · coverage gaps · CO/PO attainment ·
+question bank · "has this been asked?" · syllabus gaps · Genie ask panel.
+
+```bash
+cd faculty && cp .env.example .env.local   # fill in Databricks host/token/warehouse
+npm install && npm run dev                 # http://localhost:3100
+```
+
+`DATABRICKS_CATALOG` must match the catalog the Genie space is configured
+against — otherwise the ask panel answers from a different dataset than every
+other screen, which is very hard to notice.
+
+## Student app
+
+```bash
+cd student && npm install && npm run dev
+```
+
+---
 
 ## What Pyqheaven does
 

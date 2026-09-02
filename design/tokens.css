@@ -1,0 +1,62 @@
+/**
+ * Kronos design tokens — the single source for both apps.
+ *
+ * The student app (Vite/Tailwind v4) and the faculty console (Next/Tailwind v3)
+ * use different build systems, so each maps these into its own theme layer. The
+ * VALUES live here once: previously the palette was duplicated per app and had
+ * already started to drift.
+ *
+ * The language: cream paper ground, one bookish red, an editorial serif for
+ * content and a retro mono for anything numeric. Red means "a mark, a citation,
+ * or a constraint that failed" — never decoration.
+ */
+:root {
+  /* ground + ink */
+  --k-paper:    #f6f5f1;
+  --k-paper-2:  #fbfaf7;
+  --k-line:     #e1dfd8;
+  --k-line-2:   #eceae3;
+  --k-ink:      #16181d;
+  --k-ink-2:    #5a6072;
+
+  /* the one accent */
+  --k-mark:     #b02c33;
+
+  /* semantic, separate from the accent */
+  --k-ok:       #2f6b46;
+  --k-warn:     #8a5a12;
+
+  --k-radius:   0.5rem;
+
+  --k-font-editorial: "Fraunces", ui-serif, Georgia, "Times New Roman", serif;
+  --k-font-serif:     "Newsreader", ui-serif, Georgia, "Times New Roman", serif;
+  --k-font-sans:      "General Sans", ui-sans-serif, system-ui, sans-serif;
+  --k-font-mono:      "Departure Mono", ui-monospace, monospace;
+}
+
+/* Dark is a deliberate re-mapping, not an inversion: the cream ground becomes a
+   cool near-black, and the red lifts so it still reads as a mark on it. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --k-paper:   #14151a;
+    --k-paper-2: #1b1d23;
+    --k-line:    #2b2e37;
+    --k-line-2:  #23262d;
+    --k-ink:     #ecebe6;
+    --k-ink-2:   #9aa0b0;
+    --k-mark:    #e0656b;
+    --k-ok:      #6fbf8e;
+    --k-warn:    #d9a441;
+  }
+}
+:root[data-theme="dark"] {
+  --k-paper:   #14151a;
+  --k-paper-2: #1b1d23;
+  --k-line:    #2b2e37;
+  --k-line-2:  #23262d;
+  --k-ink:     #ecebe6;
+  --k-ink-2:   #9aa0b0;
+  --k-mark:    #e0656b;
+  --k-ok:      #6fbf8e;
+  --k-warn:    #d9a441;
+}

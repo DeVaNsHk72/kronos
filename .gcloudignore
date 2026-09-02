@@ -4,7 +4,9 @@
 .env
 plans/
 scripts/
-frontend/
+student/
+faculty/
+design/
 RIPPED_PAPERS/
 node_modules/
 *.log
