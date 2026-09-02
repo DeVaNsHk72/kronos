@@ -35,7 +35,7 @@ export const runQuery = (name: string, params: Record<string, unknown> = {}) => 
  *  a differently-phrased answer would silently change a paper). */
 const GENIE_BACKED = new Set([
   "overview", "marksByUnit", "unitDrift", "coverageGap",
-  "coAttainment", "repetition", "freshness", "bloomByCo",
+  "repetition", "freshness",
 ]);
 
 export const askGenie = (question: string, conversation_id?: string) =>
