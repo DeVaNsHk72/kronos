@@ -88,7 +88,7 @@ export function Empty({ title, hint }: { title: string; hint?: string }) {
 }
 
 const FACULTY_TABS = [
-  { to: "/faculty", label: "Dashboard", end: true },
+  { to: "/faculty", label: "Overview", end: true },
   { to: "/faculty/generate", label: "Generate" },
   { to: "/faculty/blueprint", label: "Blueprint" },
   { to: "/faculty/coverage", label: "Coverage" },

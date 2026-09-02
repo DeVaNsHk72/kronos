@@ -40,7 +40,7 @@ export default function FacultyDashboard() {
 
   return (
     <div className="max-w-[1400px] mx-auto px-6 py-8">
-      <PageHead title="The state of this subject"
+      <PageHead title="Intelligence"
         blurb="Drawn from papers actually sat. Re-exam sittings are excluded from the charts — they are real, but they are not what is normally asked."
         right={<SubjectPicker subjects={subjects} value={key} onChange={setKey} />} />
 

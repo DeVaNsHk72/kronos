@@ -233,7 +233,7 @@ export default function Ask() {
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="mb-1 serif-note">
-                        Pyqheaven
+                        Kronos
                       </p>
 
                       {t.asking && <RetrievalProgress totalQuestions={totalQuestions} />}

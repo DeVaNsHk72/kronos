@@ -1,19 +1,28 @@
 # Kronos
 
-A college's own exam archive, turned into something two different people can use.
+**Your college has a memory now.**
 
-**Students** ask what to study and get a ranked answer with citations.
-**Faculty** set the next paper from questions that were actually asked, and see
-what the exam has been over- and under-examining.
+Every past paper, every set of notes, every syllabus — read, parsed, and held in
+one place as governed tables. Kronos is the agent that thinks over that memory
+and shows its working.
 
 ```
-kronos/
-├── student/    Vite + React 19 — ONE app: student archive + faculty console
-│   └── src/routes/faculty/   dashboard · generate · coverage · attainment · bank · similar
-├── backend/    FastAPI — student archive, and the Databricks proxy the console calls
-├── design/     Shared design tokens
-└── scripts/    Corpus pipeline: OCR, extraction, embeddings, topic clustering
+15,888 questions · 30 subjects · 9 years · 12,698 pages of notes read
 ```
+
+Not a search box. The papers, notes and syllabus are the memory; a Databricks
+Multi-Agent Supervisor calling Genie is what reasons over it. Ask in plain words
+and the SQL it wrote is one click away, because an agent that cannot show its
+working cannot be trusted with an exam.
+
+**Two sides, one brain.**
+
+| | |
+|---|---|
+| **Studying** | What to revise, and the evidence for it — marks over nine years, what repeats, which pages of notes cover it |
+| **Intelligence** (teaching) | Set the next paper from questions actually asked, and see what the exam has been over- and under-examining |
+
+---
 
 ## One app, two audiences
 
@@ -56,7 +65,7 @@ cd student && pnpm install && pnpm dev
 
 ---
 
-## What Pyqheaven does
+## What Kronos does
 
 Four pages, four jobs:
 

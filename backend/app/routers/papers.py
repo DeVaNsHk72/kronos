@@ -138,6 +138,6 @@ def zip_papers(
     label = (course_code[0] if len(course_code) == 1 else f"{len(course_code)}-courses")
     return FileResponse(
         tmp.name, media_type="application/zip",
-        filename=f"pyqheaven_{label}.zip",
+        filename=f"kronos_{label}.zip",
         background=BackgroundTask(os.unlink, tmp.name),
     )

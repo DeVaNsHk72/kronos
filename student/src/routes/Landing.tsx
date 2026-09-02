@@ -57,28 +57,36 @@ export default function Landing() {
         {/* ---- the archive states its own size ---- */}
         <div className="mb-10">
           <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-ink-2 mb-5">
-            B.M.S. College of Engineering
+            B.M.S. College of Engineering · agentic academic memory
           </p>
           <h1 className="serif-display text-[clamp(2.6rem,7vw,4.4rem)] text-ink">
-            Nine years of papers,
+            Your college
             <br />
-            <span className="text-mark">asked directly.</span>
+            <span className="text-mark">has a memory now.</span>
           </h1>
+          <p className="serif text-[16px] text-ink-2 mt-5 max-w-xl leading-relaxed">
+            Every past paper, every set of notes, every syllabus &mdash; read, parsed
+            and held in one place. Kronos is the agent that thinks over it, and
+            shows its working.
+          </p>
           {stats && (
-            <p className="font-mono text-[12px] text-ink-2 mt-5 tabular-nums">
-              {stats.questions.toLocaleString()} questions · {stats.subjects} subjects · 2016&ndash;2024
-              <span className="text-mark"> · every answer cites its source paper</span>
-            </p>
+            <div className="flex flex-wrap gap-x-6 gap-y-1 mt-6 font-mono text-[12px] tabular-nums">
+              <span className="text-ink">{stats.questions.toLocaleString()}<span className="text-ink-2"> questions</span></span>
+              <span className="text-ink">{stats.subjects}<span className="text-ink-2"> subjects</span></span>
+              <span className="text-ink">9<span className="text-ink-2"> years</span></span>
+              <span className="text-ink">12,698<span className="text-ink-2"> pages of notes read</span></span>
+              <span className="text-mark">every answer cites its source</span>
+            </div>
           )}
         </div>
 
         {/* ---- who is asking ---- */}
         <div className="flex gap-2 mb-3">
           {([
-            { k: "student", label: "I'm a student", Icon: GraduationCap,
-              sub: "what to revise, and why" },
-            { k: "faculty", label: "I'm faculty", Icon: Chalkboard,
-              sub: "set a paper, see the gaps" },
+            { k: "student", label: "I'm studying", Icon: GraduationCap,
+              sub: "what to revise, and the evidence for it" },
+            { k: "faculty", label: "I teach here", Icon: Chalkboard,
+              sub: "intelligence — set papers, see the gaps" },
           ] as const).map(({ k, label, Icon, sub }) => (
             <button key={k} onClick={() => { setWho(k); box.current?.focus(); }}
               aria-pressed={who === k}
@@ -119,7 +127,7 @@ export default function Landing() {
               <FluidOrb size={22} color="#b02c33" />
             </span>
             <span className="font-mono text-[10px] uppercase tracking-widest text-ink-2">
-              agent · supervisor &rarr; genie
+              kronos agent · supervisor &rarr; genie
             </span>
             <button type="submit" disabled={!q.trim()}
               aria-label="Ask"
@@ -144,7 +152,7 @@ export default function Landing() {
         {/* ---- the other ways in ---- */}
         <div className="flex flex-wrap gap-x-5 gap-y-1 mt-10 pt-5 border-t border-line">
           {(who === "faculty"
-            ? [["/faculty", "Dashboard"], ["/faculty/generate", "Generate a paper"],
+            ? [["/faculty", "Intelligence"], ["/faculty/generate", "Generate a paper"],
                ["/faculty/coverage", "Coverage gaps"], ["/faculty/similar", "Asked before?"]]
             : [["/home", "Search every question"], ["/stats", "What to study"],
                ["/download", "Bulk download"]]

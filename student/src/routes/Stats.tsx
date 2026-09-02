@@ -26,7 +26,7 @@ import {
 } from "../api";
 import Popover from "../components/Popover";
 
-const RECENT_KEY = "pyqheaven:recent-courses";
+const RECENT_KEY = "kronos:recent-courses";
 const RECENT_MAX = 6;
 
 function loadRecent(): Course[] {

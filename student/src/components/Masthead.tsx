@@ -9,17 +9,17 @@ const TABS = [
   { to: "/ask", label: "Ask" },
   { to: "/stats", label: "Stats" },
   { to: "/download", label: "Download" },
-  { to: "/faculty", label: "Faculty" },
+  { to: "/faculty", label: "Intelligence" },
 ];
 
 function Wordmark() {
   return (
     <svg
-      viewBox="0 0 126 14"
+      viewBox="0 0 92 14"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className="h-[13px] w-auto"
-      aria-label="Pyqheaven"
+      aria-label="Kronos"
     >
       <text
         x="0"
@@ -30,9 +30,9 @@ function Wordmark() {
         fontWeight="400"
         letterSpacing="0.08em"
       >
-        PYQHEAVEN
+        KRONOS
       </text>
-      <circle cx="122" cy="11" r="2.5" fill="var(--color-mark)" />
+      <circle cx="88" cy="11" r="2.5" fill="var(--color-mark)" />
     </svg>
   );
 }
