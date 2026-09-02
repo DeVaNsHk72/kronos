@@ -87,7 +87,7 @@ export default function FacultyDashboard() {
                 </BarChart>
               </ResponsiveContainer>
             ) : <Empty title="No marks recorded" />}
-            <SqlToggle sql={units?.sql} ms={units?.ms} />
+            <SqlToggle sql={units?.sql} ms={units?.ms} engine={units?.engine} fallbackReason={units?.fallback_reason} />
           </section>
 
           <section className="border border-line rounded-lg bg-paper-2 p-5">
@@ -110,7 +110,7 @@ export default function FacultyDashboard() {
                 </AreaChart>
               </ResponsiveContainer>
             ) : <Empty title="Not enough years to show drift" />}
-            <SqlToggle sql={drift?.sql} ms={drift?.ms} />
+            <SqlToggle sql={drift?.sql} ms={drift?.ms} engine={drift?.engine} fallbackReason={drift?.fallback_reason} />
           </section>
         </div>
       </>}

@@ -91,7 +91,7 @@ export default function Attainment() {
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
-            <SqlToggle sql={co.sql} ms={co.ms} />
+            <SqlToggle sql={co?.sql} ms={co?.ms} engine={co?.engine} fallbackReason={co?.fallback_reason} />
           </section>
 
           <section className="border border-line rounded-lg bg-paper-2 p-5 mt-6">
@@ -112,7 +112,7 @@ export default function Attainment() {
                 </BarChart>
               </ResponsiveContainer>
             )}
-            {po && <SqlToggle sql={po.sql} ms={po.ms} />}
+            {po && <SqlToggle sql={po?.sql} ms={po?.ms} engine={po?.engine} fallbackReason={po?.fallback_reason} />}
           </section>
         </>
       )}

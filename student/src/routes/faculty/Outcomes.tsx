@@ -102,7 +102,7 @@ export default function Outcomes() {
             syllabus — it means the question's leading verb was not in the Bloom map, which is true of
             54% of the corpus.
           </p>
-          <SqlToggle sql={data.sql} ms={data.ms} />
+          <SqlToggle sql={data?.sql} ms={data?.ms} engine={data?.engine} fallbackReason={data?.fallback_reason} />
         </>
       )}
     </div>

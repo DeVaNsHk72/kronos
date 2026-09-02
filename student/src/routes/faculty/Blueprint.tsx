@@ -219,7 +219,7 @@ export default function Blueprint() {
               </tbody>
             </table>
           )}
-          <SqlToggle sql={avail?.sql} ms={avail?.ms} />
+          <SqlToggle sql={avail?.sql} ms={avail?.ms} engine={avail?.engine} fallbackReason={avail?.fallback_reason} />
         </aside>
       </div>
     </div>

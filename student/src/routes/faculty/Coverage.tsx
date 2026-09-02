@@ -67,7 +67,7 @@ export default function Coverage() {
                 <Scatter data={rows} fill="var(--color-mark)" fillOpacity={0.55} />
               </ScatterChart>
             </ResponsiveContainer>
-            <SqlToggle sql={gap.sql} ms={gap.ms} />
+            <SqlToggle sql={gap?.sql} ms={gap?.ms} engine={gap?.engine} fallbackReason={gap?.fallback_reason} />
           </section>
 
           <section className="mt-8">
@@ -126,7 +126,7 @@ export default function Coverage() {
                     ))}
                   </tbody>
                 </table>
-                <div className="px-4 pb-3"><SqlToggle sql={rep.sql} ms={rep.ms} /></div>
+                <div className="px-4 pb-3"><SqlToggle sql={rep?.sql} ms={rep?.ms} engine={rep?.engine} fallbackReason={rep?.fallback_reason} /></div>
               </div>
             )}
           </section>

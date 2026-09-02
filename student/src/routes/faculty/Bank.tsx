@@ -147,7 +147,7 @@ export default function Bank() {
               className="border border-line rounded-md px-3 py-1 text-[12px] disabled:opacity-40">Next</button>
             <span className="font-mono text-[11px] text-ink-2 ml-auto">page {page + 1}</span>
           </div>
-          <div className="px-3 pb-3"><SqlToggle sql={data?.sql} ms={data?.ms} /></div>
+          <div className="px-3 pb-3"><SqlToggle sql={data?.sql} ms={data?.ms} engine={data?.engine} fallbackReason={data?.fallback_reason} /></div>
         </div>
       )}
     </div>

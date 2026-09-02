@@ -10,6 +10,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
 from .. import databricks as dbx
+from .. import genie_client as genie
 from .. import faculty_sql as Q
 
 router = APIRouter(prefix="/api/faculty", tags=["faculty"])
@@ -22,8 +23,106 @@ class QueryReq(BaseModel):
 
 @router.get("/status")
 def status():
-    return {"databricks": dbx.available(), "catalog": dbx.CATALOG,
-            "queries": sorted(Q.REGISTRY)}
+    return {"databricks": dbx.available(), "genie": genie.available(),
+            "catalog": dbx.CATALOG, "queries": sorted(Q.REGISTRY)}
+
+
+class AskReq(BaseModel):
+    question: str
+    conversation_id: str | None = None
+
+
+@router.post("/ask")
+def ask(r: AskReq):
+    """Every analytical screen routes through here: Genie writes the SQL."""
+    try:
+        return genie.ask(r.question, r.conversation_id)
+    except Exception as e:
+        raise HTTPException(503, str(e))
+
+
+# The questions each screen asks Genie. Phrased to name the columns wanted, so
+# the answer is chartable — Genie picks its own aliases otherwise and a chart
+# bound to fixed keys silently renders nothing.
+ASKS = {
+    "overview": (
+        "For subject_key '{s}': how many questions in total, how many distinct "
+        "exam years, how many distinct source files, how many have a non-null "
+        "marks value, and how many have a non-null course_outcome? "
+        "Return one row with columns total_questions, years_covered, papers, "
+        "with_marks, with_co, first_year, last_year."),
+    "marksByUnit": (
+        "For subject_key '{s}', total marks per unit_no, counting only rows "
+        "where sitting = 'Main' and marks is not null. "
+        "Return columns unit_no, marks, questions. Order by unit_no."),
+    "unitDrift": (
+        "For subject_key '{s}', total marks per exam_year and unit_no, only "
+        "where sitting = 'Main' and marks is not null. "
+        "Return columns exam_year, unit_no, marks. Order by exam_year, unit_no."),
+    "coverageGap": (
+        "For subject_key '{s}', join fact_question to dim_topic on topic_id and "
+        "left join fact_note_coverage on topic_id. Per topic return columns "
+        "topic_name, unit_no, marks_examined (sum of marks), years_appeared "
+        "(count of distinct exam_year), questions (count), and notes_pages "
+        "(sum of depth_score, 0 if none). Only rows where marks is not null. "
+        "Order by marks_examined descending."),
+    "coAttainment": (
+        "For subject_key '{s}', where sitting = 'Main' and course_outcome is not "
+        "null and marks is not null: per course_outcome return columns "
+        "course_outcome, questions (count), total_marks (sum of marks), and "
+        "pct_of_paper (that outcome's marks as a percentage of all marks, one "
+        "decimal). Order by course_outcome."),
+    "repetition": (
+        "For subject_key '{s}', group rows with a non-null repeat_cluster_id and "
+        "return columns repeat_cluster_id, times_asked (count), first_asked (min "
+        "exam_year), last_asked (max exam_year), example (any question_text), "
+        "unit_no (any). Only groups asked 3 or more times. "
+        "Order by times_asked descending. Limit 40."),
+    "freshness": (
+        "For subject_key '{s}' where sitting = 'Main' and unit_no is not null: "
+        "per unit_no return columns unit_no, last_asked (max exam_year), "
+        "questions (count), marks (sum), years (count of distinct exam_year). "
+        "Order by unit_no."),
+    "bloomByCo": (
+        "For subject_key '{s}' where sitting = 'Main' and course_outcome and "
+        "bloom_level are both not null: per course_outcome and bloom_level "
+        "return columns course_outcome, bloom_level, questions (count), "
+        "marks (sum). Order by course_outcome."),
+}
+
+
+class GenieQueryReq(BaseModel):
+    name: str
+    subject_key: str
+
+
+@router.post("/genie-query")
+def genie_query(r: GenieQueryReq):
+    """A named analytical question, answered by Genie rather than by our SQL.
+
+    Falls back to the equivalent hand-written statement when Genie is
+    unavailable or returns no rows, so a screen degrades to working-but-not-
+    agentic rather than to blank. The response says which path produced it.
+    """
+    tmpl = ASKS.get(r.name)
+    if not tmpl:
+        raise HTTPException(400, f'no Genie question for "{r.name}"')
+    try:
+        res = genie.ask(tmpl.format(s=r.subject_key))
+        if res.get("rows"):
+            res["engine"] = "genie"
+            return res
+        reason = res.get("error") or "Genie returned no rows"
+    except Exception as e:
+        reason = str(e)
+
+    sql = Q.REGISTRY.get(r.name)
+    if not sql:
+        raise HTTPException(503, reason)
+    out = dbx.query(sql, {"subject_key": r.subject_key})
+    out["engine"] = "sql-fallback"
+    out["fallback_reason"] = reason
+    return out
 
 
 @router.post("/query")

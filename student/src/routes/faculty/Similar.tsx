@@ -79,7 +79,7 @@ export default function Similar() {
               </div>
             </div>
           ))}
-          <SqlToggle sql={res.sql} ms={res.ms} />
+          <SqlToggle sql={res?.sql} ms={res?.ms} engine={res?.engine} fallbackReason={res?.fallback_reason} />
         </div>
       ))}
     </div>

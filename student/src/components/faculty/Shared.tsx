@@ -47,15 +47,22 @@ export function Tile({ label, value, sub, tone = "normal" }: {
 }
 
 /** Every number can show the statement that produced it. */
-export function SqlToggle({ sql, ms }: { sql?: string; ms?: number }) {
+export function SqlToggle({ sql, ms, engine, fallbackReason }: {
+  sql?: string; ms?: number; engine?: string; fallbackReason?: string;
+}) {
   const [open, setOpen] = useState(false);
   if (!sql) return null;
   return (
     <div className="mt-2">
       <button onClick={() => setOpen(!open)}
         className="font-mono text-[10px] uppercase tracking-widest text-ink-2 hover:text-mark">
-        {open ? "hide sql" : "show sql"}{ms !== undefined && <span className="ml-2">· {ms}ms</span>}
+        {open ? "hide sql" : "show the sql genie wrote"}
+        {ms !== undefined && <span className="ml-2">· {(ms / 1000).toFixed(1)}s</span>}
+        {engine && <span className="ml-2">· {engine === "genie" ? "genie" : "sql fallback"}</span>}
       </button>
+      {fallbackReason && (
+        <p className="text-[10px] text-warn mt-1">Genie unavailable: {fallbackReason}</p>
+      )}
       {open && <pre className="mt-2 p-3 rounded border border-line bg-paper text-[11px]
         leading-relaxed overflow-x-auto font-mono text-ink-2 whitespace-pre">{sql.trim()}</pre>}
     </div>
