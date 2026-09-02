@@ -162,12 +162,48 @@ CROSS JOIN probe_total pt
 WHERE f.subject_key = :subject_key AND s.shared_words >= 2
 ORDER BY similarity DESC LIMIT 15"""
 
+
+
+
+# What a paper could actually be built from: unused questions per unit and mark
+# value, after removing everything asked recently. Answers "is this blueprint
+# even satisfiable" before a lecturer discovers it slot by slot.
+AVAILABILITY = f"""
+WITH recent AS (
+  SELECT DISTINCT repeat_cluster_id FROM {C}.fact_question
+  WHERE subject_key = :subject_key AND exam_year >= :cutoff_year
+    AND repeat_cluster_id IS NOT NULL
+)
+SELECT q.unit_no, q.marks,
+       COUNT(*) AS total,
+       SUM(CASE WHEN q.repeat_cluster_id IS NULL
+                  OR q.repeat_cluster_id NOT IN (SELECT repeat_cluster_id FROM recent)
+                THEN 1 ELSE 0 END) AS available,
+       COUNT(DISTINCT q.course_outcome) AS distinct_cos
+FROM {C}.fact_question q
+WHERE q.subject_key = :subject_key AND q.sitting = 'Main'
+  AND q.marks IS NOT NULL AND q.unit_no IS NOT NULL
+GROUP BY q.unit_no, q.marks
+ORDER BY q.unit_no, q.marks"""
+
+# Which cognitive level each outcome is actually tested at. A CO assessed only
+# by recall is a real finding for an accreditation review.
+BLOOM_BY_CO = f"""
+SELECT course_outcome, bloom_level, COUNT(*) AS questions, SUM(marks) AS marks
+FROM {C}.fact_question
+WHERE subject_key = :subject_key AND sitting = 'Main'
+  AND course_outcome IS NOT NULL AND bloom_level IS NOT NULL
+GROUP BY course_outcome, bloom_level
+ORDER BY course_outcome, bloom_level"""
+
+
 REGISTRY = {
     "subjects": SUBJECTS, "overview": OVERVIEW, "marksByUnit": MARKS_BY_UNIT,
     "unitDrift": UNIT_DRIFT, "bloom": BLOOM, "coverageGap": COVERAGE_GAP,
     "coAttainment": CO_ATTAINMENT, "poAttainment": PO_ATTAINMENT,
     "repetition": REPETITION, "freshness": FRESHNESS, "blueprint": BLUEPRINT,
     "markSlots": MARK_SLOTS, "distinctCos": DISTINCT_COS,
+    "availability": AVAILABILITY, "bloomByCo": BLOOM_BY_CO,
 }
 ALLOWED_PARAMS = {"subject_key", "exam_type", "unit_no", "marks",
                   "target_bloom", "cutoff_year", "probe", "topic_id"}

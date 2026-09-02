@@ -105,6 +105,15 @@ def similar(r: SimilarReq):
 
 
 # ---------------------------------------------------------------- generator --
+class Section(BaseModel):
+    label: str
+    note: str = ""
+    slots: int          # questions printed
+    answer: int         # questions the student answers
+    marks: int          # marks per question
+    units: list[int] | None = None   # restrict this section to these units
+
+
 class GenerateReq(BaseModel):
     subject_key: str
     exam_type: str = "CIE"
@@ -112,6 +121,12 @@ class GenerateReq(BaseModel):
     require_co: bool = True
     bloom_mix: dict = {}
     locked: dict = {}
+    # A blueprint supplied by the department beats anything inferred. When this
+    # is set it is authoritative and nothing is scaled; without it only the
+    # declared CIE format is available, because averaging real papers gives unit
+    # totals of 155 or 201 that then have to be fudged onto the target.
+    blueprint: list[Section] | None = None
+    instructions: list[str] = []
 
 
 # The CIE shape is printed on the papers themselves ("PART -A / Total 5 Marks
@@ -119,6 +134,30 @@ class GenerateReq(BaseModel):
 # it is declared rather than inferred. A declared blueprint beats an observed
 # average: averaging real papers gives unit totals of 155 or 201, which then have
 # to be scaled — a fudge a known format does not need.
+def _see_format(units: list[int]) -> dict:
+    """SEE: every unit carries 20 marks, made of 10-mark questions.
+
+    Internal choice is per unit — the printed paper offers two complete
+    questions and the student answers one. Modelled here as four 10-mark slots
+    per unit of which two are answered, which fills the same shape from the same
+    pool; the difference only matters if a student could mix halves of the two
+    alternatives, which the printed instruction forbids.
+    """
+    roman = ["", "I", "II", "III", "IV", "V", "VI", "VII"]
+    return {
+        "name": "Semester End Examination",
+        "instructions": [
+            "All units have internal choice, answer one complete question from each unit."
+        ],
+        "sections": [
+            {"label": f"UNIT - {roman[u] if u < len(roman) else u}",
+             "note": "20 marks · internal choice · 10 marks per question",
+             "slots": 4, "answer": 2, "marks": 10, "units": [u]}
+            for u in units
+        ],
+    }
+
+
 FORMATS = {
     "CIE": {
         "name": "Internal Assessment",
@@ -141,10 +180,22 @@ def generate(r: GenerateReq):
     be defended line by line. Where a constraint cannot be met it is RELAXED AND
     REPORTED — a paper that quietly misses a CO is worse than one that says so.
     """
-    fmt = FORMATS.get(r.exam_type)
+    # Units are needed before an SEE format can be built, so read them first.
+    _slots = dbx.query(Q.MARK_SLOTS, {"subject_key": r.subject_key})["rows"]
+    _units = sorted({int(x["unit_no"]) for x in _slots if x.get("unit_no") is not None})
+
+    if r.blueprint:
+        fmt = {"name": f"{r.exam_type} (blueprint supplied)",
+               "instructions": r.instructions or [],
+               "sections": [s.model_dump() for s in r.blueprint]}
+    elif r.exam_type == "SEE":
+        # Only the five real syllabus units; 6 and 7 are parser artifacts.
+        fmt = _see_format([u for u in _units if u <= 5] or _units)
+    else:
+        fmt = FORMATS.get(r.exam_type)
     if not fmt:
-        raise HTTPException(422, f"No declared format for {r.exam_type}. "
-                                 "Only CIE is declared; SEE blueprints are observed only.")
+        raise HTTPException(422, f"No declared format for {r.exam_type}, and no "
+                                 "blueprint supplied. Send a blueprint, or use CIE.")
     warnings: list[str] = []
     cutoff = date.today().year - r.exclude_years
     used_ids: set[str] = set()
@@ -154,8 +205,7 @@ def generate(r: GenerateReq):
     all_cos = [int(x["course_outcome"]) for x in
                dbx.query(Q.DISTINCT_COS, {"subject_key": r.subject_key})["rows"]
                if x.get("course_outcome") is not None]
-    slots = dbx.query(Q.MARK_SLOTS, {"subject_key": r.subject_key})["rows"]
-    units = sorted({int(x["unit_no"]) for x in slots if x.get("unit_no") is not None})
+    units = _units
     if not units:
         raise HTTPException(422, "No questions with a unit for this subject.")
 
@@ -182,14 +232,15 @@ def generate(r: GenerateReq):
         for i in range(sec["slots"]):
             n += 1
             bloom = bloom_order[i % len(bloom_order)] if bloom_order else ""
-            unit = units[(n - 1) % len(units)]
+            sec_units = [u for u in (sec.get("units") or units) if u in units] or units
+            unit = sec_units[(n - 1) % len(sec_units)]
             want_co = next((c for c in all_cos if c not in cos_seen), None) if r.require_co else None
 
             q = pick(unit, sec["marks"], bloom, want_co)
             if not q:
                 # The format fixes the marks, so relaxing the unit is the honest
                 # trade — and it is reported.
-                for u in units:
+                for u in sec_units:
                     if u == unit:
                         continue
                     q = pick(u, sec["marks"], bloom, want_co)

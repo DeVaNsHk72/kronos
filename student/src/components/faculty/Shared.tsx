@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { NavLink } from "react-router-dom";
 import { runQuery, type Subject } from "../../facultyApi";
 import { cn } from "../../lib/utils";
 
@@ -79,10 +80,39 @@ export function Empty({ title, hint }: { title: string; hint?: string }) {
   );
 }
 
+const FACULTY_TABS = [
+  { to: "/faculty", label: "Dashboard", end: true },
+  { to: "/faculty/generate", label: "Generate" },
+  { to: "/faculty/blueprint", label: "Blueprint" },
+  { to: "/faculty/coverage", label: "Coverage" },
+  { to: "/faculty/outcomes", label: "Outcomes" },
+  { to: "/faculty/attainment", label: "CO / PO" },
+  { to: "/faculty/bank", label: "Bank" },
+  { to: "/faculty/similar", label: "Asked before?" },
+];
+
+export function FacultyNav() {
+  return (
+    <nav className="flex gap-1 flex-wrap mb-6 border-b border-line pb-2 no-print">
+      {FACULTY_TABS.map((t) => (
+        <NavLink key={t.to} to={t.to} end={t.end}
+          className={({ isActive }) => cn(
+            "px-3 py-1.5 text-[13px] rounded-md transition-colors",
+            isActive ? "bg-line-2 text-ink font-medium"
+                     : "text-ink-2 hover:text-ink hover:bg-line-2/60")}>
+          {t.label}
+        </NavLink>
+      ))}
+    </nav>
+  );
+}
+
 export function PageHead({ title, blurb, right }: {
   title: string; blurb?: string; right?: React.ReactNode;
 }) {
   return (
+    <>
+    <FacultyNav />
     <div className="flex items-end justify-between gap-6 flex-wrap mb-6">
       <div>
         <h1 className="serif-display text-4xl text-ink">{title}</h1>
@@ -90,5 +120,6 @@ export function PageHead({ title, blurb, right }: {
       </div>
       {right}
     </div>
+    </>
   );
 }

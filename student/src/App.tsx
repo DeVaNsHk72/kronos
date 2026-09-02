@@ -10,6 +10,8 @@ import FacultyCoverage from "./routes/faculty/Coverage";
 import FacultyAttainment from "./routes/faculty/Attainment";
 import FacultyBank from "./routes/faculty/Bank";
 import FacultySimilar from "./routes/faculty/Similar";
+import FacultyBlueprint from "./routes/faculty/Blueprint";
+import FacultyOutcomes from "./routes/faculty/Outcomes";
 
 export default function App() {
   // Home's hero fills the viewport under the fixed nav on purpose (the pill
@@ -33,6 +35,8 @@ export default function App() {
           <Route path="/faculty/attainment" element={<FacultyAttainment />} />
           <Route path="/faculty/bank" element={<FacultyBank />} />
           <Route path="/faculty/similar" element={<FacultySimilar />} />
+          <Route path="/faculty/blueprint" element={<FacultyBlueprint />} />
+          <Route path="/faculty/outcomes" element={<FacultyOutcomes />} />
           <Route path="*" element={<Navigate to="/home" replace />} />
         </Routes>
       </div>

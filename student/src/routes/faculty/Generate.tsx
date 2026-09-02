@@ -8,6 +8,7 @@ const BLOOMS = ["remember", "understand", "apply", "analyse", "evaluate"];
 export default function Generate() {
   const { subjects } = useSubjects();
   const [key, setKey] = useState("");
+  const [examType, setExamType] = useState("SEE");
   const [excl, setExcl] = useState(3);
   const [requireCo, setRequireCo] = useState(true);
   const [mix, setMix] = useState<Record<string, number>>({
@@ -23,8 +24,14 @@ export default function Generate() {
   async function go() {
     setBusy(true); setErr(null);
     try {
-      setPaper(await generatePaper({ subject_key: key, exam_type: "CIE",
-        exclude_years: excl, require_co: requireCo, bloom_mix: mix }));
+      setPaper(await generatePaper({ subject_key: key, exam_type: examType,
+        exclude_years: excl, require_co: requireCo, bloom_mix: mix,
+        // A blueprint saved on the Blueprint screen is authoritative for this
+        // subject; the declared format is only the fallback.
+        blueprint: (() => {
+          try { return JSON.parse(localStorage.getItem("kronos-blueprints") || "{}")[key] ?? null; }
+          catch { return null; }
+        })() }));
     } catch (e: any) {
       setErr(e?.response?.data?.detail ?? String(e));
     } finally { setBusy(false); }
@@ -40,6 +47,14 @@ export default function Generate() {
 
       <div className="grid lg:grid-cols-[280px_1fr] gap-6 items-start">
         <aside className="border border-line rounded-lg bg-paper-2 p-4 flex flex-col gap-4 no-print">
+          <div>
+            <span className="text-[11px] uppercase tracking-wider text-ink-2 block mb-1.5">Exam</span>
+            <select value={examType} onChange={(e) => setExamType(e.target.value)}
+              className="w-full border border-line rounded-md bg-paper px-2 py-1.5 text-[13px]">
+              <option value="SEE">SEE — 100 marks, 5 units × 20</option>
+              <option value="CIE">CIE — 40 marks, Parts A/B/C</option>
+            </select>
+          </div>
           <div>
             <span className="text-[11px] uppercase tracking-wider text-ink-2 block mb-1.5">
               Exclude asked in last {excl} years
