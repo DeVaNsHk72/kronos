@@ -11,6 +11,7 @@ from pydantic import BaseModel
 
 from .. import databricks as dbx
 from .. import genie_client as genie
+from .. import mas_client as mas
 from .. import faculty_sql as Q
 
 router = APIRouter(prefix="/api/faculty", tags=["faculty"])
@@ -24,7 +25,8 @@ class QueryReq(BaseModel):
 @router.get("/status")
 def status():
     return {"databricks": dbx.available(), "genie": genie.available(),
-            "catalog": dbx.CATALOG, "queries": sorted(Q.REGISTRY)}
+            "agent": mas.available(), "catalog": dbx.CATALOG,
+            "queries": sorted(Q.REGISTRY)}
 
 
 class AskReq(BaseModel):
@@ -34,17 +36,51 @@ class AskReq(BaseModel):
 
 @router.post("/ask")
 def ask(r: AskReq):
-    """Every analytical screen routes through here: Genie writes the SQL."""
+    """Ask the agent.
+
+    Prefers the Multi-Agent Supervisor, which reasons about the question and
+    calls Genie as a tool — so the reply carries the tool calls as well as the
+    answer. Falls back to Genie directly if the supervisor is unreachable; the
+    response says which answered.
+    """
+    if mas.available():
+        try:
+            out = mas.ask(r.question)
+            out["engine"] = "supervisor"
+            return out
+        except Exception as e:
+            supervisor_error = str(e)
+    else:
+        supervisor_error = "agent endpoint not configured"
     try:
-        return genie.ask(r.question, r.conversation_id)
+        out = genie.ask(r.question, r.conversation_id)
+        out["engine"] = "genie"
+        out["fallback_reason"] = supervisor_error
+        return out
     except Exception as e:
-        raise HTTPException(503, str(e))
+        raise HTTPException(503, f"supervisor: {supervisor_error} | genie: {e}")
 
 
 # The questions each screen asks Genie. Phrased to name the columns wanted, so
 # the answer is chartable — Genie picks its own aliases otherwise and a chart
 # bound to fixed keys silently renders nothing.
 ASKS = {
+    "candidates": (
+        "From fact_question where subject_key = '{s}' and sitting = 'Main' and "
+        "marks is not null and unit_no is not null, list every question that is "
+        "NOT in a repeat cluster asked in {y} or later. A question qualifies if "
+        "repeat_cluster_id is null, or its repeat_cluster_id does not appear on "
+        "any row of the same subject with exam_year >= {y}. Return columns "
+        "question_id, question_text, marks, unit_no, course_outcome, "
+        "program_outcome, bloom_level, exam_year, exam_session, source_file, "
+        "repeat_cluster_id, topic_id. Return every qualifying row, no limit."),
+    "markSlots": (
+        "For subject_key '{s}' where sitting = 'Main' and marks is not null and "
+        "unit_no is not null: per unit_no and marks return columns unit_no, "
+        "marks, n (count). Order by unit_no, marks."),
+    "distinctCos": (
+        "List the distinct non-null course_outcome values for subject_key '{s}'. "
+        "Return one column named course_outcome, ordered ascending."),
     "overview": (
         "For subject_key '{s}': how many questions in total, how many distinct "
         "exam years, how many distinct source files, how many have a non-null "
@@ -94,6 +130,7 @@ ASKS = {
 class GenieQueryReq(BaseModel):
     name: str
     subject_key: str
+    cutoff_year: int | None = None
 
 
 @router.post("/genie-query")
@@ -106,15 +143,31 @@ def genie_query(r: GenieQueryReq):
     """
     tmpl = ASKS.get(r.name)
     if not tmpl:
-        raise HTTPException(400, f'no Genie question for "{r.name}"')
-    try:
-        res = genie.ask(tmpl.format(s=r.subject_key))
-        if res.get("rows"):
-            res["engine"] = "genie"
-            return res
-        reason = res.get("error") or "Genie returned no rows"
-    except Exception as e:
-        reason = str(e)
+        raise HTTPException(400, f'no agent question for "{r.name}"')
+    reason = "agent unavailable"
+    # The supervisor is the agent; Genie is the tool it calls. Preferred over
+    # talking to Genie directly so every screen goes through one entry point.
+    if mas.available():
+        try:
+            res = mas.ask(tmpl.format(s=r.subject_key, y=r.cutoff_year or 0))
+            if res.get("rows"):
+                res["engine"] = "supervisor"
+                res["sql"] = res.get("sql") or "\n".join(
+                    f"-- {t.get('name')}: {t.get('arguments')}" for t in res.get("tools", []))
+                return res
+            reason = "supervisor returned no rows"
+        except Exception as e:
+            reason = str(e)
+    if genie.available():
+        try:
+            res = genie.ask(tmpl.format(s=r.subject_key, y=r.cutoff_year or 0))
+            if res.get("rows"):
+                res["engine"] = "genie"
+                res["fallback_reason"] = reason
+                return res
+            reason = res.get("error") or "Genie returned no rows"
+        except Exception as e:
+            reason = str(e)
 
     sql = Q.REGISTRY.get(r.name)
     if not sql:
@@ -281,7 +334,8 @@ def generate(r: GenerateReq):
     """
     # Units are needed before an SEE format can be built, so read them first.
     _slots = dbx.query(Q.MARK_SLOTS, {"subject_key": r.subject_key})["rows"]
-    _units = sorted({int(x["unit_no"]) for x in _slots if x.get("unit_no") is not None})
+    _units = sorted({int(x["unit_no"]) for x in _slots
+                     if x.get("unit_no") is not None})
 
     if r.blueprint:
         fmt = {"name": f"{r.exam_type} (blueprint supplied)",
@@ -301,9 +355,42 @@ def generate(r: GenerateReq):
     used_clusters: set[str] = set()
     cos_seen: set[int] = set()
 
-    all_cos = [int(x["course_outcome"]) for x in
-               dbx.query(Q.DISTINCT_COS, {"subject_key": r.subject_key})["rows"]
+    def _rows(name: str, **fmt):
+        """Ask Genie; fall back to the equivalent statement if it cannot answer.
+
+        Returns (rows, engine) so the caller can report which produced the paper.
+        """
+        tmpl = ASKS.get(name)
+        if tmpl and mas.available():
+            try:
+                out = mas.ask(tmpl.format(s=r.subject_key, y=cutoff))
+                if out.get("rows"):
+                    return out["rows"], "supervisor"
+            except Exception:
+                pass
+        if tmpl and genie.available():
+            try:
+                out = genie.ask(tmpl.format(s=r.subject_key, y=cutoff))
+                if out.get("rows"):
+                    return out["rows"], "genie"
+            except Exception:
+                pass
+        sql = Q.REGISTRY.get(name)
+        if not sql:
+            return [], "none"
+        params = {"subject_key": r.subject_key}
+        if ":cutoff_year" in sql:
+            params["cutoff_year"] = cutoff
+        return dbx.query(sql, params)["rows"], "sql-fallback"
+
+    co_rows, co_engine = _rows("distinctCos")
+    all_cos = [int(x["course_outcome"]) for x in co_rows
                if x.get("course_outcome") is not None]
+
+    # One call for the whole eligible pool, then select locally. Asking Genie
+    # per slot would be ~15 round trips at ~20s each and the wording would vary
+    # between them, so two runs of the same constraints could differ.
+    pool_rows, pool_engine = _rows("candidates")
     units = _units
     if not units:
         raise HTTPException(422, "No questions with a unit for this subject.")
@@ -311,9 +398,9 @@ def generate(r: GenerateReq):
     bloom_order = [k for k, v in sorted(r.bloom_mix.items(), key=lambda kv: -kv[1]) if v > 0]
 
     def pick(unit, marks, bloom, want_co):
-        rows = dbx.query(Q.CANDIDATES, {
-            "subject_key": r.subject_key, "unit_no": unit, "marks": marks,
-            "cutoff_year": cutoff, "target_bloom": bloom or ""})["rows"]
+        rows = [c for c in pool_rows
+                if int(c.get("unit_no") or -1) == unit
+                and int(c.get("marks") or -1) == marks]
         pool = [c for c in rows if c["question_id"] not in used_ids
                 and not (c.get("repeat_cluster_id") and c["repeat_cluster_id"] in used_clusters)]
         if not pool:
@@ -385,4 +472,5 @@ def generate(r: GenerateReq):
             "cos_required": all_cos, "cos_covered": sorted(cos_seen),
             "bloom_requested": r.bloom_mix, "bloom_achieved": achieved,
             "empty_slots": empty, "cutoff_year": cutoff, "warnings": warnings,
+            "engine": pool_engine, "pool_size": len(pool_rows),
             "sql_used": Q.CANDIDATES}

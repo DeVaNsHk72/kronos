@@ -11,6 +11,7 @@ from pydantic import BaseModel, Field
 
 from .. import chat as C
 from .. import genie, llm, semantic
+from .. import mas_client as mas
 from ..config import SEMANTIC_POOL
 from ..db import get_db
 from ..filters import Filters
@@ -56,17 +57,36 @@ def _retrieve(con, intent, course_code):
 
 @router.post("/chat", dependencies=[Depends(_chat_limit)])
 def chat(body: ChatIn, con=Depends(get_db)):
-    # --- Genie path: send question directly, it queries the data itself ---
+    # --- Agent path: the supervisor reasons and calls Genie as a tool. -------
+    # Preferred over talking to Genie directly, because the reply carries the
+    # tool calls and the rows as well as the prose, and over the local RAG
+    # pipeline, which answers from a local SQLite copy rather than the governed
+    # Unity Catalog tables.
+    if mas.available():
+        try:
+            out = mas.ask(body.message)
+            if out.get("answer") or out.get("rows"):
+                return {
+                    "intent": {"kind": "agent", "query": body.message,
+                               "tools": [t.get("name") for t in out.get("tools", [])]},
+                    "answer": out.get("answer"),
+                    "columns": out.get("columns", []),
+                    "rows": out.get("rows", []),
+                    "engine": "supervisor",
+                    "results": [], "citations": [],
+                }
+        except Exception:
+            pass  # fall through
+
     if genie.available():
         try:
-            answer = genie.ask(body.message)
             return {
                 "intent": {"kind": "genie", "query": body.message},
-                "answer": answer,
+                "answer": genie.ask(body.message),
+                "engine": "genie",
                 "results": [], "citations": [],
             }
-        except Exception as e:
-            # fall through to local pipeline on Genie failure
+        except Exception:
             pass
 
     # --- Local RAG pipeline (fallback) ---
