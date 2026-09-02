@@ -39,13 +39,10 @@ pdf_links*
 node_modules/
 dist/
 build/
-.next/
 *.tsbuildinfo
 .DS_Store
 
-# Faculty console: local SQLite mirror of the gold tables, rebuilt from
-# parquet. Kept out of git for the same reason DERIVED_DATA is.
-faculty/data/
+
 
 # Logs
 *.log
