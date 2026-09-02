@@ -1,4 +1,4 @@
-"""Telegram bot logic — hits the Databricks serving endpoint.
+"""Telegram bot logic — routes questions through Databricks Genie.
 
 Each Telegram user gets conversation history so context carries
 across messages. Sessions live in memory (fine for single-process).
@@ -9,24 +9,21 @@ from pathlib import Path
 
 import requests
 from dotenv import load_dotenv
+from app import genie
 
 REPO = Path(__file__).resolve().parents[2]
 load_dotenv(REPO / ".env")
 
 BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-DATABRICKS_HOST = (os.getenv("DATABRICKS_HOST") or "").rstrip("/")
-DATABRICKS_TOKEN = os.getenv("DATABRICKS_TOKEN")
-SERVING_ENDPOINT = os.getenv("DATABRICKS_SERVING_ENDPOINT",
-                             "mas-4d3338c9-endpoint")
 
-# telegram_user_id -> list of {role, content} dicts
+# telegram_user_id -> list of {role, content} dicts (kept for /reset UX)
 _sessions: dict[int, list[dict]] = {}
 
 TELEGRAM_API = f"https://api.telegram.org/bot{BOT_TOKEN}"
 
 
 def available() -> bool:
-    return bool(BOT_TOKEN and DATABRICKS_HOST and DATABRICKS_TOKEN)
+    return bool(BOT_TOKEN and genie.available())
 
 
 # ── Telegram helpers ──────────────────────────────────────────────
@@ -47,46 +44,18 @@ def send_typing(chat_id: int):
                   json={"chat_id": chat_id, "action": "typing"}, timeout=5)
 
 
-# ── Databricks serving endpoint ──────────────────────────────────
+# ── Databricks Genie ─────────────────────────────────────────────
 
-def ask_databricks(user_id: int, question: str) -> str:
-    """Send question to Databricks serving endpoint with conversation history."""
-    history = _sessions.setdefault(user_id, [])
-    history.append({"role": "user", "content": question})
-
-    # keep last 10 messages to avoid token limits
-    msgs = history[-10:]
-
+def ask_genie(user_id: int, question: str) -> str:
+    """Send question to Databricks Genie and return the answer."""
+    _sessions.setdefault(user_id, []).append({"role": "user", "content": question})
     try:
-        r = requests.post(
-            f"{DATABRICKS_HOST}/serving-endpoints/{SERVING_ENDPOINT}/invocations",
-            headers={"Authorization": f"Bearer {DATABRICKS_TOKEN}",
-                     "Content-Type": "application/json"},
-            json={"input": msgs},
-            timeout=120,
-        )
-        r.raise_for_status()
-        data = r.json()
-
-        # extract text from response
-        answer = ""
-        for output in data.get("output", []):
-            if output.get("type") == "message":
-                for content in output.get("content", []):
-                    if content.get("type") == "output_text":
-                        answer += content["text"]
-
-        if not answer:
-            answer = "No response from Databricks."
-
-        # save assistant reply to history
-        history.append({"role": "assistant", "content": answer})
-        _sessions[user_id] = history[-10:]
-
-        return answer
-
+        answer = genie.ask(question)
     except Exception as e:
-        return f"⚠️ Error: {str(e)[:300]}"
+        answer = f"⚠️ Error: {str(e)[:300]}"
+    _sessions[user_id].append({"role": "assistant", "content": answer})
+    _sessions[user_id] = _sessions[user_id][-10:]
+    return answer
 
 
 # ── Command handlers ──────────────────────────────────────────────
@@ -147,7 +116,7 @@ def handle_update(update: dict):
 
 def _ask(chat_id: int, user_id: int, question: str):
     send_typing(chat_id)
-    answer = ask_databricks(user_id, question)
+    answer = ask_genie(user_id, question)
     # Telegram 4096 char limit
     if len(answer) > 4000:
         for i in range(0, len(answer), 4000):
