@@ -29,7 +29,9 @@ and had begun to drift.
 | Data | FastAPI → SQLite + embeddings | Databricks SQL (Unity Catalog) |
 | Deploy | Cloudflare Pages | any Node host |
 
-See **[AGENTS.md](AGENTS.md)** for how each AI component is grounded — the part
+See **[SCHEMA.md](SCHEMA.md)** for the complete database reference — every
+column, every coverage gap, and the eight traps that produce plausible wrong
+answers. See **[AGENTS.md](AGENTS.md)** for how each AI component is grounded — the part
 that decides whether an answer can be trusted.
 
 ## Faculty console
