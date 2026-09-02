@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from . import semantic
 from .config import CORS_ORIGINS
 from .db import connection
-from .routers import search, meta, questions, files, chat, papers, telegram, voice
+from .routers import faculty, search, meta, questions, files, chat, papers, telegram, voice
 
 app = FastAPI(
     title="BMSCE Question Bank API",
@@ -32,6 +32,7 @@ app.include_router(chat.router)
 app.include_router(papers.router)
 app.include_router(telegram.router)
 app.include_router(voice.router)
+app.include_router(faculty.router)
 
 
 @app.on_event("startup")

@@ -29,6 +29,9 @@ and had begun to drift.
 | Data | FastAPI → SQLite + embeddings | Databricks SQL (Unity Catalog) |
 | Deploy | Cloudflare Pages | any Node host |
 
+Start with **[PROJECT.md](PROJECT.md)** for the full explanation — problem, gold
+table design, every feature, the pipeline, and the skills involved.
+
 See **[SCHEMA.md](SCHEMA.md)** for the complete database reference — every
 column, every coverage gap, and the eight traps that produce plausible wrong
 answers. See **[AGENTS.md](AGENTS.md)** for how each AI component is grounded — the part
