@@ -22,7 +22,7 @@ function Wordmark() {
         x="0"
         y="12"
         fill="currentColor"
-        fontFamily="'Departure Mono', monospace"
+        fontFamily="'Ubuntu Mono', monospace"
         fontSize="13"
         fontWeight="400"
         letterSpacing="0.08em"
@@ -50,22 +50,23 @@ export default function Masthead() {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-40 flex justify-center px-4 pt-4">
-        <nav className="flex h-12 w-full max-w-4xl items-center rounded-full border border-line bg-paper px-6 shadow-[0_2px_8px_rgba(0,0,0,0.08)] backdrop-blur-lg">
-          <NavLink to="/home" className="text-ink">
+      {/* A plain bar on the same grid as the page, not a floating pill. The
+          pill was the one element that sat on a different geometry from
+          everything below it. */}
+      <header className="fixed top-0 left-0 right-0 z-40 border-b border-line bg-paper/95 backdrop-blur">
+        <nav className="mx-auto flex h-14 max-w-[1400px] items-center px-6">
+          <NavLink to="/" className="text-ink">
             <Wordmark />
           </NavLink>
 
-          <div className="ml-auto flex items-center gap-1 text-[13px] font-medium">
+          <div className="ml-auto flex items-center gap-1 text-[13px]">
             {TABS.map(({ to, label }) => (
               <NavLink
                 key={to}
                 to={to}
                 className={({ isActive }) =>
-                  `rounded-full px-3.5 py-1.5 transition-colors ${
-                    isActive
-                      ? "bg-ink text-paper"
-                      : "text-ink-2 hover:text-ink"
+                  `rounded-md px-3 py-1.5 transition-colors duration-150 ${
+                    isActive ? "text-ink font-medium" : "text-ink-2 hover:text-ink"
                   }`
                 }
               >
@@ -75,7 +76,7 @@ export default function Masthead() {
 
             <button
               onClick={() => setCmdkOpen(true)}
-              className="ml-2 flex items-center gap-1 rounded-md border border-line bg-paper-2 px-2 py-1 text-[11px] text-ink-2 transition-colors hover:border-ink/25 hover:text-ink"
+              className="ml-3 flex items-center gap-1 rounded-md border border-line bg-paper-2 px-2 py-1 text-[11px] text-ink-2 transition-colors duration-150 hover:border-ink-2 hover:text-ink"
               aria-label="Open command palette"
             >
               <CommandIcon size={12} weight="bold" />

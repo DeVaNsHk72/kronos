@@ -46,18 +46,14 @@ export type Overview = ReturnType<typeof computeOverview>;
 export function ChatStats({ o }: { o: Overview }) {
   return (
     <div className="mt-4 flex flex-col gap-4">
-      <div className="flex flex-wrap gap-x-6 gap-y-2 rounded-md border border-line bg-paper-2 px-4 py-3">
+      <div className="card flex flex-wrap gap-x-6 gap-y-2 px-4 py-3">
         <div>
-          <div className="serif-note">
-            found
-          </div>
+          <div className="label-cap">found</div>
           <div className="text-sm font-semibold text-ink">{o.total}</div>
         </div>
         {o.topics[0] && (
           <div>
-            <div className="serif-note">
-              top topic
-            </div>
+            <div className="label-cap">top topic</div>
             <div className="max-w-[14rem] truncate text-sm font-semibold text-ink">
               {o.topics[0][0]}
             </div>
@@ -65,17 +61,13 @@ export function ChatStats({ o }: { o: Overview }) {
         )}
         {o.avgMarks != null && (
           <div>
-            <div className="serif-note">
-              avg marks
-            </div>
+            <div className="label-cap">avg marks</div>
             <div className="text-sm font-semibold text-mark">{o.avgMarks}</div>
           </div>
         )}
         {o.yearRange && (
           <div>
-            <div className="serif-note">
-              years
-            </div>
+            <div className="label-cap">years</div>
             <div className="text-sm font-semibold text-ink">
               {o.yearRange[0] === o.yearRange[1]
                 ? o.yearRange[0]
@@ -87,9 +79,7 @@ export function ChatStats({ o }: { o: Overview }) {
 
       {o.topics.length > 1 && (
         <div>
-          <p className="serif-note">
-            topics covered
-          </p>
+          <p className="label-cap">topics covered</p>
           <ul className="mt-1.5 flex flex-col gap-1">
             {o.topics.map(([topic, n]) => (
               <li key={topic} className="flex items-center gap-2 text-sm">
@@ -109,9 +99,7 @@ export function ChatAlsoAskedIn({ o }: { o: Overview }) {
   if (o.alsoAskedIn.length <= 1) return null;
   return (
     <div className="mt-4">
-      <p className="serif-note">
-        also asked in
-      </p>
+      <p className="label-cap">also asked in</p>
       <div className="mt-1.5 flex flex-wrap gap-1.5">
         {o.alsoAskedIn.map((a) => (
           <span key={`${a.year}-${a.exam_type}`} className="chip">

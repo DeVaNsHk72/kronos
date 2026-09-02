@@ -71,10 +71,8 @@ export default function QuestionCard({
   return (
     <article
       id={n ? citeId ?? `cite-${n}` : undefined}
-      className={`group scroll-mt-32 rounded-md border bg-paper-2 px-4 py-4 sm:px-5 transition-colors ${
-        flash
-          ? "border-blueprint ring-2 ring-blueprint/25"
-          : "border-line hover:border-ink/25"
+      className={`card group scroll-mt-32 px-4 py-4 sm:px-5 transition-colors ${
+        flash ? "border-blueprint ring-2 ring-blueprint/25" : "hover:border-ink-2"
       }`}
     >
       <div className="flex gap-3 sm:gap-4">
@@ -94,7 +92,7 @@ export default function QuestionCard({
           {/* Question left of the rule, marks right of it — the layout of the
               printed paper this row came from. */}
           <div className="flex items-start gap-3 sm:gap-4">
-            <p className="min-w-0 flex-1 serif text-[16px] leading-relaxed text-ink sm:text-[17px]">
+            <p className="min-w-0 flex-1 text-[15px] leading-relaxed text-ink sm:text-[15.5px]">
               {highlight(text, query ? [query] : [])}
             </p>
             <div className="shrink-0 self-stretch pl-3 sm:pl-4">

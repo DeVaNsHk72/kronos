@@ -57,14 +57,13 @@ export default function Bank() {
   }
 
   return (
-    <div className="max-w-[1400px] mx-auto px-6 py-8">
+    <div className="page py-8">
       <PageHead title="Question bank"
-        blurb="Every question in the archive, with the paper it came from."
         right={<SubjectPicker subjects={subjects} value={key} onChange={setKey} />} />
 
-      <div className="flex gap-2 flex-wrap items-center border border-line rounded-lg bg-paper-2 p-3">
+      <div className="card flex gap-2 flex-wrap items-center p-3">
         <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search question text…"
-          className="border border-line rounded-md bg-paper px-3 py-1.5 text-[13px] flex-1 min-w-[220px]" />
+          className="field flex-1 min-w-[220px]" />
         <Sel label="Unit" value={f.unit} onChange={(v) => setF({ ...f, unit: v })}
              options={["1","2","3","4","5","6","7"]} />
         <Sel label="Marks" value={f.marks} onChange={(v) => setF({ ...f, marks: v })}
@@ -73,12 +72,9 @@ export default function Bank() {
         <Sel label="Year" value={f.year} onChange={(v) => setF({ ...f, year: v })}
              options={Array.from({ length: 9 }, (_, i) => String(2024 - i))} />
         <Sel label="Sitting" value={f.sitting} onChange={(v) => setF({ ...f, sitting: v })} options={SITTINGS} />
-        <button onClick={exportCsv} disabled={!rows.length}
-          className="border border-line rounded-md px-3 py-1.5 text-[12px] hover:bg-line-2 disabled:opacity-40">
-          Export CSV
-        </button>
+        <button onClick={exportCsv} disabled={!rows.length} className="btn">Export CSV</button>
         <button onClick={() => { setF({ sitting: "Main" }); setQ(""); }}
-          className="text-[12px] text-ink-2 hover:text-mark underline underline-offset-2">reset</button>
+          className="text-[12px] text-ink-2 hover:text-mark">Reset</button>
       </div>
 
       <p className="font-mono text-[11px] text-ink-2 my-3">
@@ -87,18 +83,18 @@ export default function Bank() {
       </p>
 
       {busy && !rows.length ? <Skeleton className="h-96" /> : rows.length === 0 ? (
-        <Empty title="Nothing matches these filters" hint="Try clearing the sitting or year filter." />
+        <Empty title="Nothing matches these filters" />
       ) : (
-        <div className="border border-line rounded-lg overflow-hidden">
+        <div className="table-wrap">
           <div className="overflow-x-auto">
-            <table className="w-full text-[13px]">
-              <thead><tr className="text-left text-[11px] uppercase tracking-wider text-ink-2 bg-paper-2">
-                <th className="px-3 py-2 font-medium">Question</th>
-                <th className="px-3 py-2 font-medium">U</th>
-                <th className="px-3 py-2 font-medium text-right">Marks</th>
-                <th className="px-3 py-2 font-medium">Bloom</th>
-                <th className="px-3 py-2 font-medium">Year</th>
-                <th className="px-3 py-2 font-medium">Source</th>
+            <table>
+              <thead><tr>
+                <th>Question</th>
+                <th>Unit</th>
+                <th className="text-right">Marks</th>
+                <th>Bloom</th>
+                <th>Year</th>
+                <th>Source</th>
               </tr></thead>
               <tbody>
                 {rows.map((r) => {
@@ -106,18 +102,18 @@ export default function Bank() {
                   return (
                     <>
                       <tr key={id} onClick={() => setOpenRow(openRow === id ? null : id)}
-                          className="border-t border-line hover:bg-line-2/40 cursor-pointer align-top">
-                        <td className="px-3 py-2 serif max-w-[520px]">{r.question_text}</td>
-                        <td className="px-3 py-2 font-mono text-ink-2">{r.unit_no ?? "—"}</td>
-                        <td className="px-3 py-2 font-mono text-right">{r.marks ?? "—"}</td>
-                        <td className="px-3 py-2 text-ink-2 text-[12px]">{r.bloom_level ?? "—"}</td>
-                        <td className="px-3 py-2 font-mono text-ink-2">{r.exam_year}</td>
-                        <td className="px-3 py-2 font-mono text-[11px] text-ink-2 max-w-[170px] truncate"
+                          className="cursor-pointer align-top">
+                        <td className="max-w-[520px]">{r.question_text}</td>
+                        <td className="font-mono text-ink-2">{r.unit_no ?? "—"}</td>
+                        <td className="font-mono text-right">{r.marks ?? "—"}</td>
+                        <td className="text-ink-2 text-[12px]">{r.bloom_level ?? "—"}</td>
+                        <td className="font-mono text-ink-2">{r.exam_year}</td>
+                        <td className="font-mono text-[11px] text-ink-2 max-w-[170px] truncate"
                             title={String(r.source_file)}>{String(r.source_file).split("/").pop()}</td>
                       </tr>
                       {openRow === id && (
                         <tr key={id + "-d"} className="bg-paper">
-                          <td colSpan={6} className="px-3 py-3">
+                          <td colSpan={6}>
                             <div className="font-mono text-[11px] text-ink-2 space-y-0.5">
                               <div>question_id: {r.question_id}</div>
                               <div>source_file: {r.source_file}</div>
@@ -136,10 +132,8 @@ export default function Bank() {
             </table>
           </div>
           <div className="flex items-center gap-3 p-3 border-t border-line">
-            <button disabled={page === 0} onClick={() => setPage(page - 1)}
-              className="border border-line rounded-md px-3 py-1 text-[12px] disabled:opacity-40">Previous</button>
-            <button disabled={(page + 1) * LIMIT >= total} onClick={() => setPage(page + 1)}
-              className="border border-line rounded-md px-3 py-1 text-[12px] disabled:opacity-40">Next</button>
+            <button disabled={page === 0} onClick={() => setPage(page - 1)} className="btn">Previous</button>
+            <button disabled={(page + 1) * LIMIT >= total} onClick={() => setPage(page + 1)} className="btn">Next</button>
             <span className="font-mono text-[11px] text-ink-2 ml-auto">page {page + 1}</span>
           </div>
           <div className="px-3 pb-3"><SqlToggle sql={data?.sql} ms={data?.ms} engine={data?.engine} fallbackReason={data?.fallback_reason} /></div>
@@ -158,7 +152,7 @@ function Sel({ label, value, onChange, options }: SelProps) {
   return (
     <select value={value ?? "all"}
       onChange={(e) => onChange(e.target.value === "all" ? undefined : e.target.value)}
-      className="border border-line rounded-md bg-paper px-2 py-1.5 text-[12px] text-ink">
+      className="field">
       <option value="all">{label}: any</option>
       {options.map((o) => <option key={o} value={o}>{label}: {o}</option>)}
     </select>

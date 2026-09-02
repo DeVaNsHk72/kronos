@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { PageHead, SubjectPicker, useSubjects, Banner, Skeleton, Empty }
+import { PageHead, SubjectPicker, useSubjects, Banner, Skeleton, Empty, SqlToggle }
   from "../../components/faculty/Shared";
 
 const http = axios.create({ baseURL: import.meta.env.VITE_API_URL || "" });
@@ -30,6 +30,11 @@ export default function Practice() {
   const [count, setCount] = useState(10);
 
   const [items, setItems] = useState<Item[] | null>(null);
+  // provenance for the pool the set was drawn from — the agent wrote the SQL
+  const [pool, setPool] = useState<{
+    engine?: string; sql?: string; ms?: number;
+    cached?: boolean; fallback_reason?: string; pool_size?: number;
+  } | null>(null);
   const [picked, setPicked] = useState<Record<string, string>>({});
   const [revealed, setRevealed] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -38,7 +43,7 @@ export default function Practice() {
   useEffect(() => { if (subjects?.length && !key) setKey(subjects[0].subject_key); }, [subjects, key]);
   useEffect(() => {
     if (!key) return;
-    setItems(null); setPicked({}); setRevealed(false); setUnit(null);
+    setItems(null); setPicked({}); setRevealed(false); setUnit(null); setPool(null);
     http.get("/api/faculty/units", { params: { subject_key: key } })
       .then((r) => setUnits(r.data.units ?? []))
       .catch(() => setUnits([]));
@@ -51,9 +56,10 @@ export default function Practice() {
         subject_key: key, scope, unit_no: scope === "unit" ? unit : null, count,
       });
       setItems(r.data.items);
+      setPool(r.data);
     } catch (e: any) {
       setErr(e?.response?.data?.detail ?? String(e));
-      setItems(null);
+      setItems(null); setPool(null);
     } finally { setBusy(false); }
   }
 
@@ -62,40 +68,40 @@ export default function Practice() {
     ? items.filter((i) => picked[i.question_id] === i.answer).length : 0;
 
   return (
-    <div className="max-w-[900px] mx-auto px-6 py-8">
-      <PageHead title="Practice sets"
-        blurb="Drawn from questions that were actually set. The stem is a real question with its year and source paper; the options are other real topics from the same subject."
+    <div className="page py-8">
+      <div className="mx-auto max-w-[900px]">
+      <PageHead title="Practice"
         right={<SubjectPicker subjects={subjects} value={key} onChange={setKey} />} />
 
-      <div className="flex flex-wrap items-end gap-3 border border-line rounded-lg bg-paper-2 p-3 no-print">
-        <label className="flex flex-col gap-1">
-          <span className="text-[11px] uppercase tracking-wider text-ink-2">Scope</span>
+      <div className="card flex flex-wrap items-end gap-3 p-3 no-print">
+        <label className="flex flex-col gap-1.5">
+          <span className="label-cap">Scope</span>
           <select value={scope} onChange={(e) => setScope(e.target.value as "subject" | "unit")}
-            className="border border-line rounded-md bg-paper px-2 py-1.5 text-[13px]">
+            className="field">
             <option value="subject">Whole subject</option>
             <option value="unit">One unit</option>
           </select>
         </label>
         {scope === "unit" && (
-          <label className="flex flex-col gap-1">
-            <span className="text-[11px] uppercase tracking-wider text-ink-2">Unit</span>
+          <label className="flex flex-col gap-1.5">
+            <span className="label-cap">Unit</span>
             <select value={unit ?? ""} onChange={(e) => setUnit(Number(e.target.value))}
-              className="border border-line rounded-md bg-paper px-2 py-1.5 text-[13px]">
+              className="field">
               <option value="">choose…</option>
               {units.map((u) => <option key={u} value={u}>Unit {u}</option>)}
             </select>
           </label>
         )}
-        <label className="flex flex-col gap-1">
-          <span className="text-[11px] uppercase tracking-wider text-ink-2">Questions</span>
+        <label className="flex flex-col gap-1.5">
+          <span className="label-cap">Questions</span>
           <select value={count} onChange={(e) => setCount(Number(e.target.value))}
-            className="border border-line rounded-md bg-paper px-2 py-1.5 text-[13px]">
+            className="field">
             {[5, 10, 15, 20].map((n) => <option key={n} value={n}>{n}</option>)}
           </select>
         </label>
         <button onClick={build} disabled={busy || !key || (scope === "unit" && !unit)}
-          className="bg-mark text-paper rounded-md px-4 py-2 text-[13px] disabled:opacity-40">
-          {busy ? "Building…" : items ? "New set" : "Build a set"}
+          className="btn-primary">
+          {busy ? "Asking the agent…" : items ? "New set" : "Build a set"}
         </button>
         {items && (
           <span className="font-mono text-[12px] text-ink-2 ml-auto tabular-nums">
@@ -109,7 +115,7 @@ export default function Practice() {
       {busy && !items && <div className="mt-6"><Skeleton className="h-72" /></div>}
       {!busy && !items && !err && (
         <div className="mt-6">
-          <Empty title="No set yet" hint="Choose a scope and build one." />
+          <Empty title="No set yet" />
         </div>
       )}
 
@@ -118,10 +124,10 @@ export default function Practice() {
           {items.map((it, n) => {
             const chosen = picked[it.question_id];
             return (
-              <div key={it.question_id} className="border border-line rounded-lg bg-paper-2 p-4">
+              <div key={it.question_id} className="card p-4">
                 <div className="flex items-baseline gap-3 mb-2">
                   <span className="font-mono text-[12px] text-ink-2">{n + 1}</span>
-                  <p className="serif text-[15px] leading-snug flex-1">{it.stem}</p>
+                  <p className="text-[15px] leading-snug flex-1">{it.stem}</p>
                 </div>
                 <p className="text-[12px] text-ink-2 mb-2 pl-7">{it.prompt}</p>
                 <div className="flex flex-col gap-1.5 pl-7">
@@ -151,20 +157,21 @@ export default function Practice() {
             );
           })}
 
+          {/* The pool was chosen by the agent, so the set shows its SQL like
+              every other screen. `cached` explains why a re-roll is instant. */}
+          <SqlToggle sql={pool?.sql} ms={pool?.cached ? undefined : pool?.ms}
+                     engine={pool?.engine} fallbackReason={pool?.fallback_reason} />
+
           <div className="flex items-center gap-3">
             <button onClick={() => setRevealed(true)} disabled={revealed || answered === 0}
-              className="bg-mark text-paper rounded-md px-4 py-2 text-[13px] disabled:opacity-40">
+              className="btn-primary">
               {revealed ? `${correct} of ${items.length} correct` : "Check answers"}
             </button>
-            {revealed && (
-              <button onClick={build}
-                className="border border-line rounded-md px-4 py-2 text-[13px] hover:bg-line-2">
-                Another set
-              </button>
-            )}
+            {revealed && <button onClick={build} className="btn">Another set</button>}
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 }

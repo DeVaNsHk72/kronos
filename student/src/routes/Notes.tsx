@@ -43,24 +43,17 @@ export default function Notes() {
   }, [docs, q, kind]);
 
   return (
-    <div className="max-w-[1100px] mx-auto px-6 py-8">
-      <div className="mb-6">
-        <h1 className="serif-display text-3xl text-ink">Notes &amp; papers</h1>
-        <p className="text-[13px] text-ink-2 mt-2 max-w-2xl">
-          The documents themselves. Every one here has been read into the archive,
-          so what you open is what the agent answers from.
-        </p>
-      </div>
+    <div className="page py-8">
+      <h1 className="title-page mb-6">Notes &amp; papers</h1>
 
-      <div className="flex gap-2 flex-wrap items-center border border-line rounded-lg bg-paper-2 p-3 mb-5">
+      <div className="card flex gap-2 flex-wrap items-center p-3 mb-5">
         <input value={q} onChange={(e) => setQ(e.target.value)}
           placeholder="Search subject or file…"
-          className="border border-line rounded-md bg-paper px-3 py-1.5 text-[13px] flex-1 min-w-[200px]" />
+          className="field flex-1 min-w-[200px]" />
         {(["all", "notes", "exam_paper"] as const).map((k) => (
           <button key={k} onClick={() => setKind(k)}
-            className={`border rounded-md px-3 py-1.5 text-[12px] transition-colors duration-150
-              ${kind === k ? "border-mark text-mark bg-mark/[0.06]" : "border-line text-ink-2 hover:text-ink"}`}>
-            {k === "all" ? "Everything" : k === "notes" ? "Notes" : "Past papers"}
+            className={`btn ${kind === k ? "border-ink text-ink" : "text-ink-2"}`}>
+            {k === "all" ? "Everything" : k === "notes" ? "Notes" : "Papers"}
           </button>
         ))}
       </div>
@@ -71,7 +64,7 @@ export default function Notes() {
         </div>
       ) : bySubject.length === 0 ? (
         <div className="border border-dashed border-line rounded-lg py-12 text-center">
-          <p className="serif text-lg text-ink">Nothing matches</p>
+          <p className="text-[14px] text-ink-2">Nothing matches</p>
         </div>
       ) : (
         <div className="flex flex-col gap-2">
@@ -80,11 +73,11 @@ export default function Notes() {
             const notes = items.filter((d) => d.asset === "notes").length;
             const papers = items.length - notes;
             return (
-              <div key={subject} className="border border-line rounded-lg bg-paper-2 overflow-hidden">
+              <div key={subject} className="card overflow-hidden">
                 <button onClick={() => setOpen(isOpen ? null : subject)}
                   className="w-full text-left px-4 py-3 flex items-baseline gap-3
                              hover:bg-line-2/40 transition-colors duration-150">
-                  <span className="serif text-[15px] text-ink flex-1">{subject}</span>
+                  <span className="text-[14px] text-ink flex-1">{subject}</span>
                   <span className="font-mono text-[11px] text-ink-2 tabular-nums">
                     {notes > 0 && `${notes} notes`}{notes > 0 && papers > 0 && " · "}
                     {papers > 0 && `${papers} papers`}

@@ -34,8 +34,7 @@ export const runQuery = (name: string, params: Record<string, unknown> = {}) => 
  *  `availability` and `markSlots` (feed the generator's own constraints, where
  *  a differently-phrased answer would silently change a paper). */
 const GENIE_BACKED = new Set([
-  "overview", "marksByUnit", "unitDrift", "coverageGap",
-  "repetition", "freshness",
+  "overview", "marksByUnit", "unitDrift", "freshness",
 ]);
 
 export const askGenie = (question: string, conversation_id?: string) =>
@@ -46,9 +45,6 @@ export const facultyStatus = () =>
 
 export const searchBank = (body: Record<string, unknown>) =>
   http.post<QueryResult>("/api/faculty/bank", body).then((r) => r.data);
-
-export const checkSimilar = (subject_key: string, probe: string) =>
-  http.post<QueryResult>("/api/faculty/similar", { subject_key, probe }).then((r) => r.data);
 
 export const generatePaper = (body: Record<string, unknown>) =>
   http.post("/api/faculty/generate", body).then((r) => r.data);

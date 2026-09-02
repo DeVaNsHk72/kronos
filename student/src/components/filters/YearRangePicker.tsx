@@ -52,15 +52,13 @@ export function YearRangePicker({
             ["to", yearMax, (n?: number) => onChange({ year_max: n })] as const,
           ].map(([lbl, val, set]) => (
             <label key={lbl} className="flex-1">
-              <span className="mb-1 block serif italic text-[12px] text-ink-2">
-                {lbl}
-              </span>
+              <span className="mb-1.5 block label-cap">{lbl}</span>
               <select
                 value={val ?? ""}
                 onChange={(e) =>
                   set(e.target.value ? Number(e.target.value) : undefined)
                 }
-                className="w-full rounded-sm border border-line bg-paper px-2 py-1.5 text-sm"
+                className="field w-full"
               >
                 <option value="">Any</option>
                 {years.map((y) => (

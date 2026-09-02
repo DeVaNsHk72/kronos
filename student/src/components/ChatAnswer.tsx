@@ -73,18 +73,14 @@ export default function ChatAnswer({
 
   return (
     <div>
-      <div className="whitespace-pre-wrap serif text-[16px] leading-relaxed text-ink">
+      <div className="whitespace-pre-wrap text-[15px] leading-relaxed text-ink">
         {withCitations(answer, valid, onJump)}
       </div>
       <button
         onClick={toggleSpeak}
         disabled={loading}
         aria-label={playing ? "Stop speaking" : "Read aloud"}
-        className={`mt-2 inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-[background-color,color] duration-150 ease-out ${
-          playing
-            ? "bg-red-500/10 text-red-600 hover:bg-red-500/20"
-            : "bg-ink/5 text-ink-2 hover:text-ink hover:bg-ink/10"
-        }`}
+        className={`btn mt-2 h-8 px-2.5 text-xs ${playing ? "border-mark text-mark" : "text-ink-2"}`}
       >
         {playing ? <Stop size={14} weight="bold" /> : <SpeakerHigh size={14} weight="bold" />}
         {loading ? "Loading…" : playing ? "Stop" : "Listen"}

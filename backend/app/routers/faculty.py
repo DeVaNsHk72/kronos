@@ -110,6 +110,23 @@ ASKS = {
         "per unit_no return columns unit_no, last_asked (max exam_year), "
         "questions (count), marks (sum), years (count of distinct exam_year). "
         "Order by unit_no."),
+    # Mirrors Q.PRACTICE_POOL exactly. The two have to agree: whichever engine
+    # answers, a set built from it must be the same kind of set.
+    #
+    # unit_no is spelled out because both tables have one and they are not the
+    # same thing: fact_question.unit_no is the unit the question was set under,
+    # dim_topic.unit_no is the unit the topic sits in under the current scheme.
+    # They differ on 362 of 685 dbms rows. Left to itself Genie took dim_topic's,
+    # which silently redefines what "Unit 2" means on the practice screen.
+    "practicePool": (
+        "From fact_question left joined to dim_topic on topic_id, for "
+        "subject_key '{s}' where marks is not null and marks >= 4 and the "
+        "character length of question_text is between 40 and 400: return "
+        "columns question_id, question_text, marks, unit_no, bloom_level, "
+        "exam_year, source_file, topic_id — all of these taken from "
+        "fact_question, and in particular fact_question.unit_no and NOT "
+        "dim_topic.unit_no — plus topic_name taken from dim_topic. "
+        "Order by exam_year descending. Limit 400."),
 }
 
 
@@ -119,49 +136,91 @@ class GenieQueryReq(BaseModel):
     cutoff_year: int | None = None
 
 
-@router.post("/genie-query")
-def genie_query(r: GenieQueryReq):
-    """A named analytical question, answered by Genie rather than by our SQL.
+def agent_rows(name: str, subject_key: str, cutoff_year: int | None = None,
+               require: tuple[str, ...] = (), bulk: bool = False) -> dict:
+    """Answer a named question through the agent, falling back to our own SQL.
 
-    Falls back to the equivalent hand-written statement when Genie is
-    unavailable or returns no rows, so a screen degrades to working-but-not-
-    agentic rather than to blank. The response says which path produced it.
+    Supervisor -> Genie -> the equivalent hand-written statement. A screen
+    degrades to working-but-not-agentic rather than to blank, and the result
+    says which path produced it.
+
+    `require` names columns the caller indexes directly. An agent answer that
+    is missing one is rejected rather than returned: text-to-SQL picks its own
+    aliases, and a caller reading `row["question_id"]` would 500 on an answer
+    that is otherwise perfectly good prose.
+
+    `bulk` asks Genie first. The supervisor answers in prose with the rows as a
+    markdown table, and on a question that returns hundreds of rows it writes
+    two tables — Genie's raw output and its own short summary of it — which the
+    parser in mas_client cannot tell apart, so it returns whichever came first.
+    Measured on applied_physics: the supervisor spends ~40s and yields 3 rows
+    under summary headings, then Genie is asked anyway and returns all 287.
+    For row retrieval there is nothing the supervisor adds, so it goes second.
+    Analytical questions, which it answers well, are unaffected.
     """
-    tmpl = ASKS.get(r.name)
+    tmpl = ASKS.get(name)
     if not tmpl:
-        raise HTTPException(400, f'no agent question for "{r.name}"')
-    reason = "agent unavailable"
-    # The supervisor is the agent; Genie is the tool it calls. Preferred over
-    # talking to Genie directly so every screen goes through one entry point.
-    if mas.available():
-        try:
-            res = mas.ask(tmpl.format(s=r.subject_key, y=r.cutoff_year or 0))
-            if res.get("rows"):
-                res["engine"] = "supervisor"
-                res["sql"] = res.get("sql") or "\n".join(
-                    f"-- {t.get('name')}: {t.get('arguments')}" for t in res.get("tools", []))
-                return res
-            reason = "supervisor returned no rows"
-        except Exception as e:
-            reason = str(e)
-    if genie.available():
-        try:
-            res = genie.ask(tmpl.format(s=r.subject_key, y=r.cutoff_year or 0))
-            if res.get("rows"):
-                res["engine"] = "genie"
-                res["fallback_reason"] = reason
-                return res
-            reason = res.get("error") or "Genie returned no rows"
-        except Exception as e:
-            reason = str(e)
+        raise HTTPException(400, f'no agent question for "{name}"')
+    question = tmpl.format(s=subject_key, y=cutoff_year or 0)
 
-    sql = Q.REGISTRY.get(r.name)
+    def usable(res: dict) -> bool:
+        rows = res.get("rows") or []
+        return bool(rows) and all(k in rows[0] for k in require)
+
+    def missing(res: dict, who: str) -> str:
+        if not res.get("rows"):
+            return f"{who} returned no rows"
+        return f"{who} returned rows missing {sorted(set(require) - set(res['rows'][0]))}"
+
+    # The supervisor is the agent; Genie is the tool it calls. Preferred over
+    # talking to Genie directly so every screen goes through one entry point —
+    # except for bulk row retrieval, see above.
+    def via_supervisor():
+        res = mas.ask(question)
+        if usable(res):
+            res["engine"] = "supervisor"
+            res["sql"] = res.get("sql") or "\n".join(
+                f"-- {t.get('name')}: {t.get('arguments')}" for t in res.get("tools", []))
+            return res, None
+        return None, missing(res, "supervisor")
+
+    def via_genie():
+        res = genie.ask(question)
+        if usable(res):
+            res["engine"] = "genie"
+            return res, None
+        return None, res.get("error") or missing(res, "Genie")
+
+    chain = [(genie.available, via_genie), (mas.available, via_supervisor)] if bulk \
+        else [(mas.available, via_supervisor), (genie.available, via_genie)]
+
+    reason = "agent unavailable"
+    for is_available, attempt in chain:
+        if not is_available():
+            continue
+        try:
+            res, why = attempt()
+        except Exception as e:
+            reason = str(e)
+            continue
+        if res is not None:
+            res["fallback_reason"] = reason if reason != "agent unavailable" else None
+            return res
+        reason = why
+
+    sql = Q.REGISTRY.get(name)
     if not sql:
         raise HTTPException(503, reason)
-    out = dbx.query(sql, {"subject_key": r.subject_key})
+    out = dbx.query(sql, {"subject_key": subject_key})
     out["engine"] = "sql-fallback"
     out["fallback_reason"] = reason
     return out
+
+
+@router.post("/genie-query")
+def genie_query(r: GenieQueryReq):
+    """A named analytical question, answered by Genie rather than by our SQL."""
+    return agent_rows(r.name, r.subject_key, r.cutoff_year)
 
 
 @router.post("/query")
@@ -453,21 +512,52 @@ class PracticeReq(BaseModel):
     unit_no: int | None = None
     topic_id: str | None = None
     count: int = 10
+    refresh: bool = False         # re-ask the agent instead of using the cache
+
+
+# The pool is the same for every set built from a subject, and the agent takes
+# ~30s to answer. Without this, "New set" — an instant re-roll today — would
+# cost a Genie round trip each time. Cached per subject; a set is still a fresh
+# random sample of it.
+_POOL_TTL = 900.0
+_pool_cache: dict[str, tuple[float, dict]] = {}
+
+
+def _practice_pool(subject_key: str, refresh: bool = False) -> dict:
+    import time
+    hit = _pool_cache.get(subject_key)
+    if hit and not refresh and time.time() - hit[0] < _POOL_TTL:
+        out = dict(hit[1])
+        out["cached"] = True
+        return out
+    # question_id and question_text are indexed directly below; topic_name is
+    # the answer key. An agent answer without them is not usable as a pool.
+    res = agent_rows("practicePool", subject_key, bulk=True,
+                     require=("question_id", "question_text", "topic_name"))
+    _pool_cache[subject_key] = (time.time(), res)
+    out = dict(res)
+    out["cached"] = False
+    return out
 
 
 @router.post("/practice")
 def practice(r: PracticeReq):
     """Build an MCQ practice set from real past questions.
 
-    The stem is always a question that was actually asked, carrying its year and
-    source paper. Only the distractors are written, and they are written from
-    OTHER real questions in the same subject — so a wrong option is a real thing
-    someone was asked, not an invented plausible-sounding string. Nothing here
-    fabricates course content.
+    The pool is selected by the agent — the supervisor calling Genie, falling
+    back to our own statement — so the set carries the SQL behind it like every
+    other screen. Assembly stays deterministic Python on purpose: the stem is a
+    question that was actually asked, and the distractors are OTHER real topics
+    from the same subject. No model rephrases a stem or invents an option.
     """
     import random
 
-    rows = dbx.query(Q.PRACTICE_POOL, {"subject_key": r.subject_key})["rows"]
+    pool = _practice_pool(r.subject_key, refresh=r.refresh)
+    # topic_name is the answer key, so a question with no topic cannot become a
+    # usable item — it would make a literal em dash the correct option. The
+    # LEFT JOIN keeps unmapped questions in the pool; they are dropped here.
+    rows = [x for x in pool.get("rows", [])
+            if x.get("question_id") and x.get("question_text") and x.get("topic_name")]
     if r.scope == "unit" and r.unit_no is not None:
         rows = [x for x in rows if x.get("unit_no") == r.unit_no]
     elif r.scope == "topic" and r.topic_id:
@@ -484,7 +574,7 @@ def practice(r: PracticeReq):
     picked = random.sample(rows, min(n, len(rows)))
     items = []
     for q in picked:
-        right = q.get("topic_name") or "—"
+        right = q["topic_name"]
         # Distractors are other real topics from the same subject: a plausible
         # wrong answer here is one a student could genuinely confuse it with.
         others = [t for t in by_topic if t != right and t != "—"]
@@ -506,7 +596,12 @@ def practice(r: PracticeReq):
             "source_file": q.get("source_file"),
         })
     return {"subject_key": r.subject_key, "scope": r.scope,
-            "count": len(items), "pool_size": len(rows), "items": items}
+            "count": len(items), "pool_size": len(rows), "items": items,
+            # same provenance fields every other screen returns, so the set can
+            # show the statement that chose the questions in it
+            "engine": pool.get("engine"), "sql": pool.get("sql"),
+            "ms": pool.get("ms"), "cached": pool.get("cached"),
+            "fallback_reason": pool.get("fallback_reason")}
 
 
 @router.get("/units")

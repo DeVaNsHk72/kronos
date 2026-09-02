@@ -1,14 +1,8 @@
 /**
  * Kronos design tokens — the single source for both apps.
  *
- * The student app (Vite/Tailwind v4) and the faculty console (Next/Tailwind v3)
- * use different build systems, so each maps these into its own theme layer. The
- * VALUES live here once: previously the palette was duplicated per app and had
- * already started to drift.
- *
- * The language: cream paper ground, one bookish red, an editorial serif for
- * content and a retro mono for anything numeric. Red means "a mark, a citation,
- * or a constraint that failed" — never decoration.
+ * Cream paper ground, one bookish red, Ubuntu throughout. Red means "a mark, a
+ * citation, or a constraint that failed" — never decoration.
  */
 :root {
   /* ground + ink */
@@ -28,10 +22,14 @@
 
   --k-radius:   0.5rem;
 
-  --k-font-editorial: "Fraunces", ui-serif, Georgia, "Times New Roman", serif;
-  --k-font-serif:     "Newsreader", ui-serif, Georgia, "Times New Roman", serif;
-  --k-font-sans:      "General Sans", ui-sans-serif, system-ui, sans-serif;
-  --k-font-mono:      "Departure Mono", ui-monospace, monospace;
+  /* One voice. Ubuntu for everything that reads as language, Ubuntu Mono for
+     anything numeric so columns of marks and years line up. The four-family
+     stack this replaced was the main reason two screens never looked alike. */
+  --k-font-sans:      "Ubuntu", ui-sans-serif, system-ui, sans-serif;
+  --k-font-mono:      "Ubuntu Mono", ui-monospace, monospace;
+  /* Kept as aliases so nothing has to be renamed at every call site. */
+  --k-font-editorial: var(--k-font-sans);
+  --k-font-serif:     var(--k-font-sans);
 }
 
 /* Dark is a deliberate re-mapping, not an inversion: the cream ground becomes a

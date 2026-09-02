@@ -1,39 +1,40 @@
 /**
- * Shared type treatments. Both apps import these so a heading in the faculty
+ * Shared type treatments. Both apps import these, so a heading in the faculty
  * console and one in the student app are the same object, not two that happen
  * to look alike.
+ *
+ * One family (Ubuntu), one numeric family (Ubuntu Mono), and weight + size
+ * doing all the work. The class names are unchanged from the four-family
+ * version so no call site had to be rewritten — `.serif` is now simply the
+ * reading style, not a different typeface.
  */
 .wordmark {
-  font-family: var(--k-font-editorial);
+  font-family: var(--k-font-mono);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.14em;
 }
 
-/* Content that reads as content — question text, topic names. Newsreader has
-   variable optical sizing, which browsers apply from font-size automatically. */
+/* Content that reads as content — question text, topic names, prose. */
 .serif {
-  font-family: var(--k-font-serif);
+  font-family: var(--k-font-sans);
   font-weight: 400;
   letter-spacing: -0.005em;
 }
 
-/* Fraunces with SOFT and WONK dialled up: softened terminals and swashy
-   alternates, so it reads as a specific face rather than "an editorial serif".
-   One moment per screen — it stops working the moment it is repeated. */
+/* The one heading style. Used at every size; the size carries the emphasis. */
 .serif-display {
-  font-family: var(--k-font-editorial);
+  font-family: var(--k-font-sans);
   font-weight: 500;
-  font-style: italic;
-  font-variation-settings: "SOFT" 100, "WONK" 1;
-  letter-spacing: -0.025em;
-  line-height: 0.95;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
 }
 
+/* Small caption / field label. */
 .serif-label {
-  font-family: var(--k-font-serif);
-  font-style: italic;
+  font-family: var(--k-font-sans);
   font-weight: 400;
+  color: var(--k-ink-2);
 }
 
 /* Anything numeric: marks, years, counts, ids. Tabular figures so columns of

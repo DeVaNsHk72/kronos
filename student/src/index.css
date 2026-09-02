@@ -1,20 +1,11 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-/* Departure Mono — self-hosted via a community-packaged @proj-airi wrapper
-   (the official Departure Mono has no @fontsource release). The single retro-
-   mono voice for numbers, marks, and codes. */
-@import "@proj-airi/font-departure-mono";
-
-/* Cream paper ground + one bookish-red accent. Font families are a fresh
-   pick, deliberately away from the AI-default Google Fonts stack:
-   Fraunces (Google) → display, with SOFT + WONK axes dialled up.
-   Newsreader (Google) → screen-reading serif.
-   General Sans (Fontshare, Indian Type Foundry) → chrome.
-   Departure Mono → retro-mono for archive-from-the-past numbers. */
-/* Palette and type come from the shared design system — see design/tokens.css.
-   This block only maps them onto Tailwind v4's theme, which needs the
-   `--color-*` prefix for utilities like `bg-paper` to resolve. */
+/* Cream paper ground, one bookish-red accent, and Ubuntu as the only voice —
+   Ubuntu Mono for anything numeric. Palette and type come from the shared
+   design system (design/tokens.css); this block only maps them onto Tailwind
+   v4's theme, which needs the `--color-*` prefix for utilities like
+   `bg-paper` to resolve. */
 @import "../../design/tokens.css";
 @import "../../design/typography.css";
 
@@ -60,6 +51,9 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+  /* Native selects, scrollbars and the date/number spinners follow the theme.
+     Without this they stay light-chrome on the dark palette. */
+  color-scheme: light dark;
 }
 
 body {
@@ -81,82 +75,189 @@ body {
 }
 
 
-/* Editorial serif — for question text, topic names, anything that reads as
-   *content* rather than chrome. Newsreader has variable optical sizing
-   (`opsz`) which browsers follow automatically from the font-size. */
-
-/* Display serif — Fraunces with SOFT and WONK cranked up. The SOFT axis
-   softens the terminals; WONK adds swashy alternates on `g`, `y`, italic
-   letters. Combined at max, Fraunces reads distinctive rather than "another
-   editorial serif". Use sparingly — one moment per screen. */
-
-
-/* Italic serif at 13px in muted ink — used everywhere for hints, labels,
-   micro-notes, filter select captions. Was previously repeated 11 times in
-   the codebase as `serif italic text-[13px] text-ink-2`. */
-.serif-note {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-weight: 400;
-  font-size: 13px;
-  color: var(--color-ink-2);
-}
-
-/* Page-level hero title. Instrument Serif italic, 44px → 64px at sm.
-   Used on the top of Download and Stats. Landing hero uses its own clamp. */
-.title-page {
-  font-family: var(--font-editorial);
-  font-weight: 500;
-  font-style: italic;
-  font-variation-settings: "SOFT" 100, "WONK" 1;
-  letter-spacing: -0.025em;
-  line-height: 0.9;
-  font-size: 44px;
-  color: var(--color-ink);
-}
-@media (min-width: 640px) {
+/* These are component defaults, not hard rules: they live in @layer components
+   so a Tailwind utility on the element (`btn h-8`, `field w-[280px]`,
+   `page max-w-[860px]`) still wins. Unlayered, they silently beat every
+   utility and the overrides written against them do nothing. */
+@layer components {
+  /* Two heading sizes and nothing else. Every screen picks one of these, so a
+     page title on Stats and one on the faculty console are literally the same
+     object rather than two that happen to look alike. */
   .title-page {
-    font-size: 64px;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    font-size: 30px;
+    color: var(--color-ink);
   }
-}
+  @media (min-width: 640px) {
+    .title-page {
+      font-size: 34px;
+    }
+  }
 
-/* Empty-state / section title. 32px → 40px at sm. Used on Ask, Stats,
-   Download empty states. */
-.title-section {
-  font-family: var(--font-editorial);
-  font-weight: 500;
-  font-style: italic;
-  font-variation-settings: "SOFT" 100, "WONK" 1;
-  letter-spacing: -0.025em;
-  line-height: 0.9;
-  font-size: 32px;
-  color: var(--color-ink);
-}
-@media (min-width: 640px) {
   .title-section {
-    font-size: 40px;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    font-size: 20px;
+    color: var(--color-ink);
   }
-}
 
-/* Round backdrop for a foreground icon. 44px is the empty-state hero size;
-   `.icon-badge-sm` is the 28px chat avatar. Both use the accent bg at 10%. */
-.icon-badge {
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--color-mark) 10%, transparent);
-  color: var(--color-mark);
-}
-.icon-badge-sm {
-  display: grid;
-  place-items: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--color-mark) 10%, transparent);
-  color: var(--color-mark);
+  /* Muted 13px caption. Used for hints, field labels, micro-notes. */
+  .serif-note {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: 13px;
+    color: var(--color-ink-2);
+  }
+
+  /* ---- the three primitives every screen is built from --------------------
+     Before this, each screen wrote its own border/radius/ground triple inline
+     and they had drifted: three radii, two grounds, four label treatments. */
+
+  /* Every bordered box: panels, tiles, filter bars, list rows. */
+  .card {
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius);
+    background: var(--color-paper-2);
+  }
+
+  /* Every small uppercase field label and tile caption. */
+  .label-cap {
+    font-size: 11px;
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-ink-2);
+  }
+
+  /* THE page container. Every screen's header, nav, controls and content sit on
+     this one gutter, so nothing is inset differently from the thing above it. */
+  .page {
+    max-width: 1400px;
+    margin-inline: auto;
+    padding-inline: 24px;
+  }
+
+  /* Every horizontal nav: the student study tabs and the Intelligence tabs are
+     the same object rather than a strip and a dropdown that behave differently.
+     The hairline belongs to the full-width wrapper, not the strip, so it runs
+     edge to edge instead of stopping at the container. */
+  .tabstrip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+  }
+  .tab {
+    padding: 10px 12px;
+    margin-bottom: -1px;
+    font-size: 13px;
+    color: var(--color-ink-2);
+    border-bottom: 2px solid transparent;
+    transition: color 150ms var(--k-ease-out), border-color 150ms var(--k-ease-out);
+  }
+  .tab:hover {
+    color: var(--color-ink);
+  }
+  .tab-on {
+    color: var(--color-ink);
+    font-weight: 500;
+    border-bottom-color: var(--color-mark);
+  }
+
+  /* Every input and select. One height, one radius, one focus treatment. */
+  .field {
+    height: 36px;
+    padding: 0 10px;
+    font-size: 13px;
+    color: var(--color-ink);
+    background: var(--color-paper);
+    border: 1px solid var(--color-line);
+    border-radius: 6px;
+    transition: border-color 150ms var(--k-ease-out);
+  }
+  .field:hover { border-color: var(--color-ink-2); }
+  .field:focus { outline: none; border-color: var(--color-ink); }
+  textarea.field { height: auto; padding: 8px 10px; }
+
+  /* Two buttons, and there is no third. */
+  .btn,
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 36px;
+    padding: 0 14px;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 6px;
+    white-space: nowrap;
+    transition: background-color 150ms var(--k-ease-out),
+                border-color 150ms var(--k-ease-out),
+                opacity 150ms var(--k-ease-out);
+  }
+  .btn {
+    border: 1px solid var(--color-line);
+    background: var(--color-paper-2);
+    color: var(--color-ink);
+  }
+  .btn:hover:not(:disabled) { border-color: var(--color-ink-2); }
+  .btn-primary {
+    border: 1px solid var(--color-ink);
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+  .btn-primary:hover:not(:disabled) { background: var(--color-ink-2); border-color: var(--color-ink-2); }
+  .btn:disabled,
+  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* Every data table. The header row was written four different ways. */
+  .table-wrap {
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .table-wrap table { width: 100%; font-size: 13px; }
+  .table-wrap thead tr {
+    text-align: left;
+    background: var(--color-paper-2);
+  }
+  .table-wrap th {
+    padding: 8px 16px;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-ink-2);
+  }
+  .table-wrap td { padding: 8px 16px; }
+  .table-wrap tbody tr { border-top: 1px solid var(--color-line); }
+  .table-wrap tbody tr:hover { background: color-mix(in srgb, var(--color-line-2) 50%, transparent); }
+
+  /* Round backdrop for a foreground icon. 44px is the empty-state size;
+     `.icon-badge-sm` is the 28px chat avatar. Both use the accent bg at 10%. */
+  .icon-badge {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color-mark) 10%, transparent);
+    color: var(--color-mark);
+  }
+  .icon-badge-sm {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color-mark) 10%, transparent);
+    color: var(--color-mark);
+  }
 }
 
 .grid-paper {

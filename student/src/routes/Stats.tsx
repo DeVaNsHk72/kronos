@@ -93,13 +93,9 @@ function Panel({
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-md border border-line bg-paper-2 p-4">
-      <h2 className="serif text-[17px] font-medium text-ink">{title}</h2>
-      {hint && (
-        <p className="mb-3 mt-1 serif italic text-[13px] leading-snug text-ink-2">
-          {hint}
-        </p>
-      )}
+    <section className="card p-4">
+      <h2 className="title-section">{title}</h2>
+      {hint && <p className="mb-3 mt-1 serif-note leading-snug">{hint}</p>}
       <div className={hint ? "" : "mt-3"}>{children}</div>
     </section>
   );
@@ -117,7 +113,7 @@ const LINE = "#e1dfd8";
 const BLUEPRINT = "#b02c33";
 const PAPER2 = "#fbfaf7";
 
-const TICK_STYLE = { fill: INK2, fontSize: 11, fontFamily: "Departure Mono, monospace" } as Record<string, unknown>;
+const TICK_STYLE = { fill: INK2, fontSize: 11, fontFamily: "Ubuntu Mono, monospace" } as Record<string, unknown>;
 const tickLabel = <LinearXAxisTickLabel {...TICK_STYLE} />;
 const yTickLabel = <LinearYAxisTickLabel {...TICK_STYLE} />;
 
@@ -214,13 +210,10 @@ export default function Stats() {
   return (
     <>
       <section className="grid-paper border-b border-line">
-        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-7">
-          <h1 className="title-page">What to study.</h1>
-          <p className="mt-3 max-w-xl serif text-[15px] leading-relaxed text-ink-2 sm:text-[17px]">
-            What a course actually asks — and whether it still asks it.
-          </p>
+        <div className="page py-8">
+          <h1 className="title-page">What to study</h1>
 
-          <div className="mt-4 flex flex-wrap items-center gap-2">
+          <div className="mt-5 flex flex-wrap items-center gap-2">
             <Popover
               label="Course"
               value={course?.course_code}
@@ -285,9 +278,7 @@ export default function Stats() {
                   ] as const
                 ).map(([lbl, val, set]) => (
                   <label key={lbl} className="flex items-center gap-1.5">
-                    <span className="serif-label text-[14px] text-ink-2">
-                      {lbl}
-                    </span>
+                    <span className="label-cap">{lbl}</span>
                     <select
                       value={val ?? ""}
                       onChange={(e) =>
@@ -295,7 +286,7 @@ export default function Stats() {
                           e.target.value ? Number(e.target.value) : undefined,
                         )
                       }
-                      className="rounded-sm border border-line bg-paper-2 px-2 py-1.5 text-sm transition-transform active:scale-[0.98]"
+                      className="field"
                     >
                       <option value="">Any</option>
                       {years.map((y) => (
@@ -316,25 +307,19 @@ export default function Stats() {
         </div>
       </section>
 
-      <main className="mx-auto max-w-7xl px-4 py-5 sm:px-6">
+      <main className="page py-6">
         {!course && (
           <div className="mx-auto max-w-2xl py-12">
             <div className="flex flex-col items-center text-center">
               <div className="icon-badge">
                 <ChartBar size={20} weight="regular" />
               </div>
-              <h2 className="title-section mt-5">Pick a course.</h2>
-              <p className="mt-3 max-w-sm serif text-[15px] leading-relaxed text-ink-2">
-                See which topics still get asked, which have gone quiet, and
-                which questions come back word-for-word.
-              </p>
+              <h2 className="title-page mt-5">Pick a course</h2>
             </div>
 
             {recent.length > 0 && (
               <div className="mt-10">
-                <p className="mb-3 text-center serif-label text-[14px] text-ink-2">
-                  Recently viewed
-                </p>
+                <p className="mb-3 text-center label-cap">Recently viewed</p>
                 <div className="grid gap-2 sm:grid-cols-2">
                   {recent.map((c) => (
                     <button
@@ -379,14 +364,13 @@ export default function Stats() {
               <div>
                 <NumberFlow
                   value={data.total}
-                  className="serif-display block text-[72px] leading-none text-ink sm:text-[88px]"
+                  className="mono block text-[48px] font-medium leading-none text-ink sm:text-[56px]"
                 />
-                <p className="mt-1 serif italic text-[14px] text-ink-2">
-                  questions asked between {years[0]} and{" "}
-                  {years[years.length - 1]}
+                <p className="mt-2 label-cap">
+                  questions · {years[0]}–{years[years.length - 1]}
                 </p>
               </div>
-              <div className="flex gap-x-8 pb-2 serif text-[15px] text-ink-2">
+              <div className="flex gap-x-8 pb-2 text-[14px] text-ink-2">
                 <span>
                   <NumberFlow
                     value={data.topics.length}
@@ -411,8 +395,8 @@ export default function Stats() {
               title="Topics by how often they are asked"
               hint={
                 view === "heat"
-                  ? "Each cell is one topic in one year. Darker = more questions."
-                  : "Darker squares mean more questions that year. Rows that fade out have gone quiet."
+                  ? "Each cell is one topic in one year."
+                  : "Darker squares mean more questions that year."
               }
             >
               <div className="mb-3 flex gap-1">
@@ -460,7 +444,7 @@ export default function Stats() {
                                   return (
                                     <div
                                       style={{
-                                        fontFamily: "General Sans, sans-serif",
+                                        fontFamily: "Ubuntu, sans-serif",
                                         fontSize: 12,
                                         padding: "4px 8px",
                                       }}
@@ -482,7 +466,7 @@ export default function Stats() {
                           <LinearYAxisTickSeries
                             label={
                               <LinearYAxisTickLabel
-                                {...({ style: { fill: INK, fontSize: 12, fontFamily: "Newsreader, serif" } } as Record<string, unknown>)}
+                                {...({ style: { fill: INK, fontSize: 12, fontFamily: "Ubuntu, sans-serif" } } as Record<string, unknown>)}
                               />
                             }
                           />
@@ -551,7 +535,6 @@ export default function Stats() {
             <div className="mt-4 grid gap-4 lg:grid-cols-2">
               <Panel
                 title="Questions per year"
-                hint="How much of this course's history the archive holds."
               >
                 {yearBarData.length > 0 && (
                   <BarChart
@@ -589,7 +572,7 @@ export default function Stats() {
                                   return (
                                     <div
                                       style={{
-                                        fontFamily: "General Sans, sans-serif",
+                                        fontFamily: "Ubuntu, sans-serif",
                                         fontSize: 12,
                                         padding: "4px 8px",
                                       }}
@@ -611,7 +594,6 @@ export default function Stats() {
 
               <Panel
                 title="Marks distribution"
-                hint="What a question is typically worth."
               >
                 {marksBarData.length > 0 ? (
                   <BarChart
@@ -649,7 +631,7 @@ export default function Stats() {
                                   return (
                                     <div
                                       style={{
-                                        fontFamily: "General Sans, sans-serif",
+                                        fontFamily: "Ubuntu, sans-serif",
                                         fontSize: 12,
                                         padding: "4px 8px",
                                       }}
@@ -676,7 +658,6 @@ export default function Stats() {
               <div className="mt-4">
                 <Panel
                   title="Asked more than once, word for word"
-                  hint="The same question text appearing in different years. These are the safest things to prepare."
                 >
                   <ul className="flex flex-col gap-2">
                     {data.repeats.map((r) => (

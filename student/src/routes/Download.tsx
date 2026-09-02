@@ -314,13 +314,10 @@ export default function Download() {
   return (
     <>
       <section className="grid-paper border-b border-line">
-        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-7">
-          <h1 className="title-page">Take them with you.</h1>
-          <p className="mt-2 text-[13px] text-ink-2">
-            Pick courses and a year range. Every PDF comes down in one archive.
-          </p>
+        <div className="page py-8">
+          <h1 className="title-page">Download</h1>
 
-          <div className="mt-4 flex flex-wrap items-center gap-2">
+          <div className="mt-5 flex flex-wrap items-center gap-2">
             <Popover label="Add course" value={null} active={false} width="w-80">
               {(close) => (
                 <div>
@@ -384,7 +381,7 @@ export default function Download() {
                   onChange={(e) =>
                     set(e.target.value ? Number(e.target.value) : undefined)
                   }
-                  className="rounded-sm border border-line bg-paper-2 px-2 py-1.5 text-sm transition-transform active:scale-[0.98]"
+                  className="field"
                 >
                   <option value="">Any</option>
                   {years.map((y) => (
@@ -439,16 +436,13 @@ export default function Download() {
         </div>
       </section>
 
-      <main className="mx-auto max-w-7xl px-4 py-5 sm:px-6">
+      <main className="page py-6">
         {picked.length === 0 && (
           <div className="mx-auto max-w-2xl py-12 text-center">
             <div className="mx-auto icon-badge">
               <DownloadIcon size={20} weight="regular" />
             </div>
-            <h2 className="title-section mt-5">Pick your courses.</h2>
-            <p className="mt-2 text-sm leading-relaxed text-ink-2">
-              Add one or more courses above. Every matching PDF, in one zip.
-            </p>
+            <h2 className="title-page mt-5">Pick your courses</h2>
           </div>
         )}
 

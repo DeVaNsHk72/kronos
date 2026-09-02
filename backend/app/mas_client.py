@@ -9,6 +9,7 @@ Task type is `agent/v1/responses`, so the payload is the Responses API shape
 (`input`), not chat completions (`messages`).
 """
 import json
+import math
 import os
 import re
 from pathlib import Path
@@ -62,10 +63,22 @@ def _parse_markdown_table(text: str) -> tuple[list[str], list[dict]]:
         body = [r[1:] for r in body]
 
     def num(v: str):
+        # The supervisor formats numbers for a human reader, so a count arrives
+        # as "1,571" and a null as "NaN". Both break something downstream:
+        # "1,571" reaches the UI as a string that Number() turns into NaN, so a
+        # dashboard tile renders the literal text NaN; float("NaN") reaches
+        # JSONResponse, which renders with allow_nan=False and fails the whole
+        # request with a 500. Normalise here, where every cell already passes.
+        s = v.replace(",", "").strip()
+        if s.lower() in ("nan", "inf", "-inf", "infinity", "none", "null"):
+            return None
         try:
-            return int(v) if v.lstrip("-").isdigit() else float(v)
+            if s.lstrip("-").isdigit():
+                return int(s)
+            f = float(s)
         except ValueError:
-            return v
+            return v            # ordinary text: hand back the cell untouched
+        return f if math.isfinite(f) else None
 
     rows = [dict(zip(header, (num(c) for c in r))) for r in body if len(r) == len(header)]
     return header, rows

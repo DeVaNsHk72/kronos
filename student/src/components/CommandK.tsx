@@ -19,10 +19,11 @@ import {
 import { getCourses, type Course } from "../api";
 
 const ROUTES = [
-  { label: "Home", to: "/home", icon: House, shortcut: "" },
-  { label: "Ask the archive", to: "/ask", icon: ChatCircleText, shortcut: "" },
-  { label: "Course statistics", to: "/stats", icon: ChartBar, shortcut: "" },
-  { label: "Download papers", to: "/download", icon: DownloadSimple, shortcut: "" },
+  { label: "Home", to: "/", icon: House, shortcut: "" },
+  { label: "Ask", to: "/ask", icon: ChatCircleText, shortcut: "" },
+  { label: "Search", to: "/ask/search", icon: MagnifyingGlass, shortcut: "" },
+  { label: "Statistics", to: "/stats", icon: ChartBar, shortcut: "" },
+  { label: "Download", to: "/download", icon: DownloadSimple, shortcut: "" },
 ];
 
 export default function CommandK({
@@ -66,7 +67,7 @@ export default function CommandK({
       open={open}
       onOpenChange={onOpenChange}
       title="Command palette"
-      description="Navigate, search courses, or ask a question."
+      description="Navigate or search courses."
       showCloseButton={false}
     >
       <CommandInput

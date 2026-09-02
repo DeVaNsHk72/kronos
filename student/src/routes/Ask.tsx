@@ -96,7 +96,7 @@ function RetrievalProgress({ totalQuestions }: { totalQuestions: number | null }
               )}
             </div>
             <span
-              className={`pb-2 serif italic text-[13px] transition-opacity ${
+              className={`pb-2 text-[13px] transition-opacity ${
                 active ? "text-ink-2" : "text-ink-2/50"
               }`}
             >
@@ -182,24 +182,21 @@ export default function Ask() {
   const CARD_LIMIT = 6;
 
   return (
-    <div className="flex min-h-[calc(100svh-76px)] flex-col">
-      <div className="mx-auto w-full max-w-[860px] flex-1 px-4 pb-40 pt-6 sm:px-6">
+    <div className="flex min-h-[calc(100svh-56px)] flex-col">
+      <div className="page w-full flex-1 pb-40 pt-8">
+        <div className="mx-auto max-w-[860px]">
         {empty ? (
           <div className="flex min-h-[55vh] flex-col items-center justify-center text-center">
             <div className="icon-badge">
               <MessageSquareText size={20} weight="regular" />
             </div>
-            <h1 className="title-section mt-5">Ask the archive.</h1>
-            <p className="mt-2 max-w-sm text-sm leading-relaxed text-ink-2">
-              Answers come only from papers that exist here. Every claim is
-              numbered, and every number opens a real question.
-            </p>
+            <h1 className="title-page mt-5">Ask the archive</h1>
             <div className="mt-7 grid w-full max-w-md grid-cols-2 gap-2.5">
               {EXAMPLES.map(({ icon: Icon, label, q: ex }) => (
                 <button
                   key={ex}
                   onClick={() => submit(ex)}
-                  className="flex flex-col items-start gap-2 rounded-md border border-line bg-paper-2 px-3.5 py-3 text-left transition-colors hover:border-ink/25 hover:bg-paper"
+                  className="card flex flex-col items-start gap-2 px-3.5 py-3 text-left transition-[border-color] duration-150 hover:border-ink-2"
                 >
                   <Icon size={16} weight="regular" className="text-mark" />
                   <span className="text-[13px] font-medium leading-snug text-ink">{label}</span>
@@ -221,7 +218,7 @@ export default function Ask() {
                 <div key={t.id} className="flex flex-col gap-3 border-t border-line pt-8 first:border-t-0 first:pt-0">
                   {/* user message — right-aligned bubble */}
                   <div className="flex justify-end">
-                    <div className="max-w-[85%] rounded-2xl rounded-br-sm bg-ink px-4 py-2.5 text-[15px] leading-relaxed text-paper">
+                    <div className="max-w-[85%] rounded-lg bg-ink px-4 py-2.5 text-[15px] leading-relaxed text-paper">
                       {t.question}
                     </div>
                   </div>
@@ -232,10 +229,6 @@ export default function Ask() {
                       <MessageSquareText size={14} weight="regular" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="mb-1 serif-note">
-                        Kronos
-                      </p>
-
                       {t.asking && <RetrievalProgress totalQuestions={totalQuestions} />}
 
                       {t.error && (
@@ -328,6 +321,7 @@ export default function Ask() {
             <div ref={bottomRef} />
           </div>
         )}
+        </div>
       </div>
 
       <PromptBox

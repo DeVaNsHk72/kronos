@@ -1,15 +1,34 @@
 import { useEffect, useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
-import { CaretDown } from "@phosphor-icons/react";
+import { NavLink } from "react-router-dom";
 import { runQuery, type Subject } from "../../facultyApi";
 import { cn } from "../../lib/utils";
+
+/** Semesters 1-4 of the CSE track, and nothing else.
+ *
+ *  `dim_subject.branch` cannot carry this on its own: semesters 1-2 are the
+ *  common first year (branch "Common") and the sem 3-4 CS core is stored under
+ *  the AI&ML scheme it was digitised from. Semester is therefore the reliable
+ *  bound, with the branch check only there to keep a later non-CS import from
+ *  appearing. Everything from semester 5 up is out of scope. */
+const CS_BRANCH = /computer|information|common|artificial intelligence/i;
+
+export function subjectsInScope(rows: Subject[]): Subject[] {
+  return rows
+    .filter((s) => {
+      const sem = Number(s.semester);
+      return sem >= 1 && sem <= 4 && CS_BRANCH.test(s.branch ?? "");
+    })
+    .sort((a, b) =>
+      Number(a.semester) - Number(b.semester) ||
+      a.subject_name.localeCompare(b.subject_name));
+}
 
 export function useSubjects() {
   const [subjects, setSubjects] = useState<Subject[] | null>(null);
   const [err, setErr] = useState<string | null>(null);
   useEffect(() => {
     runQuery("subjects")
-      .then((r) => setSubjects(r.rows as unknown as Subject[]))
+      .then((r) => setSubjects(subjectsInScope(r.rows as unknown as Subject[])))
       .catch((e) => setErr(e?.response?.data?.detail ?? String(e)));
   }, []);
   return { subjects, err };
@@ -19,31 +38,41 @@ export function SubjectPicker({ subjects, value, onChange }: {
   subjects: Subject[] | null; value: string; onChange: (v: string) => void;
 }) {
   return (
-    <div className="flex items-center gap-3">
-      <label htmlFor="subj" className="text-[11px] uppercase tracking-wider text-ink-2">Subject</label>
-      <select id="subj" value={value} onChange={(e) => onChange(e.target.value)}
-        className="border border-line rounded-md bg-paper-2 px-3 py-1.5 text-[14px] text-ink min-w-[260px]">
-        {!subjects && <option>Loading…</option>}
-        {subjects?.map((s) => (
-          <option key={s.subject_key} value={s.subject_key}>
-            {s.subject_name} — {s.questions.toLocaleString()}
-          </option>
-        ))}
-      </select>
+    <select aria-label="Subject" value={value} onChange={(e) => onChange(e.target.value)}
+      className="field w-[280px] max-w-full bg-paper-2">
+      {!subjects && <option>Loading…</option>}
+      {subjects?.length === 0 && <option>No subjects in scope</option>}
+      {subjects?.map((s) => (
+        <option key={s.subject_key} value={s.subject_key}>
+          Sem {s.semester} · {s.subject_name}
+        </option>
+      ))}
+    </select>
+  );
+}
+
+export function Tile({ label, value, tone = "normal" }: {
+  label: string; value: string | number; tone?: "normal" | "warn";
+}) {
+  return (
+    <div className="card px-4 py-3 flex flex-col gap-1.5">
+      <span className="label-cap">{label}</span>
+      <span className={cn("font-mono text-2xl leading-none tabular-nums",
+        tone === "warn" ? "text-mark" : "text-ink")}>{value}</span>
     </div>
   );
 }
 
-export function Tile({ label, value, sub, tone = "normal" }: {
-  label: string; value: string | number; sub?: string; tone?: "normal" | "warn";
+/** The one panel wrapper. Every bordered box on every screen is this, so the
+ *  radius, ground and padding cannot drift apart screen by screen. */
+export function Panel({ title, children, className }: {
+  title?: string; children: React.ReactNode; className?: string;
 }) {
   return (
-    <div className="border border-line rounded-lg bg-paper-2 px-4 py-3 flex flex-col gap-1">
-      <span className="text-[11px] uppercase tracking-wider text-ink-2">{label}</span>
-      <span className={cn("font-mono text-2xl leading-none tabular-nums",
-        tone === "warn" ? "text-mark" : "text-ink")}>{value}</span>
-      {sub && <span className="text-[11px] text-ink-2 leading-snug">{sub}</span>}
-    </div>
+    <section className={cn("card p-5", className)}>
+      {title && <h2 className="title-section mb-4">{title}</h2>}
+      {children}
+    </section>
   );
 }
 
@@ -83,82 +112,45 @@ export function Skeleton({ className }: { className?: string }) {
   return <div className={cn("animate-pulse bg-line-2 rounded", className)} />;
 }
 
-export function Empty({ title, hint }: { title: string; hint?: string }) {
+export function Empty({ title }: { title: string }) {
   return (
     <div className="border border-dashed border-line rounded-lg py-12 text-center">
-      <p className="serif text-lg text-ink">{title}</p>
-      {hint && <p className="text-[13px] text-ink-2 mt-1 max-w-md mx-auto">{hint}</p>}
+      <p className="text-[14px] text-ink-2">{title}</p>
     </div>
   );
 }
 
 const FACULTY_TABS = [
   { to: "/faculty", label: "Overview", end: true },
-  { to: "/faculty/generate", label: "Generate a paper" },
-  { to: "/faculty/practice", label: "Practice sets" },
-  { to: "/faculty/coverage", label: "Coverage" },
-  { to: "/faculty/bank", label: "Question bank" },
-  { to: "/faculty/similar", label: "Asked before?" },
+  { to: "/faculty/generate", label: "Generate" },
+  { to: "/faculty/practice", label: "Practice" },
+  { to: "/faculty/bank", label: "Bank" },
 ];
 
-/** A menu rather than a tab strip: six destinations do not fit a row on a
- *  laptop, and a wrapping strip reads as clutter above every screen. */
+/** Same shape as the student side's tab strip, so the two halves of the app
+ *  navigate identically. */
 export function FacultyNav() {
-  const [open, setOpen] = useState(false);
-  const loc = useLocation();
-  const here = FACULTY_TABS.find((t) => t.end ? loc.pathname === t.to : loc.pathname === t.to)
-    ?? FACULTY_TABS[0];
-  useEffect(() => setOpen(false), [loc.pathname]);
-
   return (
-    <div className="relative mb-6 no-print">
-      <button onClick={() => setOpen(!open)} aria-expanded={open} aria-haspopup="menu"
-        className="inline-flex items-center gap-2 border border-line rounded-lg bg-paper-2
-                   px-3 py-2 text-[13px] text-ink hover:border-ink-2
-                   transition-[border-color] duration-150 ease-out">
-        <span className="font-mono text-[10px] uppercase tracking-widest text-ink-2">
-          Intelligence
-        </span>
-        <span className="font-medium">{here.label}</span>
-        <CaretDown size={13} weight="bold"
-          className={`text-ink-2 transition-transform duration-150 ease-out ${open ? "rotate-180" : ""}`} />
-      </button>
-
-      {open && (
-        <>
-          <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} aria-hidden="true" />
-          <div role="menu"
-            className="absolute z-20 mt-1 min-w-[220px] border border-line rounded-lg
-                       bg-paper-2 shadow-lg overflow-hidden">
-            {FACULTY_TABS.map((t) => (
-              <NavLink key={t.to} to={t.to} end={t.end} role="menuitem"
-                className={({ isActive }) => cn(
-                  "block px-3 py-2 text-[13px] transition-colors duration-150",
-                  isActive ? "bg-line-2 text-ink font-medium"
-                           : "text-ink-2 hover:bg-line-2/60 hover:text-ink")}>
-                {t.label}
-              </NavLink>
-            ))}
-          </div>
-        </>
-      )}
-    </div>
+    <nav className="tabstrip page no-print">
+      {FACULTY_TABS.map((t) => (
+        <NavLink key={t.to} to={t.to} end={t.end}
+          className={({ isActive }) => cn("tab", isActive && "tab-on")}>
+          {t.label}
+        </NavLink>
+      ))}
+    </nav>
   );
 }
 
-export function PageHead({ title, blurb, right }: {
-  title: string; blurb?: string; right?: React.ReactNode;
+/** Title left, controls right. No blurb slot: a paragraph explaining a screen
+ *  above every screen is read once and skipped forever after. */
+export function PageHead({ title, right }: {
+  title: string; right?: React.ReactNode;
 }) {
   return (
-    <>
-    <FacultyNav />
-    <div className="flex items-end justify-between gap-6 flex-wrap mb-6">
-      <div>
-        <h1 className="serif-display text-4xl text-ink">{title}</h1>
-        {blurb && <p className="text-[13px] text-ink-2 mt-2 max-w-2xl">{blurb}</p>}
-      </div>
+    <div className="flex items-center justify-between gap-6 flex-wrap mb-6">
+      <h1 className="title-page">{title}</h1>
       {right}
     </div>
-    </>
   );
 }

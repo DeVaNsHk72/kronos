@@ -38,35 +38,29 @@ export default function Generate() {
   const subject = subjects?.find((s) => s.subject_key === key);
 
   return (
-    <div className="max-w-[1400px] mx-auto px-6 py-8">
-      <PageHead title="Set the next paper"
-        blurb="Assembled from questions that were actually set. Nothing is written by a language model — every line traces to a real past paper and the year it was last asked."
+    <div className="page py-8">
+      <PageHead title="Generate"
         right={<SubjectPicker subjects={subjects} value={key} onChange={setKey} />} />
 
       <div className="grid lg:grid-cols-[280px_1fr] gap-6 items-start">
-        <aside className="border border-line rounded-lg bg-paper-2 p-4 flex flex-col gap-4 no-print">
+        <aside className="card p-4 flex flex-col gap-5 no-print">
           <div>
-            <span className="text-[11px] uppercase tracking-wider text-ink-2 block mb-1.5">Exam</span>
+            <span className="label-cap block mb-2">Exam</span>
             <select value={examType} onChange={(e) => setExamType(e.target.value)}
-              className="w-full border border-line rounded-md bg-paper px-2 py-1.5 text-[13px]">
+              className="field w-full">
               <option value="SEE">SEE — 100 marks, 5 units × 20</option>
               <option value="CIE">CIE — 40 marks, Parts A/B/C</option>
             </select>
           </div>
           <div>
-            <span className="text-[11px] uppercase tracking-wider text-ink-2 block mb-1.5">
-              Exclude asked in last {excl} years
+            <span className="label-cap block mb-2">
+              Exclude last {excl} years
             </span>
             <input type="range" min={0} max={9} value={excl}
               onChange={(e) => setExcl(Number(e.target.value))} className="w-full accent-mark" />
           </div>
           <div>
-            <div className="mb-2">
-              <span className="text-[11px] uppercase tracking-wider text-ink-2">Difficulty preference</span>
-              <span className="block text-[11px] text-ink-2 mt-0.5">
-                Slots prefer the highest-weighted level first. A level at 0 is never preferred.
-              </span>
-            </div>
+            <span className="label-cap block mb-2">Difficulty</span>
             {BLOOMS.map((b) => (
               <div key={b} className="flex items-center gap-2 mb-1.5">
                 <span className="text-[11px] text-ink-2 w-[70px] capitalize">{b}</span>
@@ -77,9 +71,8 @@ export default function Generate() {
               </div>
             ))}
           </div>
-          <button onClick={go} disabled={busy || !key}
-            className="bg-mark text-paper rounded-md py-2 text-[14px] font-medium disabled:opacity-40">
-            {busy ? "Assembling…" : paper ? "Regenerate" : "Generate paper"}
+          <button onClick={go} disabled={busy || !key} className="btn-primary">
+            {busy ? "Assembling…" : paper ? "Regenerate" : "Generate"}
           </button>
         </aside>
 
@@ -87,8 +80,7 @@ export default function Generate() {
           {err && <Banner>{err}</Banner>}
           {busy && !paper && <Skeleton className="h-[480px] w-full" />}
           {!busy && !paper && !err && (
-            <Empty title="No paper yet"
-              hint="Choose the exam and generate. Every question comes from a real past paper." />
+            <Empty title="No paper yet" />
           )}
           {paper && <Paper paper={paper} subject={subject} open={open} setOpen={setOpen} />}
         </section>
@@ -109,15 +101,12 @@ function Paper({ paper, subject, open, setOpen }: any) {
         <span className="font-mono text-[11px] text-ink-2">
           {paper.total_marks} answerable · {paper.printed_marks} printed · excluding since {paper.cutoff_year}
         </span>
-        <button onClick={() => window.print()}
-          className="ml-auto border border-line rounded-md px-3 py-1.5 text-[13px] hover:bg-line-2">
-          Print / PDF
-        </button>
+        <button onClick={() => window.print()} className="btn ml-auto">Print / PDF</button>
       </div>
 
       {/* sections stagger 40ms so the eye is led down the page rather than
           hit with the whole paper at once */}
-      <article className="paper-sheet border border-line rounded-lg bg-paper-2 p-8 serif k-stagger">
+      <article className="paper-sheet card p-8 k-stagger">
         <header className="text-center border-b border-line pb-4 mb-5">
           <p className="font-semibold text-[17px] text-ink">B.M.S. College of Engineering, Bengaluru-560019</p>
           <p className="text-[13px] text-ink-2">Autonomous Institute Affiliated to VTU</p>

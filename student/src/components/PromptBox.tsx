@@ -88,14 +88,15 @@ export default function PromptBox({
 
   return (
     <div
-      className="fixed inset-x-0 bottom-0 z-30 px-4 pb-4 pt-10 sm:px-6"
+      className="fixed inset-x-0 bottom-0 z-30 pb-4 pt-10"
       style={{
         background:
           "linear-gradient(to top, var(--color-paper) 60%, transparent)",
       }}
     >
-      <div className="mx-auto max-w-[860px]">
-        <div className="flex items-end gap-2 rounded-2xl border border-line bg-paper-2 px-4 py-3 shadow-[0_4px_24px_rgba(0,0,0,0.07)] transition-[border-color,box-shadow] duration-150 ease-out focus-within:border-ink/30 focus-within:shadow-[0_4px_28px_rgba(0,0,0,0.11)]">
+      <div className="page">
+        <div className="mx-auto max-w-[860px]">
+        <div className="card flex items-end gap-2 px-4 py-3 transition-[border-color] duration-150 ease-out focus-within:border-ink">
           <textarea
             ref={ref}
             rows={1}
@@ -122,10 +123,10 @@ export default function PromptBox({
               onClick={toggleMic}
               disabled={busy}
               aria-label={recording ? "Stop recording" : "Voice input"}
-              className={`grid h-9 w-9 shrink-0 place-items-center rounded-xl transition-[background-color,color,opacity] duration-150 ease-out ${
+              className={`grid h-9 w-9 shrink-0 place-items-center rounded-md transition-[background-color,color,opacity] duration-150 ease-out ${
                 recording
-                  ? "bg-red-500 text-white animate-pulse"
-                  : "bg-transparent text-ink-2 hover:text-ink hover:bg-ink/5"
+                  ? "bg-mark text-paper animate-pulse"
+                  : "bg-transparent text-ink-2 hover:text-ink hover:bg-line-2"
               }`}
             >
               {recording ? (
@@ -141,17 +142,18 @@ export default function PromptBox({
               onClick={send}
               disabled={!hasContent || busy}
               aria-label="Send"
-              className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-ink text-paper transition-[background-color,opacity] duration-150 ease-out hover:bg-ink/85 disabled:opacity-15"
+              className="grid h-9 w-9 shrink-0 place-items-center rounded-md bg-ink text-paper transition-[background-color,opacity] duration-150 ease-out hover:bg-ink-2 disabled:opacity-20"
             >
               <ArrowUp size={16} weight="bold" />
             </button>
           </div>
         </div>
         {footnote && (
-          <p className="mt-2 text-center font-mono text-[10px] tracking-wide text-ink-2/40">
+          <p className="mt-2 font-mono text-[10px] tracking-wide text-ink-2/60">
             {footnote}
           </p>
         )}
+        </div>
       </div>
     </div>
   );

@@ -1,15 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
-  ChartBar as ChartColumn,
-  DownloadSimple as DownloadIcon,
-
   MagnifyingGlass as Search,
   Sparkle as Sparkles,
   TextT as TypeIcon,
   Image as ImageIcon,
   X,
 } from "@phosphor-icons/react";
-import { Link } from "react-router-dom";
 import {
   search,
   getFacets,
@@ -41,12 +37,6 @@ import { cn } from "@/lib/utils";
 const EMPTY: FilterState = { q: "", mode: "keyword" };
 const PAGE_SIZE = 25;
 
-const HERO_LINKS = [
-  { to: "/ask", label: "Ask", icon: Sparkles },
-  { to: "/stats", label: "Stats", icon: ChartColumn },
-  { to: "/download", label: "Download", icon: DownloadIcon },
-];
-
 function useDebounced<T>(value: T, ms: number) {
   const [v, setV] = useState(value);
   useEffect(() => {
@@ -70,7 +60,6 @@ function pageWindow(current: number, total: number): (number | "…")[] {
 }
 
 export default function Home() {
-  const searchRef = useRef<HTMLElement>(null);
   const [filter, setFilter] = useState<FilterState>(EMPTY);
   const [page, setPage] = useState(1);
   const [data, setData] = useState<SearchResponse | null>(null);
@@ -127,76 +116,16 @@ export default function Home() {
 
   return (
     <>
-      {/* HERO — editorial right-aligned layout */}
-      <section className="relative isolate min-h-screen overflow-hidden sm:min-h-[100svh]">
-        <img
-          src="/herosection.jpg"
-          alt=""
-          aria-hidden="true"
-          fetchPriority="high"
-          className="absolute inset-0 -z-20 h-full w-full object-cover [filter:saturate(0.88)_brightness(0.75)]"
-        />
-        {/* directional gradient: heavier on the right where text sits */}
-        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#05070d]/20 via-[#05070d]/45 to-[#05070d]/80" />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-[#05070d]/25 via-transparent to-[#05070d]/60" />
+      {/* SEARCH — the page starts here. The photographic hero that used to sit
+          above it pushed every control below the fold and carried no
+          information; a search screen should open on the search box. */}
+      <section className="border-b border-line">
+        <div className="page py-10 sm:py-12">
+          <h1 className="title-page">Search the archive</h1>
 
-        <div className="relative flex min-h-screen flex-col justify-end px-5 pb-16 sm:min-h-[100svh] sm:px-10 lg:px-16">
-          <div className="ml-auto w-full max-w-xl text-right">
-            <p className="serif italic text-[14px] leading-relaxed text-white/60 sm:text-[16px]">
-              Tired of going through hundreds of papers
-              <br className="hidden sm:block" /> just to find what you want?
-            </p>
-            <h1 className="mt-4 serif-display text-[clamp(3rem,12vw,8rem)] leading-[0.9] text-white [text-shadow:0_4px_60px_rgba(5,7,13,0.6)]">
-              Not any
-              <br />
-              more.
-            </h1>
-            <p className="mt-5 font-mono text-[11px] uppercase tracking-[0.2em] text-white/50 sm:text-[12px]">
-              Ten years of BMSCE papers, question by question
-            </p>
-
-            <nav className="mt-10 flex flex-wrap items-center justify-end gap-3">
-              <Button
-                size="lg"
-                onClick={() =>
-                  searchRef.current?.scrollIntoView({ behavior: "smooth" })
-                }
-                className="h-11 gap-2 rounded-full bg-white px-5 text-[14px] font-semibold text-[#05070d] hover:bg-white/95"
-              >
-                <Search size={16} weight="regular" />
-                Search the archive
-              </Button>
-              {HERO_LINKS.map(({ to, label, icon: Icon }) => (
-                <Button
-                  key={to}
-                  asChild
-                  size="sm"
-                  variant="secondary"
-                  className="h-11 gap-2 rounded-full border border-white/15 bg-white/10 px-5 text-[13px] font-medium text-white/90 backdrop-blur-md hover:border-white/25 hover:bg-white/18"
-                >
-                  <Link to={to}>
-                    <Icon size={16} weight="regular" />
-                    {label}
-                  </Link>
-                </Button>
-              ))}
-            </nav>
-          </div>
-        </div>
-      </section>
-
-      {/* SEARCH */}
-      <section ref={searchRef} className="grid-paper">
-        <div className="mx-auto max-w-2xl px-4 py-8 text-center sm:px-6 sm:py-10">
-          <p className="serif italic text-[15px] text-ink-2">Search the archive.</p>
-
-          <div className="relative mt-3">
+          <div className="relative mt-5 max-w-2xl">
             <span className="pointer-events-none absolute inset-y-0 left-4 grid place-items-center text-ink-2">
-              {semantic ? (
-                <Sparkles size={17} />
-              ) : (
-                <Search size={17} weight="regular" />
-              )}
+              {semantic ? <Sparkles size={17} /> : <Search size={17} weight="regular" />}
             </span>
             <Input
               value={filter.q}
@@ -206,7 +135,7 @@ export default function Home() {
                   ? "describe a concept — finding area under a curve"
                   : "laplace transform, breakpoint chlorination…"
               }
-              className="h-12 rounded-full border-ink/15 bg-paper-2 pl-12 pr-12 text-[15px] shadow-none focus-visible:border-ink/30 focus-visible:ring-ink/10"
+              className="h-12 rounded-lg border-line bg-paper-2 pl-12 pr-12 text-[15px] shadow-none focus-visible:border-ink/30 focus-visible:ring-0"
             />
             {filter.q && (
               <button
@@ -219,31 +148,31 @@ export default function Home() {
             )}
           </div>
 
-          <Tabs
-            value={filter.mode}
-            onValueChange={(v) => patch({ mode: v as FilterState["mode"] })}
-            className="mt-3 inline-flex"
-          >
-            <TabsList>
-              <TabsTrigger value="keyword" className="gap-1.5">
-                <TypeIcon size={13} weight="regular" /> Keyword
-              </TabsTrigger>
-              <TabsTrigger value="semantic" className="gap-1.5">
-                <Sparkles size={13} weight="regular" /> Meaning
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
-          {semantic && (
-            <p className="mt-2 serif italic text-[12px] text-ink-2">
-              ranks by concept, not exact words
-            </p>
-          )}
+          <div className="mt-3 flex flex-wrap items-center gap-3">
+            <Tabs
+              value={filter.mode}
+              onValueChange={(v) => patch({ mode: v as FilterState["mode"] })}
+              className="inline-flex"
+            >
+              <TabsList>
+                <TabsTrigger value="keyword" className="gap-1.5">
+                  <TypeIcon size={13} weight="regular" /> Keyword
+                </TabsTrigger>
+                <TabsTrigger value="semantic" className="gap-1.5">
+                  <Sparkles size={13} weight="regular" /> Meaning
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+            {semantic && (
+              <span className="serif-note">ranks by concept, not exact words</span>
+            )}
+          </div>
         </div>
       </section>
 
       {/* FILTER BAR (sticky) */}
-      <div className="sticky top-[68px] z-30 border-b border-line bg-paper/95 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-2 px-4 py-2.5 sm:px-6">
+      <div className="sticky top-[56px] z-30 border-b border-line bg-paper/95 backdrop-blur">
+        <div className="page flex flex-wrap items-center gap-2 py-2.5">
           <CoursePicker
             code={filter.course_code}
             name={filter.course_name}
@@ -304,7 +233,7 @@ export default function Home() {
         </div>
       </div>
 
-      <main className="mx-auto max-w-7xl px-4 py-5 sm:px-6">
+      <main className="page py-6">
         {/* Active-filter chips (was ActiveFilters.tsx) */}
         <ActiveFilterChips filter={filter} onChange={patch} />
 
