@@ -76,17 +76,18 @@ export default function QuestionCard({
       }`}
     >
       <div className="flex gap-3 sm:gap-4">
-        {/* margin column: the citation number when cited, else the paper's own
-            question number — both read as a printed paper's margin */}
-        <div className="shrink-0 w-8 sm:w-10 pt-0.5 font-mono text-sm text-ink-2 tabular-nums">
-          {n ? (
-            <span className="inline-flex h-[22px] min-w-[22px] items-center justify-center rounded-[4px] border border-blueprint/35 bg-blueprint/8 px-1 text-[11px] font-semibold text-blueprint">
-              {n}
-            </span>
-          ) : (
-            label(q)
-          )}
-        </div>
+        {/* margin column: citation number or paper's own qno — hide when neither exists */}
+        {(n || q.qno != null) && (
+          <div className="shrink-0 w-8 sm:w-10 pt-0.5 font-mono text-sm text-ink-2 tabular-nums">
+            {n ? (
+              <span className="inline-flex h-[22px] min-w-[22px] items-center justify-center rounded-[4px] border border-blueprint/35 bg-blueprint/8 px-1 text-[11px] font-semibold text-blueprint">
+                {n}
+              </span>
+            ) : (
+              label(q)
+            )}
+          </div>
+        )}
 
         <div className="min-w-0 flex-1">
           {/* Question left of the rule, marks right of it — the layout of the

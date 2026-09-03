@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
-import { CaretDown } from "@phosphor-icons/react";
+import { useEffect, useMemo, useState } from "react";
+import { FloatingNav } from "../ui/floating-nav";
+import { FACULTY } from "../shell/nav";
+import { Combobox, type ComboboxOption } from "../ui/combobox";
 import { runQuery, type Subject } from "../../facultyApi";
 import { archiveError, cn } from "../../lib/utils";
 
@@ -37,40 +38,34 @@ export function useSubjects() {
 
 export function SubjectPicker({ subjects, value, onChange, failed }: {
   subjects: Subject[] | null; value: string; onChange: (v: string) => void;
-  /** The request finished and did not answer. Distinct from `subjects === null`,
-   *  which means it is still in flight — a picker that says "Loading…" forever
-   *  after a failure is telling the user to keep waiting for nothing. */
   failed?: boolean;
 }) {
   const empty = failed || subjects?.length === 0;
+  const placeholder = failed
+    ? "Not answered"
+    : !subjects
+      ? "Loading…"
+      : subjects.length === 0
+        ? "No subjects in scope"
+        : "Select subject…";
+
+  const options: ComboboxOption[] = useMemo(
+    () => (subjects ?? []).map((s) => ({
+      value: s.subject_key,
+      label: `Sem ${s.semester} · ${s.subject_name}`,
+    })),
+    [subjects],
+  );
+
   return (
-    /* A native select renders the platform's own arrow and menu chrome, which
-       on this sheet is the one control that belongs to no design system. The
-       glyph is drawn here and the select laid transparently over it. */
-    <div className="relative w-[280px] max-w-full">
-      <select
-        aria-label="Subject"
-        value={value}
-        disabled={empty}
-        onChange={(e) => onChange(e.target.value)}
-        className="field w-full appearance-none bg-paper-2 pr-8 disabled:cursor-not-allowed disabled:opacity-60"
-      >
-        {failed && <option>Not answered</option>}
-        {!failed && !subjects && <option>Loading…</option>}
-        {!failed && subjects?.length === 0 && <option>No subjects in scope</option>}
-        {!failed && subjects?.map((s) => (
-          <option key={s.subject_key} value={s.subject_key}>
-            Sem {s.semester} · {s.subject_name}
-          </option>
-        ))}
-      </select>
-      <CaretDown
-        size={13}
-        weight="bold"
-        aria-hidden
-        className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-ink-2"
-      />
-    </div>
+    <Combobox
+      aria-label="Subject"
+      options={options}
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      disabled={empty}
+    />
   );
 }
 
@@ -81,7 +76,7 @@ export function Tile({ label, value, tone = "normal" }: {
     /* A cell in a ruled block, not a card in a row: the borders belong to the
        grid the tiles sit in (see TileRow), so five figures read as one
        measured strip the way a title block does. */
-    <div className="flex flex-col gap-1.5 border-b border-r border-line px-4 py-3">
+    <div className="flex flex-col gap-1.5 rounded-[var(--r-sm)] bg-paper-2 px-4 py-3">
       <span className="label-cap">{label}</span>
       <span className={cn("font-mono text-2xl leading-none tabular-nums",
         tone === "warn" ? "text-warn" : "text-ink")}>{value}</span>
@@ -93,7 +88,7 @@ export function Tile({ label, value, tone = "normal" }: {
  *  the cells only ever draw their own bottom and right. */
 export function TileRow({ children }: { children: React.ReactNode }) {
   return (
-    <div className="grid grid-cols-2 border-l border-t border-line md:grid-cols-5">
+    <div className="grid grid-cols-2 gap-2 md:grid-cols-5">
       {children}
     </div>
   );
@@ -121,7 +116,7 @@ export function SqlToggle({ sql, ms, engine, fallbackReason }: {
   return (
     <div className="mt-2">
       <button onClick={() => setOpen(!open)}
-        className="font-mono text-[10px] uppercase tracking-widest text-ink-2 hover:text-mark">
+        className="font-mono text-[0.6875rem] text-ink-2 hover:text-mark">
         {open ? "hide sql" : "show the sql genie wrote"}
         {ms !== undefined && <span className="ml-2">· {(ms / 1000).toFixed(1)}s</span>}
         {engine && <span className="ml-2">· {engine === "genie" ? "genie" : "sql fallback"}</span>}
@@ -156,26 +151,8 @@ export function Empty({ title }: { title: string }) {
   );
 }
 
-const FACULTY_TABS = [
-  { to: "/faculty", label: "Overview", end: true },
-  { to: "/faculty/generate", label: "Generate" },
-  { to: "/faculty/practice", label: "Practice" },
-  { to: "/faculty/bank", label: "Bank" },
-];
-
-/** Same shape as the student side's tab strip, so the two halves of the app
- *  navigate identically. */
 export function FacultyNav() {
-  return (
-    <nav className="tabstrip page no-print">
-      {FACULTY_TABS.map((t) => (
-        <NavLink key={t.to} to={t.to} end={t.end}
-          className={({ isActive }) => cn("tab", isActive && "tab-on")}>
-          {t.label}
-        </NavLink>
-      ))}
-    </nav>
-  );
+  return <FloatingNav items={FACULTY} />;
 }
 
 /** Title left, controls right. No blurb slot: a paragraph explaining a screen

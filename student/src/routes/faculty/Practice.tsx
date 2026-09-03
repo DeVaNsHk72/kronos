@@ -73,7 +73,7 @@ export default function Practice() {
       <PageHead title="Practice"
         right={<SubjectPicker subjects={subjects} value={key} onChange={setKey} failed={!!subjectsErr} />} />
 
-      <div className="card flex flex-wrap items-end gap-3 p-3 no-print">
+      <div className="card flex flex-wrap items-end gap-3 p-3">
         <label className="flex flex-col gap-1.5">
           <span className="label-cap">Scope</span>
           <select value={scope} onChange={(e) => setScope(e.target.value as "subject" | "unit")}

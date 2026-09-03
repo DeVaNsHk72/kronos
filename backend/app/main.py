@@ -56,12 +56,17 @@ def health():
     return {"status": "ok", "questions": n, "semantic_loaded": semantic.is_ready()}
 
 
+_stats_cache: dict | None = None
+
 @app.get("/api/stats")
 def stats():
+    global _stats_cache
+    if _stats_cache is not None:
+        return _stats_cache
     with connection() as con:
         def one(q):
             return con.execute(q).fetchone()[0]
-        return {
+        _stats_cache = {
             "questions": one("SELECT COUNT(*) FROM questions"),
             "papers": one("SELECT COUNT(DISTINCT sha) FROM questions"),
             "courses": one("SELECT COUNT(DISTINCT course_code) FROM questions"),
@@ -70,3 +75,4 @@ def stats():
             "year_range": list(con.execute(
                 "SELECT MIN(year), MAX(year) FROM questions").fetchone()),
         }
+        return _stats_cache

@@ -64,11 +64,11 @@
 
   /* ---- shape scale (MD3) ---- */
   --md-shape-none:  0px;
-  --md-shape-xs:    2px;
-  --md-shape-sm:    4px;
-  --md-shape-md:    8px;
-  --md-shape-lg:    12px;
-  --md-shape-xl:    20px;
+  --md-shape-xs:    4px;
+  --md-shape-sm:    6px;
+  --md-shape-md:    10px;
+  --md-shape-lg:    14px;
+  --md-shape-xl:    22px;
   --md-shape-full:  999px;
 
   /* ---- state layers (MD3 opacities) ----
@@ -106,6 +106,12 @@
 
   /* the one accent */
   --k-mark:     #ff6b4a;
+  /* muted blue — active tab, active nav tick, primary interactive */
+  --k-accent:   #6e9dcb;
+
+  /* interaction surfaces — universal hover/active tints */
+  --k-surface-hover:  color-mix(in srgb, var(--k-ink) 5%, transparent);
+  --k-surface-active: color-mix(in srgb, var(--k-accent) 12%, transparent);
 
   /* semantic, separate from the accent */
   --k-ok:       #7fd6a0;
@@ -144,7 +150,12 @@
   --md-error-container:       #6b2415;
   --md-on-error-container:    #ffdad2;
 
-  --k-radius: 4px; /* the blueprint is ruled, not rounded */
+  --k-radius: 10px;
+  /* Humanised radius scale — enough rounding that surfaces stop reading as
+     ruled rectangles, but not so much that they become pills. */
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 14px;
 
   /* ---- chart ramps ----
      Units, years and marks are ordinal, not identities, so magnitude gets one
@@ -174,6 +185,7 @@
     --k-ink:     #0c2338;
     --k-ink-2:   #445d76;
     --k-mark:    #b3341f;
+    --k-accent:  #2a6096;
     --k-ok:      #276b47;
     --k-warn:    #8a5a12;
 
@@ -227,6 +239,7 @@
   --k-ink:     #0c2338;
   --k-ink-2:   #445d76;
   --k-mark:    #b3341f;
+  --k-accent:  #2a6096;
   --k-ok:      #276b47;
   --k-warn:    #8a5a12;
 

@@ -6,15 +6,20 @@ credentials.
 """
 from datetime import date
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 
 from .. import databricks as dbx
+
+
+def _require_databricks():
+    if not dbx.available():
+        raise HTTPException(503, "Kronos can't reach its database right now.")
 from .. import genie_client as genie
 from .. import mas_client as mas
 from .. import faculty_sql as Q
 
-router = APIRouter(prefix="/api/faculty", tags=["faculty"])
+router = APIRouter(prefix="/api/faculty", tags=["faculty"], dependencies=[Depends(_require_databricks)])
 
 
 class QueryReq(BaseModel):

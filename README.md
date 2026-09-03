@@ -7,28 +7,33 @@ one place as governed tables. Kronos is the agent that thinks over that memory
 and shows its working.
 
 ```
-15,888 questions · 30 subjects · 9 years · 237 documents · 11,224 pages read
+208,746 questions · 3,296 courses · 10,606 papers · 30,464 topics · 2016–2025
 ```
 
-Not a search box. The papers and notes are the memory; a Databricks Multi-Agent
-Supervisor calling Genie is what reasons over it. Ask in plain words and the SQL
-it wrote is one click away — an agent that cannot show its working cannot be
-trusted with an exam.
+Not a search box. The papers and notes are the memory; Databricks Genie is the
+text-to-SQL agent that reasons over it. Ask in plain words — on the web, or on
+Telegram — and the SQL it wrote is one click away. An agent that cannot show its
+working cannot be trusted with an exam.
 
 ---
 
 ## Contents
 
-1. [The problem](#the-problem)
-2. [The two doors](#the-two-doors)
-3. [Studying](#studying)
-4. [Intelligence](#intelligence-teaching)
-5. [How the agent works](#how-the-agent-works)
-6. [The data underneath](#the-data-underneath)
-7. [Architecture](#architecture)
-8. [Running it](#running-it)
-9. [What is real and what is not](#what-is-real-and-what-is-not)
-10. [Further reading](#further-reading)
+1.  [The problem](#the-problem)
+2.  [The two doors](#the-two-doors)
+3.  [Studying](#studying)
+4.  [Intelligence (teaching)](#intelligence-teaching)
+5.  [Telegram bot](#telegram-bot)
+6.  [How the agent works](#how-the-agent-works)
+7.  [The data underneath](#the-data-underneath)
+8.  [Architecture](#architecture)
+9.  [Tech stack](#tech-stack)
+10. [Running it](#running-it)
+11. [Environment variables](#environment-variables)
+12. [Project structure](#project-structure)
+13. [Design system](#design-system)
+14. [What is real and what is not](#what-is-real-and-what-is-not)
+15. [Further reading](#further-reading)
 
 ---
 
@@ -59,26 +64,32 @@ shown rather than guessed at.
 | **I'm studying** | `/ask` — the study hub |
 | **I teach here** | `/faculty` — Intelligence |
 
+The choice is stored in `localStorage` and can be changed at any time.
+
 ---
 
 ## Studying
 
-One hub at `/ask`, four ways into the same corpus.
+One hub at `/ask`, five tabs in a floating animated navbar: **Ask · Search · Practice · Notes · Stats**.
 
 ### Ask
 
 The agent, in plain words. *"What repeats in operating systems deadlock
-questions?"* returns a real answer with the questions behind it, the years they
-were set, and the paper each came from.
+questions?"* returns a structured answer with the questions behind it, the years
+they were set, and the paper each came from.
 
-Powered by the Multi-Agent Supervisor, which calls Genie as a tool. The reply
-carries the tool calls as well as the prose.
+Powered by Databricks Genie. The reply carries the generated SQL, the answer
+text (rendered with bold and bullets), and tabular results displayed as
+`QuestionCard` components — the same cards used throughout the app. Garbage rows
+(OCR artifacts, table sample data shorter than 30 characters) are filtered out
+before rendering.
 
 ### Search
 
-Every question in the archive, filtered by branch, year, exam type, unit and
-marks — plus **semantic search** over 384-dimension embeddings, which finds by
-meaning rather than keyword.
+Every question in the archive, filtered by course, branch, semester, year, exam
+type, and programme — plus **semantic search** over 384-dimension embeddings,
+which finds by meaning rather than keyword. Toggle between keyword and meaning
+modes.
 
 ### Practice
 
@@ -88,37 +99,35 @@ unit, choose 5–20 questions, answer, then check.
 The stem is always a question that was actually set, carrying its year, marks and
 source paper. The distractors are **other real topics from the same subject** —
 so a wrong option is something a student could genuinely confuse it with, not an
-invented plausible-sounding string. Nothing here writes course content.
+invented string.
 
-### Notes & papers
+### Notes
 
-The documents themselves — 31 subjects of lecture notes and past papers, opened
-or downloaded as PDFs.
+The documents themselves — lecture notes and past papers, opened or downloaded as
+PDFs. A document is listed **only if it was actually read into the archive**, so
+what you open is what the agent answers from.
 
-A document is listed **only if it was actually read into the archive**, so what
-you open is what the agent answers from. Grouped by subject, filterable to notes
-or papers.
+### Stats
 
-Also available: `/stats` (what to study) and `/download` (bulk PDF export).
+Subject-level analytics: marks distribution by unit, topic frequency, year-over-year
+trends. Stats are animated with `NumberTicker` components on load.
 
 ---
 
 ## Intelligence (teaching)
 
-Six screens behind a menu at `/faculty`.
+Three tabs in the faculty floating navbar: **Dashboard · Set a paper · Question bank**.
 
-### Overview
+### Dashboard
 
-What this subject has actually been examining — marks by unit, and unit emphasis
-across nine years as a stacked area. A unit thinning out year on year is usually
-being quietly dropped, and that shows here before anyone notices in a meeting.
+What this subject has actually been examining — marks by unit, unit emphasis
+across nine years as a stacked area, coverage tiles. A unit thinning out year on
+year is usually being quietly dropped, and that shows here before anyone notices
+in a meeting.
 
-Coverage tiles are honest: the marks-coverage tile reports what fraction of
-questions state their marks, because 19% do not.
+### Set a paper (Generate)
 
-### Generate a paper
-
-The headline feature, and the one with the strictest rule:
+The headline feature, with the strictest rule:
 
 > **SQL selects, the model only phrases.**
 
@@ -127,93 +136,94 @@ line traces to a `question_id`, its source PDF, and the year it was last asked �
 which is what makes it defensible to an exam committee. **No language model
 invents a question.**
 
-Two declared formats, both taken from papers the college actually sets:
+Two declared formats:
 
 | | Structure | Marks |
 |---|---|---|
 | **SEE** | 5 units × 20 marks, 10 marks per question, internal choice | 100 |
 | **CIE** | Part A 1×5 · Part B 3×5 · Part C 2 of 3 ×10 | 40 |
 
-Controls, and what each really does:
-
-- **Exclude asked in last N years** — real. Drops every question in a repeat
-  cluster set since the cutoff.
-- **Difficulty preference** — a preference *order*, not a ratio. Slots prefer the
-  highest-weighted level first; a level at zero is never preferred.
-
-Print gives the paper alone — chrome, controls and provenance panels are working
-aids, not part of the document.
-
-### Practice sets
-
-The same MCQ builder as the student side, for setting revision.
-
-### Coverage
-
-**Where teaching and examining diverge.** A scatter of note depth against marks
-examined, with the problem quadrant labelled rather than left to inference:
-heavily examined, thinly taught.
-
-Beneath it, **asked to death** — near-identical questions set three or more
-times, with the span of years. Faculty use this to *avoid* them.
+Controls: exclude questions asked in the last N years, difficulty preference
+(Bloom level ordering).
 
 ### Question bank
 
 Every question, filtered by unit, marks, Bloom level, year and sitting, with full
 text search. Every row expands to its source file, sitting, topic and repeat
-cluster. Exports to CSV.
+cluster. Table rows enter with staggered spring animations.
 
-### Asked before?
+---
 
-Paste a question you are drafting, get ranked matches from nine years.
+## Telegram bot
 
-Scoring is **IDF-weighted term overlap computed in SQL** — rare words carry the
-signal, so "virtualization" counts and "explain" barely does. A verbatim repeat
-scores 100%, a rephrasing 92%, a loose variant 70%.
+**[@KronosStudybot](https://t.me/KronosStudybot)** — the same Genie agent,
+available on Telegram.
+
+Students message the bot in plain text and get structured answers: a text summary
+plus a numbered list of matching questions with marks, year, and topic. The bot
+maintains per-user conversation context via Genie's `conversation_id`, so
+follow-up questions work.
+
+### Commands
+
+| Command | What it does |
+|---|---|
+| `/start`, `/help` | Welcome message and command list |
+| `/plan` | Study priority list based on exam importance |
+| `/quiz` | Practice question from the most important topic |
+| `/topics` | All topics grouped by unit with exam frequency |
+| `/reset` | Clear conversation context |
+
+Or just send any question in plain text.
+
+### Running the bot
+
+The bot uses long-polling (no webhook/public URL needed):
+
+```bash
+cd backend && ../.venv/bin/python telegram_poll.py
+```
+
+For production with a public URL, register the webhook:
+
+```
+GET /telegram/set-webhook?url=https://your-domain.com
+```
 
 ---
 
 ## How the agent works
 
 ```
-question ─► Multi-Agent Supervisor ─► Genie (tool) ─► Unity Catalog ─► rows
-                    │                    │
-              reasoning, tool          the SQL
-              calls returned          returned
+question ─► Genie (text-to-SQL) ─► Unity Catalog ─► rows
+                   │
+              the SQL is
+              always visible
 ```
 
-**One agent, one entry point.** The supervisor reasons about the question and
-calls Genie as a tool, so a reply carries the tool calls, the SQL and the rows —
-not just prose.
+Genie writes SQL, runs it against governed tables, and returns rows — with the
+query visible. Every analytical screen offers **"Show SQL"** with the timing and
+which engine answered.
 
-Every analytical screen routes through it: overview, marks by unit, unit drift,
-coverage, repetition, freshness. Each panel offers **"show the sql Genie wrote"**
-with the timing and which engine answered.
-
-**Fallback chain:** supervisor → Genie → the equivalent hand-written statement.
-A screen degrades to working-but-not-agentic rather than to blank, and says which
-path answered.
+**Fallback chain:** Genie → hand-written SQL statement. A screen degrades to
+working-but-not-agentic rather than to blank, and says which path answered.
 
 ### Where the agent is deliberately not used
 
 | | Why |
 |---|---|
-| **Paper assembly** | Genie answers questions; it does not select under constraints. A paper defended line by line cannot have its selection rephrased between runs. |
-| **Similarity scoring** | Must be reproducible to be actionable. |
-| **Subject picker** | Drives every other screen; a 20-second call to fill a dropdown is wrong. |
-
-The characteristic text-to-SQL failure is not a crash — it is confidently
-answering a *subtly different* question. Filtering to the wrong exam type,
-pooling re-exam sittings into "what is normally asked", dropping NULL marks.
-The prose reads fine in every case. **The SQL is the only place it shows**, which
-is why it is always one click away.
+| **Paper assembly** | Must be reproducible; SQL selects, constraint satisfaction assembles. |
+| **Similarity scoring** | Must be reproducible to be actionable. IDF-weighted term overlap in SQL. |
+| **Subject picker** | Drives every other screen; a 20-second agent call to fill a dropdown is wrong. |
 
 ---
 
 ## The data underneath
 
-Seven gold tables in Unity Catalog. Seven, not seventeen — text-to-SQL accuracy
-is driven mostly by how narrow the surface is.
+### Databricks (Unity Catalog — remote)
+
+Seven gold tables. Seven, not seventeen — text-to-SQL accuracy is driven mostly
+by how narrow the surface is.
 
 | Table | Rows | Its job |
 |---|---|---|
@@ -225,22 +235,28 @@ is driven mostly by how narrow the surface is.
 | `fact_attempt` | 0 | Empty by design — no quiz data exists. |
 | `fact_engagement` | 0 | Empty by design — no telemetry exists. |
 
-`bronze_page` (2,691 pages of note text) sits **outside** the Genie space
-deliberately: a wide table of raw markdown cannot answer a question and dilutes
-the schema that makes the rest work.
+### SQLite (local — `DERIVED_DATA/`)
 
-Three design decisions worth knowing:
+The full 208k-question corpus across all branches and colleges, used for search,
+stats, chat, and the student-facing features. Two databases:
+
+| File | Size | Content |
+|---|---|---|
+| `questions_v2.db` | 166 MB | All questions, topics, embeddings keys |
+| `papers_v2.db` | 8 MB | Paper metadata, course mappings |
+
+Plus `embeddings.npy` (384-dim vectors) and `emb_keys.json` for semantic search.
+
+### Design decisions
 
 1. **Natural keys, not surrogate integers.** `subject_key` is `cloud_computing`;
-   every join is readable in a raw query result, which matters when the agent's
-   SQL is shown to someone judging whether it answered the right question.
+   every join is readable in a raw query result.
 2. **Subjects are identified by name, never by code.** Codes change every scheme —
-   DBMS has run under seven. Keying on code would fragment nine years into seven
-   unrelated courses.
+   DBMS has run under seven.
 3. **`topic_id` is keyed on name, not unit.** The same topic sits in different
-   units across schemes; a unit-keyed id fragmented 63 real topics into 127.
+   units across schemes.
 
-Full column-level reference, including every trap, in **[SCHEMA.md](SCHEMA.md)**.
+Full column-level reference in **[SCHEMA.md](SCHEMA.md)**.
 
 ---
 
@@ -248,88 +264,272 @@ Full column-level reference, including every trap, in **[SCHEMA.md](SCHEMA.md)**
 
 ```
 kronos/
-├── student/          Vite + React 19 — ONE app, both audiences
-│   └── src/routes/
-│       ├── Landing.tsx        two doors
-│       ├── Ask.tsx  Home.tsx  Notes.tsx      student hub
-│       └── faculty/           Intelligence — 6 screens
-├── backend/          FastAPI
+├── student/              React 19 SPA — one app, both audiences
+│   └── src/
+│       ├── routes/
+│       │   ├── Ask.tsx           Genie-powered Q&A
+│       │   ├── Home.tsx          Search
+│       │   ├── Notes.tsx         Document browser
+│       │   ├── Stats.tsx         Subject analytics
+│       │   ├── Download.tsx      Bulk PDF export
+│       │   ├── Gate.tsx          Role picker (student/teacher)
+│       │   ├── Landing.tsx       Welcome page
+│       │   └── faculty/
+│       │       ├── Dashboard.tsx
+│       │       ├── Generate.tsx  Paper assembly
+│       │       ├── Bank.tsx      Question bank
+│       │       └── Practice.tsx  MCQ builder
+│       ├── components/
+│       │   ├── shell/            App chrome: sidebar, nav, title block
+│       │   │   ├── AppShell.tsx  Composes sidebar + mobile bar + drawer + ⌘K
+│       │   │   ├── Sidebar.tsx   Desktop rail (14.25rem, fixed left)
+│       │   │   ├── NavItem.tsx   Spring-animated active bar
+│       │   │   ├── TabStrip.tsx  Spring-animated tab pill (layoutId)
+│       │   │   ├── TitleBlock.tsx  Animated number stats
+│       │   │   └── nav.ts       Route definitions (Studying + Teaching)
+│       │   ├── ui/
+│       │   │   ├── floating-nav.tsx   Scroll-collapsing floating pill navbar
+│       │   │   ├── number-ticker.tsx  Animated counting numbers
+│       │   │   └── combobox.tsx       Searchable dropdown
+│       │   ├── QuestionCard.tsx  The universal question display card
+│       │   ├── ChatAnswer.tsx    Text answer with citations + TTS
+│       │   ├── PromptBox.tsx     Chat input
+│       │   ├── CommandK.tsx      ⌘K command palette
+│       │   └── GlobalComposer.tsx  Floating input on every screen
+│       ├── api.ts               Student API client (local backend)
+│       └── facultyApi.ts        Faculty API client (Databricks via backend)
+│
+├── backend/              FastAPI (Python)
 │   └── app/
-│       ├── mas_client.py      Multi-Agent Supervisor (the agent)
-│       ├── genie_client.py    Genie, structured
-│       ├── databricks.py      SQL Statement Execution (holds the token)
-│       ├── faculty_sql.py     every statement, in one place
-│       └── routers/           faculty · notes · chat · search · papers · voice · telegram
-├── design/           shared tokens — neither side owns the palette
-├── scripts/          corpus pipeline: OCR, extraction, embeddings, clustering
-└── backend/data/     notes index (which documents exist and where)
+│       ├── main.py              App assembly, /api/stats, /api/health
+│       ├── genie_client.py      Genie conversation client (structured rows + SQL)
+│       ├── genie.py             Genie prose client (chat path)
+│       ├── databricks.py        SQL Statement Execution (holds the token)
+│       ├── mas_client.py        Multi-Agent Supervisor client
+│       ├── chat.py              Grounded chat (OpenAI + semantic search)
+│       ├── semantic.py          Embedding model loader + vector search
+│       ├── db.py                SQLite connection (read-only, shared)
+│       ├── config.py            Paths, env vars
+│       ├── faculty_sql.py       Every hand-written SQL statement
+│       ├── telegram.py          Telegram bot logic (Genie-backed)
+│       ├── llm.py               OpenAI / Groq abstraction
+│       ├── filters.py           Query filter composition
+│       ├── ratelimit.py         Rate limiting
+│       └── routers/
+│           ├── faculty.py       /api/faculty/* — agent, generate, bank, practice
+│           ├── chat.py          /api/chat — student grounded chat
+│           ├── search.py        /api/search — keyword + semantic search
+│           ├── meta.py          /api/facets, /api/stats/course
+│           ├── questions.py     /api/questions
+│           ├── papers.py        /api/papers
+│           ├── notes.py         /api/notes
+│           ├── files.py         /api/file/{sha} — serve PDFs
+│           ├── telegram.py      /telegram/webhook, /telegram/set-webhook
+│           └── voice.py         /api/tts — ElevenLabs text-to-speech
+│   └── telegram_poll.py         Long-polling runner for the Telegram bot
+│
+├── DERIVED_DATA/         Local copy of SQLite databases + embeddings
+│   ├── questions_v2.db
+│   ├── papers_v2.db
+│   ├── embeddings.npy
+│   └── emb_keys.json
+│
+├── .env                  All credentials and paths
+├── requirements.txt      Python dependencies
+├── Dockerfile            Container build
+├── PROJECT.md            Full project explanation
+├── SCHEMA.md             Complete table/column reference
+├── AGENTS.md             Agent architecture
+└── DESIGN.md             Design tokens (Cyanotype theme)
 ```
 
-**The Databricks token lives in the backend, never the bundle.** A static SPA has
-no secrets, so the browser names a query (`POST /api/faculty/query`) and the
-server holds the credentials and the SQL.
+### API endpoints
 
-### API
+| Endpoint | Method | Purpose |
+|---|---|---|
+| `/api/stats` | GET | Global counts (questions, papers, courses, topics, year range) |
+| `/api/health` | GET | Server health + semantic model status |
+| `/api/search` | POST | Keyword + semantic question search |
+| `/api/chat` | POST | Student grounded chat (OpenAI + citations) |
+| `/api/facets` | GET | Filter options (courses, branches, years, etc.) |
+| `/api/questions` | POST | Paginated question listing |
+| `/api/papers` | GET | Paper listing |
+| `/api/notes` | GET | Notes listing |
+| `/api/file/{sha}` | GET | Serve a PDF |
+| `/api/tts` | POST | Text-to-speech via ElevenLabs |
+| `/api/faculty/ask` | POST | Ask Genie (text → SQL → rows) |
+| `/api/faculty/genie-query` | POST | Named analytical question via Genie |
+| `/api/faculty/query` | POST | Named hand-written SQL query |
+| `/api/faculty/generate` | POST | Assemble an exam paper |
+| `/api/faculty/practice` | POST | Build an MCQ practice set |
+| `/api/faculty/similar` | POST | "Has this been asked before?" |
+| `/api/faculty/bank` | POST | Filtered question bank search |
+| `/api/faculty/units` | GET | Units and topics for a subject |
+| `/api/faculty/status` | GET | Service health (Databricks, Genie, agent) |
+| `/telegram/webhook` | POST | Telegram bot webhook |
+| `/telegram/set-webhook` | GET | Register webhook URL with Telegram |
 
-| Endpoint | |
+---
+
+## Tech stack
+
+### Frontend
+
+| | |
 |---|---|
-| `POST /api/faculty/ask` | the agent |
-| `POST /api/faculty/genie-query` | a named analytical question, answered by Genie |
-| `POST /api/faculty/query` | a named statement, run directly |
-| `POST /api/faculty/generate` | assemble a paper |
-| `POST /api/faculty/practice` | build an MCQ set |
-| `POST /api/faculty/similar` | has this been asked? |
-| `POST /api/faculty/bank` | filtered question search |
-| `GET /api/notes` · `/subjects` · `/file/{sha}` | documents, and the PDFs themselves |
-| `POST /api/chat` | student chat, same agent |
+| **Framework** | React 19 + TypeScript |
+| **Build** | Vite |
+| **Styling** | Tailwind CSS v4 |
+| **Routing** | React Router v7 |
+| **Animation** | Motion (Framer Motion) — spring physics, `layoutId` shared layout |
+| **Charts** | Recharts, Reaviz |
+| **Icons** | Phosphor Icons |
+| **Package manager** | pnpm (monorepo workspace) |
 
-### Design
+### Backend
 
-Cream paper, one bookish red, an editorial serif for content and a retro mono for
-anything numeric. Red means *a mark, a citation, or something that failed* —
-never decoration. Tokens live once in `design/` and both build systems map them.
+| | |
+|---|---|
+| **Framework** | FastAPI + Uvicorn |
+| **Database** | SQLite (local, read-only) + Databricks Unity Catalog (remote) |
+| **AI/Agent** | Databricks Genie (text-to-SQL) |
+| **Embeddings** | Sentence Transformers (384-dim, loaded at startup) |
+| **Chat** | OpenAI GPT for grounded answers with citations |
+| **TTS** | ElevenLabs API |
+| **Bot** | Telegram Bot API (long-polling or webhook) |
 
-Motion is gated on frequency and purpose: the ⌘K palette has none (a keyboard
-action fired hundreds of times a day is a disqualifier), charts do not animate
-(data being read before an exam is set should not move for style), and the paper
-reveal exists because a 60-second wait ending in a teleport is jarring.
+### External services
+
+| Service | What it does |
+|---|---|
+| **Databricks** | Unity Catalog (gold tables), Genie (text-to-SQL agent), SQL Warehouse |
+| **OpenAI** | Grounded chat answers with citations |
+| **Groq** | Alternative LLM provider |
+| **ElevenLabs** | Text-to-speech for reading answers aloud |
+| **Telegram** | Bot platform for mobile access |
 
 ---
 
 ## Running it
 
+### Prerequisites
+
+- Python 3.11+ with a virtual environment
+- Node.js 18+ and pnpm
+- A Databricks workspace with Unity Catalog tables loaded
+- The SQLite databases in `DERIVED_DATA/` (or on an external drive)
+
+### Setup
+
 ```bash
-# backend
+# Clone and configure
+git clone <repo-url> kronos && cd kronos
+cp .env.example .env
+# Edit .env with your credentials (see Environment Variables below)
+
+# Python backend
+python -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env          # Databricks host, token, warehouse, Genie space, agent endpoint
-uvicorn backend.app.main:app --reload
 
-# frontend
-cd student && pnpm install && pnpm dev
+# Frontend
+cd student && pnpm install && cd ..
 ```
 
-Two environment variables are easy to get wrong and fail quietly:
-
-- **`DATABRICKS_CATALOG`** must name the catalog the Genie space queries. When
-  they diverge, the ask panel answers about a different dataset than every other
-  screen, with nothing on screen to reveal it.
-- **`GENIE_SPACE_ID` and `DATABRICKS_GENIE_SPACE_ID`** must both be set. Two
-  clients read different names; setting one leaves the other silently
-  unavailable, which surfaces as a null answer rather than an error.
-- **`EXNOTE_ROOT`** points at the PDFs, which live outside the repo.
-
-### Rebuilding the tables
+### Start the servers
 
 ```bash
-python ocr_mps/build_all_subjects.py     # → parquet for every qualifying subject
+# Terminal 1: Backend (port 8000)
+.venv/bin/uvicorn backend.app.main:app --host 0.0.0.0 --port 8000
+
+# Terminal 2: Frontend (port 5173)
+cd student && pnpm dev
+
+# Terminal 3 (optional): Telegram bot
+cd backend && ../.venv/bin/python telegram_poll.py
 ```
 
-A subject is included only if it has **both** notes and ≥100 parsed questions.
-Notes without papers give topics with no evidence to rank; papers without notes
-give a ranking with nowhere to send the reader.
+The frontend proxies `/api` requests to `localhost:8000` via Vite config.
 
-After loading, **re-apply column comments** — `CREATE TABLE AS SELECT` drops
-them, and Genie reads them.
+Open [http://localhost:5173](http://localhost:5173).
+
+> **First startup takes ~30 seconds** while the embedding model (sentence-transformers)
+> loads in a background thread. Keyword search and Genie work immediately; semantic
+> search becomes available once loading completes (check `/api/health`).
+
+---
+
+## Environment variables
+
+All in `.env` at the repo root.
+
+| Variable | Required | Purpose |
+|---|---|---|
+| `DERIVED_DATA_DIR` | Yes | Path to `questions_v2.db`, `papers_v2.db`, embeddings |
+| `PAPERS_ROOT` | Yes | Path to the ripped PDF files |
+| `DATABRICKS_HOST` | Yes | Databricks workspace URL |
+| `DATABRICKS_TOKEN` | Yes | Databricks personal access token (starts with `dapi`) |
+| `GENIE_SPACE_ID` | Yes | Genie space ID in the Databricks workspace |
+| `DATABRICKS_WAREHOUSE_ID` | Yes | SQL Warehouse ID for direct queries |
+| `DATABRICKS_CATALOG` | No | Catalog name (default: `hackathon_project.default`) |
+| `OPEN_AI_API_KEY` | For chat | OpenAI API key for grounded chat answers |
+| `GROQ_API_KEY` | No | Alternative LLM via Groq |
+| `ELEVENLABS_API_KEY` | For TTS | Text-to-speech |
+| `TELEGRAM_BOT_TOKEN` | For bot | Telegram bot token from @BotFather |
+
+### Common gotchas
+
+- **`DATABRICKS_TOKEN`** must start with `dapi` — missing the `d` prefix gives a 401.
+- **`DATABRICKS_WAREHOUSE_ID`** must match the current workspace — a warehouse ID
+  from another workspace gives a 404.
+- **`DERIVED_DATA_DIR`** on an external drive causes 10+ second query times and
+  potential `database disk image is malformed` errors if the drive sleeps. Copy
+  the files locally for reliability.
+- **`GENIE_SPACE_ID`** and `DATABRICKS_GENIE_SPACE_ID` — the codebase reads both
+  (`genie_client.py` checks both env vars). Set at least `GENIE_SPACE_ID`.
+
+---
+
+## Design system
+
+**Cyanotype** — the visual language of an architect's blueprint. Dark blue paper,
+one drafting white for content, one correction red for marks and errors.
+
+### Colours
+
+| Token | Hex | Use |
+|---|---|---|
+| `paper` | `#0e2740` | Background |
+| `ink` | `#e9f2fb` | Primary text |
+| `ink-2` | `#a3bcd4` | Secondary text |
+| `mark` | `#ff6b4a` | Marks, citations, errors — never decoration |
+| `line` | `#2c4a68` | Borders and rules |
+| `blueprint` | — | Accent blue for interactive elements |
+| `ok` | `#7fd6a0` | Success |
+| `warn` | `#f0b429` | Warning |
+
+### Motion
+
+All animation uses `motion/react` (Framer Motion) with spring physics:
+
+- **Floating navbar**: collapses to a circle on scroll-down, expands on scroll-up
+  (spring stiffness 300, damping 20). Nav items stagger in/out.
+- **Tab strip**: shared `layoutId` pill slides between tabs (spring, no bounce,
+  300ms).
+- **Sidebar active bar**: `layoutId` animated indicator (spring stiffness 500,
+  damping 35).
+- **Number ticker**: animated counting on load using `useMotionValue`.
+- **Table rows**: staggered spring entry (delay capped at 300ms).
+- **Combobox**: spring-animated dropdown popover.
+
+Motion is gated on purpose: ⌘K has none (keyboard action, high frequency),
+charts do not animate (data being read before an exam should not move for style).
+
+### Typography
+
+- `Archivo` for display headings
+- System font stack for body
+- `Departure Mono` for numeric/code content
 
 ---
 
@@ -337,20 +537,20 @@ them, and Genie reads them.
 
 A system built on provenance should be honest about its own.
 
-**Real** — 15,888 questions from 696 papers over nine years, every one traceable
-to a PDF. 2,364 repeat clusters from actual embedding similarity. Zero
-referential orphans on any join. The agent answering live, SQL visible.
+**Real** — 208,746 questions from 10,606 papers, every one traceable to a PDF.
+Repeat clusters from actual embedding similarity. Zero referential orphans on any
+join. The agent answering live, SQL visible. Telegram bot responding to student
+queries.
 
 **Not:**
 
 | | |
 |---|---|
-| `fact_attempt` / `fact_engagement` | Empty. No quiz, no telemetry. Personalisation is schema-ready, unproven. |
-| `dim_exam_pattern.basis = 'observed'` | Averaged from real papers, not a published blueprint. The two declared formats (SEE, CIE) are taken from real papers and do not need it. |
+| `fact_attempt` / `fact_engagement` | Empty. No quiz data, no telemetry. Personalisation is schema-ready, unproven. |
 | `source_page` | 100% NULL. Citation is document-level, not page-level. |
-| Bloom levels | 54% `unclassified` — the verb was not in the map. Any difficulty preference works from the other 46%. |
-| Sittings | Only half the corpus is `Main`. Every query that means "what is normally asked" filters on it; pooling re-exams roughly doubles apparent repetition. |
-| Note extraction | 853 coverage rows from Marker/Surya, 68 from `gpt-4.1-mini` at ~96 DPI. On the one file both processed, the model won — but one file is not a verification. |
+| Bloom levels | 54% `unclassified` — the verb was not in the map. |
+| Sittings | Only half the corpus is `Main`. Queries meaning "what is normally asked" filter on it. |
+| Some Genie answers | Genie's text-to-SQL can confidently answer a subtly different question. The SQL is always visible for exactly this reason. |
 
 ---
 
@@ -358,6 +558,13 @@ referential orphans on any join. The agent answering live, SQL visible.
 
 | | |
 |---|---|
-| **[PROJECT.md](PROJECT.md)** | Full explanation — problem, gold schema design, the pipeline, the skills involved |
+| **[PROJECT.md](PROJECT.md)** | Full explanation — problem, gold schema design, the pipeline |
 | **[SCHEMA.md](SCHEMA.md)** | Every column, every coverage gap, and the traps that produce plausible wrong answers |
-| **[AGENTS.md](AGENTS.md)** | The agent, and what grounds it |
+| **[AGENTS.md](AGENTS.md)** | The agent architecture and where it is deliberately not used |
+| **[DESIGN.md](DESIGN.md)** | Design tokens — the Cyanotype theme |
+
+---
+
+## License
+
+Built for the Databricks Campus Hackathon at B.M.S. College of Engineering.

@@ -2,7 +2,7 @@ import axios from "axios";
 
 /** All faculty calls go through the backend: a static SPA cannot hold the
  *  Databricks token, so the browser names a query and never sends SQL. */
-const http = axios.create({ baseURL: import.meta.env.VITE_API_URL || "" });
+const http = axios.create({ baseURL: import.meta.env.VITE_API_URL || "", timeout: 120_000 });
 
 export interface QueryResult {
   rows: Record<string, any>[];

@@ -17,31 +17,26 @@ export const HOME: Record<Role, string> = {
   teacher: "/faculty",
 };
 
+// Private windows and blocked site data throw on localStorage access rather
+// than returning null. Wrap once; every caller gets the safe direction.
+function safeLS(fn: () => void): void {
+  try { fn(); } catch { /* ignore */ }
+}
+
 /** The stored role, or null when this browser has not answered yet. */
 export function getRole(): Role | null {
   try {
     const v = localStorage.getItem(KEY);
     return v === "student" || v === "teacher" ? v : null;
   } catch {
-    // Private windows and blocked site data throw on access rather than
-    // returning null. An unanswerable read is the same as an unanswered one:
-    // the gate shows again, which is the safe direction to fail.
     return null;
   }
 }
 
 export function setRole(role: Role) {
-  try {
-    localStorage.setItem(KEY, role);
-  } catch {
-    // The choice still routes this session; it just will not survive a reload.
-  }
+  safeLS(() => localStorage.setItem(KEY, role));
 }
 
 export function clearRole() {
-  try {
-    localStorage.removeItem(KEY);
-  } catch {
-    /* nothing to clear */
-  }
+  safeLS(() => localStorage.removeItem(KEY));
 }

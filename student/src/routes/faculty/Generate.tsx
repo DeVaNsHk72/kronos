@@ -43,7 +43,7 @@ export default function Generate() {
         right={<SubjectPicker subjects={subjects} value={key} onChange={setKey} failed={!!subjectsErr} />} />
 
       <div className="grid lg:grid-cols-[280px_1fr] gap-6 items-start">
-        <aside className="card p-4 flex flex-col gap-5 no-print">
+        <aside className="card p-4 flex flex-col gap-5">
           <div>
             <span className="label-cap block mb-2">Exam</span>
             <select value={examType} onChange={(e) => setExamType(e.target.value)}
@@ -94,8 +94,8 @@ function Paper({ paper, subject, open, setOpen }: any) {
     // k-rise: the agent takes 20-60s, then a whole paper would otherwise
     // teleport in. Fade + 6px rise, ease-out 220ms.
     <div className="flex flex-col gap-4 k-rise">
-      <div className="flex items-center gap-3 flex-wrap no-print">
-        <span className="font-mono text-[11px] uppercase tracking-widest text-ink-2">
+      <div className="flex items-center gap-3 flex-wrap">
+        <span className="font-mono text-[0.6875rem] text-ink-2">
           structure: {paper.basis}
         </span>
         <span className="font-mono text-[11px] text-ink-2">
@@ -125,8 +125,8 @@ function Paper({ paper, subject, open, setOpen }: any) {
         {paper.sections.map((sec: any) => (
           <section key={sec.label} className="mb-7">
             <div className="flex items-baseline justify-between border-b border-line pb-1 mb-1">
-              <h3 className="font-semibold text-[14px] tracking-wide">{sec.label}</h3>
-              <span className="font-mono text-[10px] text-ink-2 uppercase tracking-wider">Marks</span>
+              <h3 className="font-semibold text-[14px]">{sec.label}</h3>
+              <span className="font-mono text-[0.625rem] text-ink-2">Marks</span>
             </div>
             <p className="text-[12px] text-ink-2 mb-2 italic">{sec.note}</p>
             {sec.picks.map((p: any) => {
@@ -140,7 +140,7 @@ function Paper({ paper, subject, open, setOpen }: any) {
                       <>
                         <p className="text-[14px] leading-snug">{p.q.question_text}</p>
                         <button onClick={() => setOpen(open === k ? null : k)}
-                          className="font-mono text-[10px] uppercase tracking-wider text-ink-2 hover:text-mark mt-1 no-print">
+                          className="font-mono text-[0.625rem] text-ink-2 hover:text-mark mt-1">
                           {open === k ? "hide source" : "source"}
                         </button>
                         <div className="disclosure" data-open={open === k}>

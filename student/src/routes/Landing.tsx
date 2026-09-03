@@ -5,6 +5,7 @@ import { getStats, type Stats } from "@/api";
 import { HOME, setRole } from "@/lib/role";
 import { fmt } from "@/lib/utils";
 
+
 /**
  * The welcome sheet.
  *
@@ -14,6 +15,12 @@ import { fmt } from "@/lib/utils";
  *
  * There is no "get started": the first action is the product's only verb.
  */
+
+const OPENERS = [
+  "I have the Cloud Computing exam in three days, where do I start?",
+  "What repeats in Operating Systems deadlock questions?",
+  "Which units carry the most marks in Engineering Maths II?",
+];
 
 export default function Landing() {
   const nav = useNavigate();
@@ -31,37 +38,17 @@ export default function Landing() {
     const question = (text ?? q).trim();
     if (!question) return;
     setRole("student");
-    nav(HOME.student, { state: { question } });
+    nav(HOME.student, { state: { question, ts: Date.now() } });
   }
 
-  const openers = [
-    "I have the Cloud Computing exam in three days, where do I start?",
-    "What repeats in Operating Systems deadlock questions?",
-    "Which units carry the most marks in Engineering Maths II?",
-  ];
 
   return (
-    <div className="relative min-h-screen">
-      {/* The drawing frame: corner ticks at the edge of the sheet. */}
-      <div aria-hidden className="pointer-events-none absolute inset-5 hidden sm:block">
-        {[
-          "left-0 top-0 border-l border-t",
-          "right-0 top-0 border-r border-t",
-          "left-0 bottom-0 border-l border-b",
-          "right-0 bottom-0 border-r border-b",
-        ].map((c) => (
-          <span key={c} className={`absolute h-4 w-4 border-line ${c}`} />
-        ))}
-      </div>
-
+    <div className="min-h-screen">
       <div className="relative flex min-h-screen w-full max-w-full flex-col px-5 py-6 sm:px-10 sm:py-7">
         <header className="flex items-baseline gap-3">
           <span className="wordmark text-[15px] text-ink">Kronos</span>
-          <span aria-hidden className="h-[7px] w-[7px] translate-y-[-2px] bg-ink-2" />
-          {/* Sheet identity belongs in the frame, the way a drawing stamps it —
-              not stacked above the headline as a label the heading does not need. */}
-          <span className="draft-caps ml-auto hidden sm:block">
-            Rev. 2026 · Sheet 1 of 1 · B.M.S. College of Engineering
+          <span className="label-cap ml-auto hidden sm:block">
+            B.M.S. College of Engineering
           </span>
         </header>
 
@@ -69,24 +56,18 @@ export default function Landing() {
           <div>
             {/* The break is authored, not left to the measure: three lines at
                 every width, so the sheet's proportions hold from 390 to 1600. */}
-            <h1 className="serif-display text-[clamp(2.2rem,6.4vw,5.2rem)] text-ink">
-              An agent whose
-              <br />
-              brain is your
-              <br />
-              <span className="text-mark">college's exams.</span>
+            <h1 className="serif-display max-w-[16ch] text-[clamp(2.2rem,6.4vw,5.2rem)] text-ink">
+              An agent whose brain is your <span className="text-mark">college's exams.</span>
             </h1>
           </div>
 
           <p className="serif mt-6 max-w-[54ch] text-[15.5px] text-ink-2">
-            Not a chatbot over a folder of PDFs. Kronos runs on Databricks Genie: you ask in
-            plain words, it writes SQL over governed tables built from this college's own
-            papers, and it shows you the query it ran.
+            Ask in plain words — it writes the SQL and shows you what it found.
           </p>
 
           {/* The first action is the product's only verb. */}
           <div className="mt-8 w-full max-w-[680px]">
-            <div className="flex items-end gap-2 border border-line bg-paper-2 px-4 py-3 transition-colors duration-150 focus-within:border-ink">
+            <div className="flex items-end gap-2 rounded-[var(--r-md)] border border-line bg-paper-2 px-4 py-3 transition-colors duration-150 focus-within:border-ink">
               <textarea
                 ref={input}
                 rows={1}
@@ -112,9 +93,9 @@ export default function Landing() {
               </button>
             </div>
 
-            <ul className="mt-4 border-t border-line">
-              {openers.map((o) => (
-                <li key={o} className="border-b border-line">
+            <ul className="mt-4 flex flex-col gap-1">
+              {OPENERS.map((o) => (
+                <li key={o}>
                   <button
                     onClick={() => ask(o)}
                     className="group flex w-full items-start gap-3 py-2.5 text-left"
@@ -146,7 +127,9 @@ export default function Landing() {
             ].map(([k, v]) => (
               <div key={k}>
                 <dt className="label-cap">{k}</dt>
-                <dd className="mt-1 font-mono text-[15px] tabular-nums text-ink">{v}</dd>
+                <dd className="mt-1 font-mono text-[15px] tabular-nums text-ink">
+                  {v === "—" ? <span className="inline-block h-4 w-12 animate-pulse rounded bg-line" /> : v}
+                </dd>
               </div>
             ))}
           </dl>

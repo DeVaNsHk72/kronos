@@ -12,13 +12,8 @@ import json
 import math
 import os
 import re
-from pathlib import Path
 
 import requests
-from dotenv import load_dotenv
-
-REPO = Path(__file__).resolve().parents[2]
-load_dotenv(REPO / ".env")
 
 ENDPOINT = (os.getenv("DATABRICKS_AGENT_ENDPOINT") or "").strip()
 TOKEN = (os.getenv("DATABRICKS_AGENT_TOKEN") or os.getenv("DATABRICKS_TOKEN") or "").strip()

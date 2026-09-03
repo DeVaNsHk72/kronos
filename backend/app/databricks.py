@@ -6,13 +6,8 @@ stay on this side and the SPA calls named queries instead of sending SQL.
 """
 import os
 import time
-from pathlib import Path
 
 import requests
-from dotenv import load_dotenv
-
-REPO = Path(__file__).resolve().parents[2]
-load_dotenv(REPO / ".env")
 
 HOST = (os.getenv("DATABRICKS_HOST") or "").rstrip("/")
 TOKEN = os.getenv("DATABRICKS_TOKEN") or ""

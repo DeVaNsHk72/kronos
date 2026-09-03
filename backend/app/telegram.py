@@ -1,6 +1,6 @@
-"""Telegram bot logic — hits the Databricks serving endpoint.
+"""Telegram bot logic — queries Kronos via Genie.
 
-Each Telegram user gets conversation history so context carries
+Each Telegram user gets a Genie conversation_id so context carries
 across messages. Sessions live in memory (fine for single-process).
 """
 
@@ -14,28 +14,50 @@ REPO = Path(__file__).resolve().parents[2]
 load_dotenv(REPO / ".env")
 
 BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-DATABRICKS_HOST = (os.getenv("DATABRICKS_HOST") or "").rstrip("/")
-DATABRICKS_TOKEN = os.getenv("DATABRICKS_TOKEN")
-SERVING_ENDPOINT = os.getenv("DATABRICKS_SERVING_ENDPOINT",
-                             "mas-4d3338c9-endpoint")
 
-# telegram_user_id -> list of {role, content} dicts
-_sessions: dict[int, list[dict]] = {}
+# telegram_user_id -> genie conversation_id
+_conversations: dict[int, str] = {}
 
 TELEGRAM_API = f"https://api.telegram.org/bot{BOT_TOKEN}"
 
 
 def available() -> bool:
-    return bool(BOT_TOKEN and DATABRICKS_HOST and DATABRICKS_TOKEN)
+    return bool(BOT_TOKEN)
+
+
+# ── Text cleaning ────────────────────────────────────────────────
+import re
+
+def _clean(text: str) -> str:
+    """Strip LaTeX, markdown formatting, and OCR junk for plain-text Telegram."""
+    if not text:
+        return ""
+    # remove $...$ and $$...$$ LaTeX
+    text = re.sub(r'\$\$(.+?)\$\$', r'\1', text, flags=re.DOTALL)
+    text = re.sub(r'\$(.+?)\$', r'\1', text)
+    # remove \text{...}, \frac{...}{...}, etc — keep inner text
+    text = re.sub(r'\\(?:text|mathrm|mathbf|textbf|textit)\{([^}]*)\}', r'\1', text)
+    text = re.sub(r'\\frac\{([^}]*)\}\{([^}]*)\}', r'\1/\2', text)
+    text = re.sub(r'\\(?:int|sum|prod|lim|sqrt|log|ln|sin|cos|tan|ext)\b', '', text)
+    # remove remaining backslash commands
+    text = re.sub(r'\\[a-zA-Z]+', '', text)
+    # remove markdown bold/italic markers
+    text = re.sub(r'\*\*(.+?)\*\*', r'\1', text)
+    text = re.sub(r'\*(.+?)\*', r'\1', text)
+    text = re.sub(r'_(.+?)_', r'\1', text)
+    # collapse whitespace
+    text = re.sub(r'[ \t]+', ' ', text)
+    text = re.sub(r'\n{3,}', '\n\n', text)
+    return text.strip()
 
 
 # ── Telegram helpers ──────────────────────────────────────────────
 
 def send_message(chat_id: int, text: str, reply_markup=None):
+    """Send plain text — no parse_mode, so nothing needs escaping."""
     payload = {
         "chat_id": chat_id,
         "text": text,
-        "parse_mode": "Markdown",
     }
     if reply_markup:
         payload["reply_markup"] = reply_markup
@@ -47,55 +69,68 @@ def send_typing(chat_id: int):
                   json={"chat_id": chat_id, "action": "typing"}, timeout=5)
 
 
-# ── Databricks serving endpoint ──────────────────────────────────
+# ── Genie ────────────────────────────────────────────────────────
 
-def ask_databricks(user_id: int, question: str) -> str:
-    """Send question to Databricks serving endpoint with conversation history."""
-    history = _sessions.setdefault(user_id, [])
-    history.append({"role": "user", "content": question})
+def ask_kronos(user_id: int, question: str) -> str:
+    """Ask Genie via the local backend and format the answer for Telegram."""
+    from . import genie_client as genie
 
-    # keep last 10 messages to avoid token limits
-    msgs = history[-10:]
+    if not genie.available():
+        return "⚠️ Genie is not configured on this server."
 
+    conv_id = _conversations.get(user_id)
     try:
-        r = requests.post(
-            f"{DATABRICKS_HOST}/serving-endpoints/{SERVING_ENDPOINT}/invocations",
-            headers={"Authorization": f"Bearer {DATABRICKS_TOKEN}",
-                     "Content-Type": "application/json"},
-            json={"input": msgs},
-            timeout=120,
-        )
-        r.raise_for_status()
-        data = r.json()
-
-        # extract text from response
-        answer = ""
-        for output in data.get("output", []):
-            if output.get("type") == "message":
-                for content in output.get("content", []):
-                    if content.get("type") == "output_text":
-                        answer += content["text"]
-
-        if not answer:
-            answer = "No response from Databricks."
-
-        # save assistant reply to history
-        history.append({"role": "assistant", "content": answer})
-        _sessions[user_id] = history[-10:]
-
-        return answer
-
+        res = genie.ask(question, conv_id)
     except Exception as e:
         return f"⚠️ Error: {str(e)[:300]}"
+
+    # persist conversation for follow-ups
+    if res.get("conversation_id"):
+        _conversations[user_id] = res["conversation_id"]
+
+    parts: list[str] = []
+
+    # text answer — strip markdown/LaTeX that Telegram can't render
+    answer = _clean(res.get("answer") or "")
+    if answer:
+        parts.append(answer)
+
+    # format rows as a readable list
+    rows = res.get("rows") or []
+    if rows:
+        parts.append(f"\n📋 {len(rows)} questions found:\n")
+        for i, row in enumerate(rows[:8]):
+            q_text = _clean(row.get("question_text") or "")[:150]
+            marks = row.get("marks")
+            year = row.get("exam_year")
+            topic = row.get("topic_name") or ""
+            # marks as int if whole number
+            m = int(marks) if marks and marks == int(marks) else marks
+            meta = " · ".join(filter(None, [
+                f"{m} marks" if m else None,
+                str(int(year)) if year else None,
+                topic,
+            ]))
+            parts.append(f"  {i+1}. {q_text}")
+            if meta:
+                parts.append(f"      ↳ {meta}")
+            parts.append("")  # blank line between items
+        if len(rows) > 8:
+            parts.append(f"...and {len(rows) - 8} more on kronos")
+
+    if not parts:
+        return "No results found. Try rephrasing your question."
+
+    return "\n".join(parts)
 
 
 # ── Command handlers ──────────────────────────────────────────────
 
-WELCOME = """👋 *Welcome to Kronos!*
+WELCOME = """👋 Welcome to Kronos!
 
 I help you study smarter using previous-year question papers.
 
-*Commands:*
+Commands:
 📚 /plan — Get a study recommendation
 📝 /quiz — Practice questions
 📖 /topics — Browse topics
@@ -128,7 +163,7 @@ def handle_update(update: dict):
         if cmd in ("/start", "/help"):
             send_message(chat_id, WELCOME)
         elif cmd == "/reset":
-            _sessions.pop(user_id, None)
+            _conversations.pop(user_id, None)
             send_message(chat_id, "🔄 Conversation reset. Ask me anything!")
         elif cmd == "/plan":
             _ask(chat_id, user_id,
@@ -147,7 +182,7 @@ def handle_update(update: dict):
 
 def _ask(chat_id: int, user_id: int, question: str):
     send_typing(chat_id)
-    answer = ask_databricks(user_id, question)
+    answer = ask_kronos(user_id, question)
     # Telegram 4096 char limit
     if len(answer) > 4000:
         for i in range(0, len(answer), 4000):

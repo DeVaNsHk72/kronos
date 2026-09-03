@@ -87,18 +87,10 @@ export default function PromptBox({
   const busy = disabled || transcribing;
 
   return (
-    <div
-      className="fixed inset-x-0 bottom-0 z-30 pb-4 pt-10"
-      style={{
-        background:
-          "linear-gradient(to top, var(--color-paper) 60%, transparent)",
-      }}
-    >
-      <div className="page">
+    <div className="fixed inset-x-0 bottom-0 z-30 pb-4 pt-10">
+      <div className="composer-glass page">
         <div className="mx-auto max-w-[860px]">
-        {/* The thread's own composer: a ruled strip, not a floating pill.
-            Nothing in this world floats. */}
-        <div className="flex items-end gap-2 border border-line bg-paper-2 px-4 py-3 transition-[border-color] duration-150 ease-out focus-within:border-ink">
+        <div className="flex items-end gap-2 rounded-[var(--r-lg)] border border-line bg-paper-2/80 px-4 py-3 shadow-[0_-2px_16px_rgba(0,0,0,0.06)] backdrop-blur-xl transition-[border-color] duration-150 ease-out focus-within:border-ink/20">
           <textarea
             ref={ref}
             rows={1}
@@ -151,7 +143,7 @@ export default function PromptBox({
           </div>
         </div>
         {footnote && (
-          <p className="draft-caps mt-2">{footnote}</p>
+          <p className="label-cap mt-2">{footnote}</p>
         )}
         </div>
       </div>

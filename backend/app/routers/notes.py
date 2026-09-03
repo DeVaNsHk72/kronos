@@ -11,13 +11,17 @@ from pathlib import Path
 
 from fastapi import APIRouter, HTTPException, Query
 from fastapi.responses import FileResponse
+from ..config import DERIVED, REPO
 
 router = APIRouter(prefix="/api/notes", tags=["notes"])
 
-# routers/ is one level deeper than app/, so this is parents[3], not the
-# parents[2] the modules in app/ use.
-REPO = Path(__file__).resolve().parents[3]
-INDEX = REPO / "backend" / "data" / "notes_index.json"
+# Prefer DERIVED_DATA (same cadence as the DBs; keeps it out of git history).
+# Fall back to backend/data/ so the repo still works before migration.
+INDEX = next(
+    (p for p in (DERIVED / "notes_index.json", REPO / "backend" / "data" / "notes_index.json")
+     if p.exists()),
+    DERIVED / "notes_index.json",
+)
 # The PDFs live outside the repo; src paths in the index are relative to this.
 EXNOTE_ROOT = Path(os.getenv("EXNOTE_ROOT") or REPO.parent).resolve()
 

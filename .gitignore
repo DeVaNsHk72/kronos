@@ -47,12 +47,27 @@ build/
 # Logs
 *.log
 npm-debug.log*
+/tmp/
 
 # Claude Code
 .claude/
 
 # Plans
 plans/
+
+# Lock files (pnpm-lock committed, others not)
+package-lock.json
+yarn.lock
+
+# OS files
+Thumbs.db
+
+# Embeddings keys
+emb_keys.json
+
+# Temp / scratch
+scratchpad/
+*.tmp
 
 # Impeccable working artifacts. The design system (DESIGN.md, .impeccable/design.json)
 # and the surface briefs are committed; the review screenshots and the hook's

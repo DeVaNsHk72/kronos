@@ -24,6 +24,9 @@
      source-paper link). It is NOT a second accent and NOT a link colour:
      anything wearing it is claiming to be evidence. */
   --color-blueprint: var(--k-mark);
+  --color-accent-blue: var(--k-accent);
+  --color-surface-hover: var(--k-surface-hover);
+  --color-surface-active: var(--k-surface-active);
 
   --font-editorial: var(--k-font-editorial);
   --font-serif: var(--k-font-serif);
@@ -53,6 +56,9 @@
      input reads as an error state rather than focus. */
   --color-ring: var(--k-ink);
   --radius: var(--k-radius);
+  --radius-r-sm: var(--r-sm);
+  --radius-r-md: var(--r-md);
+  --radius-r-lg: var(--r-lg);
 
   /* MD3 roles, addressable as Tailwind utilities (`bg-surface-container`,
      `text-on-surface-variant`, `border-outline`) so a component can reach the
@@ -191,14 +197,13 @@ body {
     border-bottom: 1px solid; border-right: 1px solid;
   }
 
-  /* Every small uppercase field label and tile caption. */
+  /* Every small field label and tile caption — sentence case, not caps.
+     Caps-tracking stays only inside the title block (.draft-caps). */
   .label-cap {
-    font-size: 10.5px;
+    font-size: 0.6875rem; /* 11px */
     font-weight: 500;
-    font-stretch: 80%;
     line-height: 1;
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.02em;
     color: var(--color-ink-2);
   }
 
@@ -218,36 +223,25 @@ body {
     display: flex;
     flex-wrap: wrap;
     gap: 2px;
+    background: var(--color-surface-hover);
+    border-radius: var(--r-md);
+    padding: 3px;
   }
   .tab {
     position: relative;
-    padding: 11px 14px;
-    margin-bottom: -1px;
+    padding: 8px 14px;
     font-size: 13px;
     font-weight: 400;
     color: var(--color-ink-2);
-    border-bottom: 1px solid transparent;
-    transition: color 150ms var(--k-ease-out), border-color 150ms var(--k-ease-out);
+    border-radius: var(--r-sm);
+    transition: color 150ms var(--k-ease-out);
   }
   .tab:hover {
     color: var(--color-ink);
   }
-  /* The active tab is drawn in: a full-weight white rule and a heavier tick
-     beneath it. The tick is ink, not the accent — which position you are at is
-     navigation, and the accent is spent only on evidence. */
   .tab-on {
     color: var(--color-ink);
     font-weight: 500;
-    border-bottom-color: var(--color-ink);
-  }
-  .tab-on::after {
-    content: "";
-    position: absolute;
-    left: 14px;
-    bottom: -1px;
-    width: 10px;
-    height: 3px;
-    background: var(--color-ink);
   }
 
   /* Every input and select. One height, one radius, one focus treatment. */
@@ -301,13 +295,20 @@ body {
     border: 1px solid var(--color-outline);
     background: transparent;
     color: var(--color-ink);
+    transition: background-color 150ms var(--k-ease-out),
+                border-color 150ms var(--k-ease-out),
+                opacity 150ms var(--k-ease-out),
+                transform 100ms var(--k-ease-out);
   }
+  .btn:active:not(:disabled) { transform: scale(0.98); }
+  .btn-primary:active:not(:disabled) { transform: scale(0.98); }
   .btn::before,
   .btn-primary::before {
     content: "";
     position: absolute;
     inset: 0;
     z-index: -1;
+    border-radius: inherit;
     background: currentColor;
     opacity: 0;
     transition: opacity var(--k-dur-press) var(--k-ease-out);
@@ -623,7 +624,7 @@ mark.hl {
     --k-ink-2: #445d76;
     --k-mark: #b3341f;
   }
-  header, nav, aside, .no-print { display: none !important; }
+  header, nav, aside { display: none !important; }
   body {
     background-image: none !important;
     background-color: var(--k-paper) !important;
@@ -682,5 +683,33 @@ mark.hl {
   .disclosure {
     transition: opacity var(--k-dur-pop) var(--k-ease-out);
     grid-template-rows: 1fr;
+  }
+}
+
+/* The composer's fade-to-transparent ground, replacing the old linear-gradient
+   hack with a real translucent surface. */
+.composer-glass {
+  background: color-mix(in srgb, var(--color-paper) 72%, transparent);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  mask-image: linear-gradient(to top, black 62%, transparent);
+  -webkit-mask-image: linear-gradient(to top, black 62%, transparent);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .composer-glass {
+    background: var(--color-paper);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .composer-glass .backdrop-blur-xl {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: var(--color-paper-2) !important;
+  }
+  aside[class*="backdrop-blur"] {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: var(--color-paper) !important;
   }
 }

@@ -7,12 +7,12 @@ import {
   ListChecks,
   Repeat as Repeat2,
 } from "@phosphor-icons/react";
-import { askChat, getStats, type ChatResponse, type ChatTurn, type Question, type Stats } from "../api";
+import { getStats, type ChatResponse, type ChatTurn, type Question, type Stats } from "../api";
+import { askGenie } from "../facultyApi";
 import QuestionCard from "../components/QuestionCard";
 import ChatAnswer from "../components/ChatAnswer";
 import ChatIntentPanel from "../components/ChatIntentPanel";
 import { computeOverview, ChatStats, ChatAlsoAskedIn } from "../components/ChatOverview";
-import PromptBox from "../components/PromptBox";
 import { archiveError, fmt } from "@/lib/utils";
 
 const EXAMPLES = [
@@ -32,13 +32,80 @@ const EXAMPLES = [
 
 const STEPS = ["Reading your question", "Writing the SQL", "Running it", "Composing an answer"];
 
+interface GenieResult {
+  answer: string;
+  rows: Question[];
+  sql?: string;
+}
+
 interface Turn {
   id: number;
   question: string;
   response: ChatResponse | null;
+  genie: GenieResult | null;
   asking: boolean;
   error: string | null;
   expanded: boolean;
+}
+
+/** Map a Genie row (Databricks columns) to our Question shape. */
+function genieRowToQuestion(row: Record<string, any>, i: number): Question {
+  return {
+    id: row.question_id ? Number(String(row.question_id).replace(/\D/g, "").slice(0, 9)) : 900000 + i,
+    sha: String(row.question_id ?? i),
+    unit: row.unit_no != null ? Number(row.unit_no) : null,
+    qno: null,
+    subpart: null,
+    question_md: row.question_text ?? "",
+    marks: row.marks != null ? Number(row.marks) : null,
+    co: null,
+    po: null,
+    course_code: row.subject_code ?? "",
+    course_name: row.subject_name ?? "",
+    program: "",
+    semester: row.semester != null ? Number(row.semester) : null,
+    year: row.exam_year != null ? Number(row.exam_year) : null,
+    exam_type: row.exam_type ?? "",
+    branch: row.branch ?? "",
+    topic: row.topic_name ?? null,
+    subtopic: null,
+    images: [],
+    download_url: "",
+    score: undefined,
+  };
+}
+
+/** Render simple markdown (bold, bullets, line breaks) to JSX. */
+function SimpleMd({ text }: { text: string }) {
+  const lines = text.split("\n");
+  const elements: React.ReactNode[] = [];
+  let listItems: React.ReactNode[] = [];
+
+  function bold(s: string, key: number) {
+    // split on **…** and render <strong>
+    return s.split(/\*\*(.+?)\*\*/g).map((part, j) =>
+      j % 2 === 1 ? <strong key={`${key}-${j}`} className="font-semibold text-ink">{part}</strong> : part
+    );
+  }
+
+  function flushList() {
+    if (!listItems.length) return;
+    elements.push(<ul key={`ul-${elements.length}`} className="my-1.5 list-disc space-y-1 pl-5">{listItems}</ul>);
+    listItems = [];
+  }
+
+  lines.forEach((line, i) => {
+    const bullet = line.match(/^[-•]\s+(.*)/);
+    if (bullet) {
+      listItems.push(<li key={i}>{bold(bullet[1], i)}</li>);
+    } else {
+      flushList();
+      if (line.trim()) elements.push(<p key={i} className="my-1">{bold(line, i)}</p>);
+    }
+  });
+  flushList();
+
+  return <div className="text-[14px] leading-relaxed text-ink-2">{elements}</div>;
 }
 
 let nextId = 1;
@@ -117,17 +184,15 @@ export default function Ask() {
   const [dims, setDims] = useState<Stats | null>(null);
   const totalQuestions = dims?.questions ?? null;
 
-  // The landing hands a question over in navigation state. Fired once — a
-  // re-render must not re-ask it, and neither must a back-navigation.
-  const handoff = (useLocation().state as { question?: string } | null)?.question;
-  const fired = useRef(false);
+  const locState = useLocation().state as { question?: string; ts?: number } | null;
+  const lastTs = useRef(0);
   useEffect(() => {
-    if (handoff && !fired.current) {
-      fired.current = true;
-      submit(handoff);
+    if (locState?.question && locState.ts && locState.ts !== lastTs.current) {
+      lastTs.current = locState.ts;
+      submit(locState.question);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [handoff]);
+  }, [locState?.ts]);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -144,25 +209,37 @@ export default function Ask() {
     setQ("");
 
     const id = nextId++;
-    const history: ChatTurn[] = turns
-      .filter((t) => t.response?.answer)
-      .flatMap((t) => [
-        { role: "user" as const, content: t.question },
-        { role: "assistant" as const, content: t.response!.answer! },
-      ]);
 
     setTurns((ts) => [
       ...ts,
-      { id, question: text, response: null, asking: true, error: null, expanded: false },
+      { id, question: text, response: null, genie: null, asking: true, error: null, expanded: false },
     ]);
 
+    // Fire Genie only
+    let genie: GenieResult | null = null;
+    let error: string | null = null;
     try {
-      const res = await askChat(text, history);
-      setTurns((ts) => ts.map((t) => (t.id === id ? { ...t, response: res, asking: false } : t)));
-    } catch (e) {
-      const msg = archiveError(e);
-      setTurns((ts) => ts.map((t) => (t.id === id ? { ...t, error: msg, asking: false } : t)));
+      const g: any = await askGenie(text);
+      if (g?.rows?.length) {
+        const MIN_Q_LEN = 30;
+        const rows = (g.rows as Record<string, any>[])
+          .map(genieRowToQuestion)
+          .filter((q) => q.question_md.length >= MIN_Q_LEN);
+        if (rows.length) {
+          genie = { answer: g.answer ?? "", rows, sql: g.sql };
+        } else {
+          genie = { answer: g.answer ?? "", rows: [], sql: g.sql };
+        }
+      } else {
+        error = g?.answer || "Genie returned no results.";
+      }
+    } catch (e: any) {
+      const detail = e?.response?.data?.detail ?? e?.message ?? "Unknown error";
+      error = `Genie error: ${detail}`;
+      console.error("askGenie failed:", e);
     }
+
+    setTurns((ts) => ts.map((t) => (t.id === id ? { ...t, genie, error, asking: false } : t)));
   }
 
   function jump(turnId: number, n: number) {
@@ -184,7 +261,7 @@ export default function Ask() {
 
   return (
     <div className="flex min-h-[calc(100svh-56px)] flex-col">
-      <div className="page w-full flex-1 pb-40 pt-8">
+      <div className="page w-full flex-1 pt-8">
         <div className="mx-auto max-w-[860px]">
         {empty ? (
           /* At rest, the sheet shows what it is. The centred column of
@@ -193,40 +270,36 @@ export default function Ask() {
              dimensions, so this one does — measured figures in fixed slots,
              then the openers ruled into the same grid. */
           <div className="pt-6 pb-4">
-            <h1 className="serif-display text-[clamp(2rem,4vw,2.9rem)] text-ink">
+            <h1 className="title-page">
               What do you need to know?
             </h1>
-            <p className="serif mt-3 max-w-[54ch] text-[14.5px] text-ink-2">
-              Ask in plain words. Kronos writes SQL over this college's own exam tables,
-              runs it, and shows you both the query and the rows it came back with.
-            </p>
 
             {/* The drawing's dimension block. Every figure is measured, every
                 slot holds its position whether or not the archive answered. */}
-            <dl className="mt-9 grid grid-cols-2 border-t border-l border-line sm:grid-cols-4">
+            <dl className="mt-9 grid grid-cols-2 gap-4 sm:grid-cols-4">
               {[
                 ["Questions", dims?.questions],
                 ["Papers", dims?.papers],
                 ["Subjects", dims?.courses],
                 ["Topics", dims?.topics],
               ].map(([label, value]) => (
-                <div key={label as string} className="border-b border-r border-line px-3 py-2.5">
+                <div key={label as string}>
                   <dt className="label-cap">{label}</dt>
                   <dd className="mt-1.5 font-mono text-[15px] tabular-nums leading-none text-ink">
-                    {fmt(value)}
+                    {value != null ? fmt(value) : <span className="inline-block h-4 w-12 animate-pulse rounded bg-line" />}
                   </dd>
                 </div>
               ))}
             </dl>
-            <p className="draft-caps mt-2">
+            <p className="label-cap mt-2">
               {dims?.year_range
-                ? `Span ${dims.year_range[0]}\u2013${dims.year_range[1]}`
-                : "Span not answered \u2014 the archive is not reachable"}
+                ? `${dims.year_range[0]}\u2013${dims.year_range[1]}`
+                : <span className="inline-block h-3 w-16 animate-pulse rounded bg-line" />}
             </p>
 
-            <ul className="mt-9 border-t border-line">
+            <ul className="mt-9 flex flex-col gap-1">
               {EXAMPLES.map(({ icon: Icon, label, q: ex }) => (
-                <li key={ex} className="border-b border-line">
+                <li key={ex}>
                   <button
                     onClick={() => submit(ex)}
                     className="group flex w-full items-center gap-3 py-3 text-left transition-colors duration-150"
@@ -239,7 +312,7 @@ export default function Ask() {
                     <span className="min-w-0 flex-1 truncate text-[14px] text-ink-2 transition-colors duration-150 group-hover:text-ink">
                       {label}
                     </span>
-                    <span className="draft-caps opacity-0 transition-opacity duration-150 group-hover:opacity-100">
+                    <span className="label-cap opacity-0 transition-opacity duration-150 group-hover:opacity-100">
                       Ask
                     </span>
                   </button>
@@ -291,49 +364,36 @@ export default function Ask() {
                         <p className="py-1.5 text-sm text-mark">{t.error}</p>
                       )}
 
-                      {!t.asking && t.response?.answer && (
-                        <>
-                          <ChatIntentPanel intent={t.response.intent} />
-                          <ChatAnswer
-                            answer={t.response.answer}
-                            citations={t.response.citations}
-                            onJump={(n) => jump(t.id, n)}
-                          />
-                        </>
-                      )}
-
-                      {!t.asking && overview && overview.total > 0 && (
-                        <ChatStats o={overview} />
-                      )}
-
-                      {!t.asking && results.length > 0 && (
-                        <div className="mt-4 flex flex-col gap-2.5">
-                          {shown.map((res, i) => {
-                            const n = i < cited ? i + 1 : undefined;
-                            const citeId = n ? `cite-t${t.id}-${n}` : undefined;
-                            return (
-                              <QuestionCard
-                                key={res.id}
-                                q={res}
-                                n={n}
-                                citeId={citeId}
-                                flash={citeId ? flash === citeId : false}
-                                matchReasons={t.response ? matchReasons(res, t.response) : undefined}
-                              />
-                            );
-                          })}
-                          {!t.expanded && results.length > CARD_LIMIT && (
-                            <button
-                              onClick={() => expand(t.id)}
-                              className="self-start text-xs font-medium text-ink-2 transition-colors duration-150 hover:text-ink hover:underline"
-                            >
-                              Show {results.length - CARD_LIMIT} more
-                            </button>
+                      {/* Genie results */}
+                      {!t.asking && t.genie && (
+                        <div className="mt-4">
+                          {t.genie.rows.length > 0 && (
+                            <p className="label-cap mb-3">From Genie · {t.genie.rows.length} results</p>
+                          )}
+                          {t.genie.answer && (
+                            <div className="mb-3"><SimpleMd text={t.genie.answer} /></div>
+                          )}
+                          <div className="flex flex-col gap-2.5">
+                            {t.genie.rows.slice(0, t.expanded ? undefined : CARD_LIMIT).map((gq) => (
+                              <QuestionCard key={gq.sha} q={gq} />
+                            ))}
+                            {!t.expanded && t.genie.rows.length > CARD_LIMIT && (
+                              <button
+                                onClick={() => expand(t.id)}
+                                className="self-start text-xs font-medium text-ink-2 transition-colors duration-150 hover:text-ink hover:underline"
+                              >
+                                Show {t.genie.rows.length - CARD_LIMIT} more from Genie
+                              </button>
+                            )}
+                          </div>
+                          {t.genie.sql && (
+                            <details className="mt-2">
+                              <summary className="cursor-pointer text-[11px] text-ink-2 hover:text-ink">Show SQL</summary>
+                              <pre className="mt-1 overflow-x-auto rounded-[var(--r-sm)] bg-paper-2 p-3 font-mono text-[11px] text-ink-2">{t.genie.sql}</pre>
+                            </details>
                           )}
                         </div>
                       )}
-
-                      {!t.asking && overview && <ChatAlsoAskedIn o={overview} />}
 
                       {canFollowUp && (
                         <div className="mt-4 flex flex-wrap gap-1.5 border-t border-line pt-3">
@@ -378,17 +438,6 @@ export default function Ask() {
         </div>
       </div>
 
-      <PromptBox
-        value={q}
-        onChange={setQ}
-        onSubmit={submit}
-        placeholder="Ask Kronos — what repeats in thermodynamics?"
-        footnote={
-          totalQuestions
-            ? `Its brain: ${fmt(totalQuestions)} questions from this college's own papers`
-            : "Every answer is a query you can read, and every row cites the paper it came from"
-        }
-      />
     </div>
   );
 }

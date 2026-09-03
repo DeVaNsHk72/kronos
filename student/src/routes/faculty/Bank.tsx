@@ -1,5 +1,6 @@
 import { fmt } from "@/lib/utils";
 import { useCallback, useEffect, useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import { searchBank, type QueryResult } from "../../facultyApi";
 import { PageHead, SubjectPicker, useSubjects, SqlToggle, Skeleton, Empty }
   from "../../components/faculty/Shared";
@@ -98,37 +99,43 @@ export default function Bank() {
                 <th>Source</th>
               </tr></thead>
               <tbody>
-                {rows.map((r) => {
+                {rows.map((r, i) => {
                   const id = String(r.question_id);
                   return (
-                    <>
-                      <tr key={id} onClick={() => setOpenRow(openRow === id ? null : id)}
-                          className="cursor-pointer align-top">
-                        <td className="max-w-[520px]">{r.question_text}</td>
-                        <td className="font-mono text-ink-2">{r.unit_no ?? "—"}</td>
-                        <td className="font-mono text-right">{r.marks ?? "—"}</td>
-                        <td className="text-ink-2 text-[12px]">{r.bloom_level ?? "—"}</td>
-                        <td className="font-mono text-ink-2">{r.exam_year}</td>
-                        <td className="font-mono text-[11px] text-ink-2 max-w-[170px] truncate"
-                            title={String(r.source_file)}>{String(r.source_file).split("/").pop()}</td>
-                      </tr>
-                      {openRow === id && (
-                        <tr key={id + "-d"} className="bg-paper">
-                          <td colSpan={6}>
-                            <div className="font-mono text-[11px] text-ink-2 space-y-0.5">
-                              <div>question_id: {r.question_id}</div>
-                              <div>source_file: {r.source_file}</div>
-                              <div>source_page: {r.source_page ?? "— not recorded in the corpus"}</div>
-                              <div>sitting: {r.sitting} · session: {r.exam_session}</div>
-                              <div>topic_id: {r.topic_id ?? "— unmapped"}</div>
-                              <div>repeat_cluster: {r.repeat_cluster_id ?? "— no near-duplicate"}</div>
-                            </div>
-                          </td>
-                        </tr>
-                      )}
-                    </>
+                    <motion.tr key={id}
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 30, delay: Math.min(i * 0.02, 0.3) }}
+                      onClick={() => setOpenRow(openRow === id ? null : id)}
+                      className="cursor-pointer align-top"
+                    >
+                      <td className="max-w-[520px]">{r.question_text}</td>
+                      <td className="font-mono text-ink-2">{r.unit_no ?? "—"}</td>
+                      <td className="font-mono text-right">{r.marks ?? "—"}</td>
+                      <td className="text-ink-2 text-[12px]">{r.bloom_level ?? "—"}</td>
+                      <td className="font-mono text-ink-2">{r.exam_year}</td>
+                      <td className="font-mono text-[11px] text-ink-2 max-w-[170px] truncate"
+                          title={String(r.source_file)}>{String(r.source_file).split("/").pop()}</td>
+                    </motion.tr>
                   );
                 })}
+                {openRow && rows.find((r) => String(r.question_id) === openRow) && (() => {
+                  const r = rows.find((r) => String(r.question_id) === openRow)!;
+                  return (
+                    <tr key={openRow + "-d"} className="bg-paper">
+                      <td colSpan={6}>
+                        <div className="font-mono text-[11px] text-ink-2 space-y-0.5">
+                          <div>question_id: {r.question_id}</div>
+                          <div>source_file: {r.source_file}</div>
+                          <div>source_page: {r.source_page ?? "— not recorded in the corpus"}</div>
+                          <div>sitting: {r.sitting} · session: {r.exam_session}</div>
+                          <div>topic_id: {r.topic_id ?? "— unmapped"}</div>
+                          <div>repeat_cluster: {r.repeat_cluster_id ?? "— no near-duplicate"}</div>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })()}
               </tbody>
             </table>
           </div>
